@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configs>
+	<Config name="indexPath">
+		<Path>/home/iir/hgj/index</Path>
+	</Config>
+	<Config name="EventIndexPath">
+		<Path>/home/iir/hgj/EventIndex</Path>
+	</Config>
+	<Config name="WebindexPath">
+		<Path>/home/mblank/index</Path>
+	</Config>
+	<Config name="WebEventIndexPath">
+		<Path>/home/mblank/EventIndex</Path>
+	</Config>
+	<Config name="UrlsBloomFilterFilePath">
+		<!-- Path>/home/iir/hgj/bloom/urls</Path -->
+		<Path>D:\\et\\abc.txt</Path>
+	</Config>
+	<Config name="ArticleIndex">
+		<!-- Path>/home/iir/hgj/bloom/urls</Path -->
+		<Path>D:\\ETT\\AI</Path>
+	</Config>
+	<Config name="TotalDF">
+		<!-- Path>/home/iir/EventTeller/bloom/urls</Path -->
+		<Path>D:\\ETT\\DF\\ddf</Path>
+	</Config>
+</Configs>
