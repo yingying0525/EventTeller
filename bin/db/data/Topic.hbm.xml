@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="db.data">
+	<class
+		name="Topic"
+		table="topic" dynamic-update="true"
+	>
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="id"
+			type="integer"
+			column="id"
+		>
+		<generator class="native"></generator>
+		</id>		
+		<property
+			name="title"
+			column="title"
+			type="string"
+			not-null="false"
+			length="1000"
+		/>
+		<property
+			name="keywords"
+			column="keywords"
+			type="string"
+			not-null="false"
+			length="1000"
+		/>
+		<property 
+			name="number"
+			column="number"
+			type="integer"
+			not-null="false"
+			length="32"
+		/>
+		<property
+			name="events"
+			column="events"
+			type="string"
+			not-null="false"
+		/>
+		<property
+			name="time"
+			column="time"
+			type="java.util.Date"
+			not-null="false"
+			length="14"
+		/>
+		<property
+			name="endTime"
+			column="endTime"
+			type="java.util.Date"
+			not-null="false"
+			length="14"
+		/>
+		<property
+			name="startTime"
+			column="startTime"
+			type="java.util.Date"
+			not-null="false"
+			length="14"
+		/>
+		<property 
+			name="updatestate"
+			column="updatestate"
+			type="integer"
+			not-null="false"
+			length="32"
+		/>
+		<property
+			name="imgs"
+			column="imgs"
+			type="string"
+			not-null="false"
+		/>
+		<property
+			name="subtopicid"
+			column="subtopicid"
+			type="integer"
+			not-null="false"
+			length="32"
+		/>
+	</class>	
+</hibernate-mapping>

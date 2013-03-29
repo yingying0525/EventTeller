@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="db.data">
+	<class
+		name="Word"
+		table="idf" dynamic-update="true"
+	>
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="id"
+			type="integer"
+			column="id"
+		>
+		<generator class="native"></generator>
+		</id>		
+		<property
+			name="name"
+			column="word"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="tf"
+			column="tf"
+			type="integer"
+			not-null="false"
+		/>
+		<property
+			name="score"
+			column="score"
+			type="double"
+			not-null="false"
+		/>
+	</class>	
+</hibernate-mapping>
