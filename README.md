@@ -15,6 +15,8 @@ It crawls more than 30 news sites in China real-time (the time interval is 20 mi
 You can try our old version demo http://www.iiret.info , the new version is buiding now.
 
 
+Thanks to Ansj (A chinese Tokenizer https://github.com/ansjsun/ansj_seg)
+
 
 
 
