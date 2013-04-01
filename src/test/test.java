@@ -160,6 +160,7 @@ public class test {
 				}
 				htmls.add(ht);
 			}
+			br.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
