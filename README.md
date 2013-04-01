@@ -1,7 +1,7 @@
 EventTeller
 ===========
 
-EventTeller is a Event Detection and Evolution System.
+EventTeller is an Event Detection and Evolution System.
 
 It crawls more than 30 news sites in China real-time (the time interval is 20 minutes now).
 
