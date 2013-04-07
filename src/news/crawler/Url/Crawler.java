@@ -411,7 +411,6 @@ public class Crawler{
 			///for gc
 			updateUrls = null;
 			NewUrls = null;			
-			System.gc();
 			System.out.println("end of java_gc..so happy~!");	
 	}
 	
