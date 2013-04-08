@@ -17,12 +17,14 @@ Features
 
 You can try our old version demo http://www.iiret.info , the new version is buiding now.
 
-All the needed jars can be downloaded from http://pan.baidu.com/share/link?shareid=377536&uk=2634814594
+All of the needed jars can be downloaded from http://pan.baidu.com/share/link?shareid=377536&uk=2634814594
 
 Thanks
 ========
 
 Thanks to Ansj (A Chinese Tokenizer https://github.com/ansjsun/ansj_seg)
+
+DB-IIR Lab Renmin University of China (http://iir.ruc.edu.cn)
 
 
 
