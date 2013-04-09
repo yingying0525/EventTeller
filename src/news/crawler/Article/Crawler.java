@@ -62,6 +62,9 @@ public class Crawler {
 	private Map<String,Integer> DDF_word_num;
 	
 	
+	/**
+	 * load TDF file to memory
+	 */
 	private void initTDF(){
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(TDF_Path));
@@ -212,6 +215,10 @@ public class Crawler {
 		}
 	}
 	
+	/**
+	 * combine ddf data in memory with data in DB
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	private List<Ddf> CombineDBWithMemory(){
 		List<Ddf> updates = new ArrayList<Ddf>();
@@ -240,9 +247,12 @@ public class Crawler {
 			}
 			String out = util.Util.DdfMapToStr(ddf_words);
 			today.setWords(out);
-			today.setDocnum(today.getDocnum() + DDF_doc_num.get(day));
-			today.setWordnum(today.getWordnum() + DDF_word_num.get(day));
+			today.setWordnum(ddf_words.size());
 			updates.add(today);
+		}
+		for(int i = 0 ; i< updates.size();i++){
+			int docnum = DDF_doc_num.get(updates.get(i).getDay()) + updates.get(i).getDocnum();
+			updates.get(i).setDocnum(docnum);
 		}
 		return updates;
 	}

@@ -133,7 +133,7 @@ public class MixtureModel {
 	}
 	
 	private void init(){
-		initWords("D:\\v-quzhao\\test\\tianyi");
+		initWords("D:\\ETT\\tianyi");
 		initPara();
 	}
 	
@@ -223,7 +223,6 @@ public class MixtureModel {
 				}
 				phi[i][t] = tmp_s / tmp_pws[t];
 				if(phi[i][t] == 0){
-					System.out.println(tmp_s + "\t" + tmp_pws[t] + "\t" + t + "\t" + WordsIdMap.get(i));
 				}
 			}
 		}		
@@ -248,7 +247,6 @@ public class MixtureModel {
 						}
 					}
 				}
-//				System.out.println(max + "\t" + WordsIdMap.get(index));
 				keys[t][j] = max;
 				vals[t][j] = index;
 			}
