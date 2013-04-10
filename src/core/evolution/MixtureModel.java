@@ -19,13 +19,15 @@ public class MixtureModel {
 	///stop condition
 	public double Eps = 0.01;
 	///max iterate number
-	public int MaxIteration = 1000;	
+	public int MaxIteration = 300;	
 	//background distribution weight
 	public double Lamda = 0.95;
 	//how many themes
 	public int K = 10;
 	//theme weight for every document (number of article) * (k theme)
 	public double pi[][];
+	//for t-1 pi (used to estimate)
+	public double tphi[][];
 	//word distribution for themes (number of words) * (k theme) 
 	public double phi[][];	
 	//all the words and TF of articles
@@ -39,8 +41,9 @@ public class MixtureModel {
 	
 	private long TotalWordNum;
 	
-	
-	
+	//tmp
+	private List<String> contents = new ArrayList<String>();
+	private List<String> titles = new ArrayList<String>();
 	
 	public MixtureModel(){
 		
@@ -71,6 +74,8 @@ public class MixtureModel {
 				Map<String,Integer> articleWords = new HashMap<String,Integer>();
 				String[] its = line.split("\t");
 				String[] words = its[3].split(" ");
+				titles.add(its[2]);
+				contents.add(its[3]);
 				for(String wd : words){
 					if(wd.length() == 0)
 						continue;
@@ -103,6 +108,7 @@ public class MixtureModel {
 		Random rd = new Random(new Date().getTime());
 		/// 0 stands for background
 		pi = new double[Words.size()][K + 1];
+		tphi = new double[Background.size() + 1][K + 1];
 		phi = new double[Background.size() + 1][K + 1];
 		///init of pi
 		for(int i = 0 ;i < Words.size();i++){
@@ -137,8 +143,9 @@ public class MixtureModel {
 		initPara();
 	}
 	
-	
-	
+	/**
+	 * update phi and pi
+	 */
 	private void updatePara(){
 		
 		////update the p(z_dw = j) and p(z_dw = B)
@@ -175,8 +182,6 @@ public class MixtureModel {
 			}
 			p_dw_t.add(dw_t);
 		}
-		
-		
 		///update pi
 		for(int i = 0 ; i< Words.size() ; i++){
 			Map<String,Integer> wds = Words.get(i);
@@ -222,12 +227,30 @@ public class MixtureModel {
 					}
 				}
 				phi[i][t] = tmp_s / tmp_pws[t];
-				if(phi[i][t] == 0){
-				}
 			}
 		}		
 	}
 	
+	/**
+	 * tpa stands for t-1 iteration phi and tpb stands for t iteration phi 
+	 * @param tpa
+	 * @param tpb
+	 * @return
+	 */
+	private double estimator(double tpa[][] , double tpb[][]){
+		double result = 0.0;
+		for(int i = 0 ; i<Background.size();i++){
+			for(int j = 1; j<= K ;j++){
+				result += Math.abs(tpa[i][j] - tpb[i][j]);
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * get top n words from the K distributions
+	 * @param N
+	 */
 	private void printTopWords(int N){
 		//sort
 		double[][] keys = new double[K + 1][ N ];
@@ -237,12 +260,12 @@ public class MixtureModel {
 				double max = -1;
 				int index = 0;
 				for(int i = 0 ; i< WordsIdMap.size(); i++){
-					if(phi[i][t] > max && j != 0 &&	phi[i][t] < keys[t][j - 1]){
-						max = phi[i][t];
+					if(tphi[i][t] > max && j != 0 &&	tphi[i][t] < keys[t][j - 1]){
+						max = tphi[i][t];
 						index = i;
 					}else if(j == 0){
-						if(phi[i][t] > max){
-							max = phi[i][t];
+						if(tphi[i][t] > max){
+							max = tphi[i][t];
 							index = i;
 						}
 					}
@@ -259,19 +282,53 @@ public class MixtureModel {
 		}
 	}
 	
+	/**
+	 * get k theme distribution (phi[][])
+	 */
+	private void getKThemDist(){
+		double diff = Double.MAX_VALUE;
+		init();
+		System.out.println("init ok ... ");
+		for(int i = 0 ; i< 2000 && diff >= Eps;i++){
+			util.Util.ArrayCopy(tphi, phi, Background.size(), K + 1);
+			updatePara();	
+			diff = estimator(tphi,phi);
+			System.out.println("iteration... " + i + "\t" + diff);
+		}
+		printTopWords(20);
+	}
+	
+	/**
+	 * get articles' theme from pi
+	 * @return
+	 */
+	private int[] getArticleTheme(){
+		int result[] = new int[Words.size()];
+		for(int i = 0 ;i<Words.size();i++){
+			double max = -1;
+			for(int j = 1 ; j <= K ;j++){
+				if(pi[i][j] > max){
+					max = pi[i][j];
+					result[i] = j;
+				}
+			}
+		}	
+		return result;
+	}
+	
+	
 	public static void main(String[] args){
 	
 		MixtureModel mm = new MixtureModel();
-		mm.init();
-		mm.printTopWords(20);
-		System.out.println("init ok ... ");
-		for(int i = 0 ; i< 2000;i++){
-			System.out.println("iteration... " + i);
-			mm.updatePara();			
-			mm.printTopWords(10);
-			System.out.println("-------------------");
+		mm.getKThemDist();
+//		int num = 0;
+		int athemes[] = mm.getArticleTheme();
+		for(int i = 0 ;i < mm.Words.size();i++){
+			if(athemes[i] > 0){
+//				num++;
+				System.out.println(athemes[i] + "\t" + mm.titles.get(i));
+			}
 		}
-		
 	}
 
 }

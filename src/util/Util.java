@@ -238,6 +238,12 @@ public class Util {
 		return result.toString();
 	}
 
-	
+	public static void ArrayCopy(double a[][] , double b[][], int N, int M){
+		for(int i = 0 ;i<N;i++){
+			for(int j = 0 ;j<M;j++){
+				a[i][j] = b[i][j];
+			}
+		}
+	}
 
 }
