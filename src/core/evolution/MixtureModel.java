@@ -18,12 +18,14 @@ public class MixtureModel {
 	
 	///stop condition
 	public double Eps = 0.01;
+	///for smoothing
+	private double Smooth = 1E-20;
 	///max iterate number
-	public int MaxIteration = 300;	
+	public int MaxIteration = 200;	
 	//background distribution weight
 	public double Lamda = 0.95;
 	//how many themes
-	public int K = 10;
+	public int K = 5;
 	//theme weight for every document (number of article) * (k theme)
 	public double pi[][];
 	//for t-1 pi (used to estimate)
@@ -103,7 +105,7 @@ public class MixtureModel {
 		}
 	}
 	
-	//initialize some random value to arguments
+	//initialize some random values for arguments
 	private void initPara(){
 		Random rd = new Random(new Date().getTime());
 		/// 0 stands for background
@@ -158,6 +160,7 @@ public class MixtureModel {
 				String wd = it_wds.next();
 				List<Double> ts = new ArrayList<Double>();
 				double t_t = 0.0;
+				double smooth = 0.0;
 				double[] tmp_ts =new double[K+1]; 
 				for(int t = 0 ; t<= K ; t++){
 					//for background 
@@ -171,17 +174,23 @@ public class MixtureModel {
 						ts.add(up / down);
 					}else{
 						double up = pi[i][t] * phi[IdWordsMap.get(wd)][t];
-						t_t += up;
+						if(up == 0){
+							up = Smooth;
+							smooth= Smooth * K;
+						}else{
+							t_t += up;
+						}
 						tmp_ts[t] = up;
 					}
 				}
-				for(int t = 1 ;t <= K ;t++){
-					ts.add(tmp_ts[t] / t_t);
+				for(int t = 1 ;t<= K ;t++){
+					ts.add(tmp_ts[t]/ (t_t + smooth));
 				}
 				dw_t.put(wd, ts);
 			}
 			p_dw_t.add(dw_t);
 		}
+		
 		///update pi
 		for(int i = 0 ; i< Words.size() ; i++){
 			Map<String,Integer> wds = Words.get(i);
@@ -321,11 +330,9 @@ public class MixtureModel {
 	
 		MixtureModel mm = new MixtureModel();
 		mm.getKThemDist();
-//		int num = 0;
 		int athemes[] = mm.getArticleTheme();
 		for(int i = 0 ;i < mm.Words.size();i++){
 			if(athemes[i] > 0){
-//				num++;
 				System.out.println(athemes[i] + "\t" + mm.titles.get(i));
 			}
 		}
