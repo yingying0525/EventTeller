@@ -9,15 +9,18 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 import news.crawler.Article.Extractor;
@@ -132,12 +135,12 @@ public class test {
 	}
 	
 	
-	@SuppressWarnings({ "unused", "deprecation" })
-	private static void testl(){
+	@SuppressWarnings({ "unused"})
+	private static void TIMethod(){
 		Map<String,Integer> IDF = new HashMap<String,Integer>();
 		int total_word = 0;
 		List<html> htmls = new ArrayList<html>();
-		String file = "D:\\ETT\\test\\tianyi";
+		String file = "D:\\ETT\\tianyi_df";
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = "";
@@ -172,35 +175,23 @@ public class test {
 			e.printStackTrace();
 		}
 		
-		for(html hl : htmls){
+		
+		for(int i = htmls.size() -1; i>=0; i--){
 			double max_sim = -1.0;
-			int max_id = 0;
-			String max_title = "";
-			for(html hs : htmls){
-				if(hs.id == hl.id )
-					continue;
-				double time_cha =  (hl.time.getTime() - hs.time.getTime())/1000/60 /60 /24;
-//				if( time_cha <= 1 || time_cha > 2)
-//					continue;
-				if(time_cha <= 0)
-					continue;
-				
-//				System.out.println(time_cha);
-				
-				
-				double sim = util.Similarity.SimilarityWithIDF(hl.words, hs.words,IDF) ;
+			int max_id = -1;
+			for(int j = i -1 ; j>=0;j--){
+				double sim = util.Similarity.SimilarityWithIDF(htmls.get(i).words, htmls.get(j).words,IDF) ;
 				if(sim > max_sim){
 					max_sim = sim;
-					max_id = hs.id;
-					max_title = hs.title;
+					max_id = j;
 				}
 			}
-			if(max_sim < 0.2)
+			if(max_sim < 0.15)
 				continue;
-			String var = "var t" + String.valueOf(hl.id) + "= graph.newNode({label: 't" + hl.time.toLocaleString() + "'});";
-			String edgs = "graph.newEdge(t" + max_id + ",t" +  hl.id+",{label: '" + max_sim + "'});";
+			String var = "var t" + i + "= graph.newNode({label: 't" + i + "'});";
+			String edgs = "graph.newEdge(t" + max_id + ",t" +  i+",{label: '" + max_sim + "'});";
 			System.out.println(edgs);
-		}	
+		}
 		
 	}
 	
@@ -248,13 +239,96 @@ public class test {
 		bw.close();
 	}
 	
+	
+	@SuppressWarnings("unused")
+	private void resort() throws IOException{
+		String path = "D:\\ETT\\tianyi";
+		String outpath = "D:\\ETT\\tianyi_sort";
+		List<String> lines = new ArrayList<String>();
+		Map<Integer,Date> dates = new HashMap<Integer,Date>();
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(outpath));
+		String line = "";
+		
+		while((line = br.readLine())!=null){
+			String[] its = line.split("\t");
+			
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");        
+			Date dt = new Date();   
+			// String转Date   
+			try {   
+			    dt = format.parse(its[0]);  // Thu Jan 18 00:00:00 CST 2007   
+			} catch (ParseException e) {   
+			    e.printStackTrace();   
+			}   
+			dates.put(lines.size(), dt);
+			lines.add(line);
+		}
+		for(int i = 0 ; i<lines.size();i++){
+			for(int j = i +1;j <lines.size();j++){
+				if(dates.get(j).getTime() - dates.get(i).getTime() < 0){
+					String tmp = lines.get(i);
+					lines.set(i, lines.get(j));
+					lines.set(j, tmp);
+					Date tmpd = dates.get(i);
+					dates.put(i, dates.get(j));
+					dates.put(j, tmpd);
+				}
+			}
+			System.out.println(dates.get(i));
+		}
+		for(int i = 0 ;i < lines.size();i++){
+			bw.write(i + "\t" + lines.get(i) + "\n");
+		}
+		br.close();
+		bw.close();
+	}
+	
+	@SuppressWarnings("unused")
+	private void FindByDf() throws IOException{
+		String path = "D:\\ETT\\tianyi";
+		String outpath = "D:\\ETT\\tianyi_df";
+		int totalDocNum = 0;
+		Map<String,Integer> DF = new HashMap<String,Integer>();
+		List<String> lines = new ArrayList<String>();
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(outpath));
+		String line = "";
+		while((line = br.readLine())!=null){
+			StringBuffer sb = new StringBuffer();
+			Set<String> has = new HashSet<String>();
+			String[] its = line.split("\t");
+			totalDocNum++;
+			String[] words = its[3].split(" ");
+			for(String wd : words){
+				if(!DF.containsKey(wd) || DF.get(wd) < totalDocNum /2){
+					sb.append(wd + " ");
+				}
+			}			
+			for(String word : words){
+				if(!DF.containsKey(word)){
+					DF.put(word, 1);
+				}else{
+					if(!has.contains(word)){
+						DF.put(word, DF.get(word) + 1);
+						has.add(word);
+					}
+				}
+			}
+			lines.add(its[1] + "\t" + its[2] + "\t" + sb.toString());
+			bw.write(its[0] + "\t" + its[1] + "\t" + its[2] + "\t" + sb.toString() + "\n");
+		}
+		br.close();
+		bw.close();
+	}
 
+	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws IOException{
 
 
-		testl();
-//		download();
-
+		test ts = new test();
+		ts.TIMethod();
+		
 		
 	}
 }

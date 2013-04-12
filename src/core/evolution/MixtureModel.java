@@ -141,7 +141,7 @@ public class MixtureModel {
 	}
 	
 	private void init(){
-		initWords("D:\\ETT\\tianyi");
+		initWords("D:\\ETT\\tianyi_df");
 		initPara();
 	}
 	
@@ -315,7 +315,7 @@ public class MixtureModel {
 		int result[] = new int[Words.size()];
 		for(int i = 0 ;i<Words.size();i++){
 			double max = -1;
-			for(int j = 1 ; j <= K ;j++){
+			for(int j = 0 ; j <= K ;j++){
 				if(pi[i][j] > max){
 					max = pi[i][j];
 					result[i] = j;
