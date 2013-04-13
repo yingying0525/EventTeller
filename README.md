@@ -4,6 +4,7 @@ EventTeller
 EventTeller is an Event Detection and Evolution System.
 
 It crawls more than 30 news sites in China real-time (the time interval is 20 minutes now).
+
 The details about which website we crawled can be found in Wiki page.
 
 Features
@@ -26,6 +27,12 @@ Thanks
 Thanks to Ansj (A Chinese Tokenizer https://github.com/ansjsun/ansj_seg)
 
 DB-IIR Lab Renmin University of China (http://iir.ruc.edu.cn)
+
+
+Attations
+========
+
+For some commits with comments of !-Test-! is not functional changes, but some test changes.
 
 
 
