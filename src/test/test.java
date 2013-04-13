@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 
 import news.crawler.Article.Extractor;
@@ -71,13 +72,14 @@ class html {
 	public String title;
 	public int id;
 	public Map<Word,Double> words;
+	public Map<Word,Double> contents;
 }
 
 
 
 public class test {
 	
-//1274342
+
 	
 	@SuppressWarnings("unchecked")
 	public static List<Topic> getTopicFromDB(int id){
@@ -89,7 +91,6 @@ public class test {
 		session.close();
 		return results;
 	}
-	
 	
 	@SuppressWarnings("unchecked")
 	public static Event getEventById(String id){
@@ -104,7 +105,6 @@ public class test {
 		}
 		return result;
 	}
-
 	
 	@SuppressWarnings("unused")
 	private void ldatest(String file){
@@ -134,13 +134,11 @@ public class test {
 		}
 	}
 	
-	
-	@SuppressWarnings({ "unused"})
-	private static void TIMethod(){
+	private void TIMethod(){
 		Map<String,Integer> IDF = new HashMap<String,Integer>();
-		int total_word = 0;
+//		int total_word = 0;
 		List<html> htmls = new ArrayList<html>();
-		String file = "D:\\ETT\\tianyi_df";
+		String file = "D:\\ETT\\tianyi";
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = "";
@@ -151,7 +149,8 @@ public class test {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 				ht.time = sdf.parse(its[1]);
 				ht.title = its[2];
-				ht.words = util.ChineseSplit.SplitStrWithPosDoubleTF(its[3]);
+				String[] pas = its[3].split("!##!");
+				ht.words = util.ChineseSplit.SplitStrWithPosDoubleTF(pas[1] + " " + ht.title);
 				Iterator<Word> it_words = ht.words.keySet().iterator();
 				while(it_words.hasNext()){
 					Word it_wd = it_words.next();
@@ -165,13 +164,10 @@ public class test {
 			}
 			br.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -181,69 +177,47 @@ public class test {
 			int max_id = -1;
 			for(int j = i -1 ; j>=0;j--){
 				double sim = util.Similarity.SimilarityWithIDF(htmls.get(i).words, htmls.get(j).words,IDF) ;
-				if(sim > max_sim){
+				if(sim > max_sim ){
 					max_sim = sim;
 					max_id = j;
 				}
 			}
 			if(max_sim < 0.15)
 				continue;
-			String var = "var t" + i + "= graph.newNode({label: 't" + i + "'});";
+//			String var = "var t" + i + "= graph.newNode({label: 't"+i +" "+ htmls.get(i).title + "'});";
 			String edgs = "graph.newEdge(t" + max_id + ",t" +  i+",{label: '" + max_sim + "'});";
 			System.out.println(edgs);
 		}
 		
 	}
 	
-	
-	
 	@SuppressWarnings({ "unused", "deprecation" })
-	private static void download() throws IOException{
+	private void download() throws IOException{
 		int num = 0;
 		String file = "d:\\ETT\\";
 		BufferedReader br = new BufferedReader(new FileReader(file + "url.txt"));
-		BufferedWriter bw = new BufferedWriter(new FileWriter(file + "test\\tianyi"));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file + "tianyi_raw"));
 		String line = "";
 		while((line = br.readLine()) != null){
 			num++;
 			String url = line;
 			Extractor etor = new Extractor(url);
 			String content = etor.getContent();
-			
-//			List<String> twords = util.ChineseSplit.SplitStr(etor.getTitle());
-//			String[] its = content.split("!##!");
-//			StringBuilder sb = new StringBuilder();
-//			for(String it : its){
-//				boolean check = false;
-//				for(String twd : twords){
-//					if(it.contains(twd)){
-//						check = true;
-//					}
-//				}
-//				if(check){
-//					sb.append(it + " ");
-//				}
-//			}
-//			List<String> words = util.ChineseSplit.SplitStr(sb.toString());
 			List<String> words = util.ChineseSplit.SplitStr(content);
 			if(words.size() == 0)
 				continue;
-			bw.write(num + "\t" + etor.getPublishTime().toLocaleString() + "\t" + etor.getTitle()+"\t");
-			for(String wd : words){
-				bw.write(wd + " ");
-			}
+			bw.write(etor.getPublishTime().toLocaleString() + "\t" + etor.getTitle()+"\t" + etor.getContent());
 			bw.write("\n");
 			System.out.println(url);
 		}
 		br.close();
 		bw.close();
+		resort();
 	}
 	
-	
-	@SuppressWarnings("unused")
 	private void resort() throws IOException{
-		String path = "D:\\ETT\\tianyi";
-		String outpath = "D:\\ETT\\tianyi_sort";
+		String path = "D:\\ETT\\tianyi_raw";
+		String outpath = "D:\\ETT\\tianyi";
 		List<String> lines = new ArrayList<String>();
 		Map<Integer,Date> dates = new HashMap<Integer,Date>();
 		BufferedReader br = new BufferedReader(new FileReader(path));
@@ -252,10 +226,9 @@ public class test {
 		
 		while((line = br.readLine())!=null){
 			String[] its = line.split("\t");
-			
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");        
 			Date dt = new Date();   
-			// String转Date   
+			// StringToDate   
 			try {   
 			    dt = format.parse(its[0]);  // Thu Jan 18 00:00:00 CST 2007   
 			} catch (ParseException e) {   
@@ -322,13 +295,55 @@ public class test {
 		bw.close();
 	}
 
-	@SuppressWarnings("static-access")
+	@SuppressWarnings("unused")
+	private void DFDistribution() throws IOException{
+		List<Map<Double,Integer>> dfd = new ArrayList<Map<Double,Integer>>();
+		List<Map<Double,String>> dfw = new ArrayList<Map<Double,String>>();
+		Map<String,Integer> df = new HashMap<String,Integer>();
+		String file_in = "D:\\ETT\\tianyi_df";
+		String file_out = "D:\\ETT\\tianyi";
+		List<String> lines = util.Util.FileToLines(file_in);
+		for(String line : lines){
+			Map<String,Integer> checks = new HashMap<String,Integer>();
+			Map<Double,Integer> tmp = new TreeMap<Double,Integer>();
+			Map<Double,String> tmpw = new TreeMap<Double,String>();
+			String[] its = line.split("\t");
+			String[] words = its[3].split(" ");
+			for(int i = 0 ;i < words.length;i++){
+				double index = (i + 1) / (double)words.length;
+				if(!checks.containsKey(words[i])){
+					if(df.containsKey(words[i])){
+						tmp.put(index, df.get(words[i]) + 1);
+						df.put(words[i], df.get(words[i]) + 1);
+					}else{
+						tmp.put(index, 1);
+						df.put(words[i], 1);
+					}
+					tmpw.put(index, words[i]);
+					checks.put(words[i],tmp.get(index));
+				}
+			}
+			dfd.add(tmp);
+			dfw.add(tmpw);
+		}
+		int num = 0;
+		for(Map<Double,Integer> tdf : dfd){
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file_out + "_" + num));
+			Iterator<Double> its = tdf.keySet().iterator();
+			while(its.hasNext()){
+				Double key = its.next();
+				int val = tdf.get(key);
+				bw.write(dfw.get(num).get(key) + "\t" + key + "\t" + val + "\n");
+			}
+			bw.close();
+			num++;
+		}
+	}
+
+	
 	public static void main(String[] args) throws IOException{
-
-
 		test ts = new test();
 		ts.TIMethod();
-		
 		
 	}
 }

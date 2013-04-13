@@ -284,9 +284,9 @@ public class Crawler {
 				DDF_doc_num.put(day, 1);
 			}
 			DDF.put(day, tmp_day_words);
-			List<Ddf> updates = CombineDBWithMemory();
-			util.Util.updateDB(updates);
 		}
+		List<Ddf> updates = CombineDBWithMemory();
+		util.Util.updateDB(updates);
 	}
 	
 	private void runTask(){
@@ -323,7 +323,7 @@ public class Crawler {
 				System.out.println(url.getId());
 			}
 		}
-		
+		///update the IDF and DDF
 		updateDDF(update_idf);
 		updateTDF(update_idf);
 		///update DB
@@ -333,7 +333,6 @@ public class Crawler {
 		util.Util.updateDB(urls);
 		//update index	
 		ati.update(update_index);
-		///update the IDF and DDF
 		//for gc
 		update_idf = null;
 		urls = null;
@@ -349,6 +348,9 @@ public class Crawler {
 			ac.mem_ats = null;
 			ac.mem_index = null;
 			ac.update_index = null;
+			ac.DDF = null;
+			ac.DDF_doc_num = null;
+			ac.DDF_word_num = null;
 			ac = null;
 			try {
 				System.out.println("now end of one crawler,sleep for:"+Const.AritcleSleepTime /1000 /60 +" minutes. "+new Date().toString());
