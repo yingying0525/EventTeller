@@ -306,6 +306,7 @@ public class Crawler {
 			Extractor etor = new Extractor(url.getUrl());			
 			Article at = new Article();			
 			at = etor.getArticleFromUrl(url);	
+			at.setSubtopic(url.getSubtopicId());
 			Map<String,Integer> at_ct_words = ChineseSplit.SplitStrWithPosTFS(at.getContent());
 			ArticleContent ac = new ArticleContent();
 			ac.at = at;

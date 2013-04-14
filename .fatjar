@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Sun Apr 14 22:15:14 CST 2013
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=ArticleCrawler.jar
+manifest.mergeall=true
+manifest.mainclass=news.crawler.Article.Crawler
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=

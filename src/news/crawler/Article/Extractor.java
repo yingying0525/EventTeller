@@ -434,10 +434,10 @@ public class Extractor {
 		if(rawTitle.indexOf("--") > 0){
 			rawTitle = rawTitle.substring(0, rawTitle.indexOf("--"));
 		}
-		if(rawTitle.indexOf("-") > 0){
-			rawTitle = rawTitle.substring(0, rawTitle.indexOf("-"));
-		}
-		
+		//no use now
+//		if(rawTitle.indexOf("-") > 0){
+//			rawTitle = rawTitle.substring(0, rawTitle.indexOf("-"));
+//		}
 		return rawTitle;
 	}
 		
