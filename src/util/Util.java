@@ -258,6 +258,7 @@ public class Util {
 			while((line = br.readLine())!=null){
 				result.add(line);
 			}
+			br.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
