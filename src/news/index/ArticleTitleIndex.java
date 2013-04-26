@@ -40,9 +40,9 @@ public class ArticleTitleIndex extends Index{
 		this.IndexPath = path;
 	}
 	
-	public int checkSameInIndex(Article at){
+	public Article checkSameInIndex(Article at){
 		
-		int result = -1;
+		Article result = null;
 		double score = -1;
 		List<Word> words = ChineseSplit.SplitStrWithPos(at.getTitle());
 		StringBuilder tmpQuery = new StringBuilder();
@@ -51,7 +51,7 @@ public class ArticleTitleIndex extends Index{
 		}		
 		//no useful information of title
 		if(tmpQuery.length() == 0){
-			return -2;
+			return null;
 		}
 		ArticleTitleIndex ati = new ArticleTitleIndex(IndexPath);
 		List<Article> sims = ati.search(tmpQuery.toString(), false);	
@@ -59,7 +59,7 @@ public class ArticleTitleIndex extends Index{
 			if(tmpat.getId() == at.getId())
 				continue;
 			if(tmpat.getTitle().equals(at.getTitle())){
-				result = tmpat.getId();
+				result = tmpat;
 				break;
 			}		
 			///article index only contains id and title.
@@ -69,7 +69,7 @@ public class ArticleTitleIndex extends Index{
 				score = util.Similarity.ContentOverlap(tmpatdb.getContent(),at.getContent());
 			}
 			if(score > 0.85){
-				result = tmpat.getId();
+				result = tmpatdb;
 				break;
 			}
 		}

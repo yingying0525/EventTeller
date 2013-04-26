@@ -138,7 +138,6 @@ public class Crawler {
 					}
 					tmp_at.setNumber(tmp_at.getNumber() + 1);
 					tmp_at.setSameurls(tmp_at.getSameurls() + " " + at.getId());
-					System.out.println(tmp_at.getId() + "\t" + tmp_at.getSameurls());
 					mem_ats.put(tmp_at.getId(), tmp_at);
 					System.out.println("find in memory..." + tmp_at.getId() + "\t" + at.getId());
 					break;
@@ -151,19 +150,13 @@ public class Crawler {
 	//find same article from index in the disk
 	private void FindInIndex(ArticleContent ac){
 		Article at = ac.at;
-		int sameid = ati.checkSameInIndex(at);
-		if(sameid > 0){
-			Article sameat = new Article();
-			if(mem_ats.containsKey(sameid)){
-				sameat = mem_ats.get(sameid);
-			}else{
-				sameat = util.Util.getArticleById(sameid);
-			}
+		Article sameat = ati.checkSameInIndex(at);
+		if(sameat != null){
 			sameat.setNumber(sameat.getNumber() + 1);
 			sameat.setSameurls(sameat.getSameurls() + " " + at.getId());
 			mem_ats.put(sameat.getId(), sameat);
-			System.out.println("find " + sameid + " --- " + at.getId() + " -- " + at.getTitle());
-		}else if(sameid != -2){
+			System.out.println("find in index " + sameat.getId() + " --- " + at.getId() + " -- ");
+		}else if(sameat == null){
 			at.setNumber(0);
 			at.setSameurls("");
 			at.setTaskstatus(Const.TASKID.get("UrlToArticle"));				
@@ -176,7 +169,6 @@ public class Crawler {
 						tmp_ids = mem_index.get(tmp_word);
 					}
 					tmp_ids.add(at.getId());
-					mem_index.put(tmp_word, tmp_ids);
 				}
 			}
 			update_index.add(at);
