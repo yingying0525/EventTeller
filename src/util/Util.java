@@ -1,9 +1,5 @@
 package util;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -248,25 +244,6 @@ public class Util {
 				a[i][j] = b[i][j];
 			}
 		}
-	}
-	
-	public static List<String> FileToLines(String in){
-		List<String> result = new ArrayList<String>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(in));
-			String line = "";
-			while((line = br.readLine())!=null){
-				result.add(line);
-			}
-			br.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
 	}
 
 }

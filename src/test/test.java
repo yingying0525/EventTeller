@@ -134,7 +134,7 @@ public class test {
 		}
 	}
 	
-	private void TIMethod(){
+	public void TIMethod(){
 		Map<String,Integer> IDF = new HashMap<String,Integer>();
 //		int total_word = 0;
 		List<html> htmls = new ArrayList<html>();
@@ -302,7 +302,7 @@ public class test {
 		Map<String,Integer> df = new HashMap<String,Integer>();
 		String file_in = "D:\\ETT\\tianyi_df";
 		String file_out = "D:\\ETT\\tianyi";
-		List<String> lines = util.Util.FileToLines(file_in);
+		List<String> lines = util.FileUtil.readAllToList(file_in);
 		for(String line : lines){
 			Map<String,Integer> checks = new HashMap<String,Integer>();
 			Map<Double,Integer> tmp = new TreeMap<Double,Integer>();
@@ -341,9 +341,18 @@ public class test {
 	}
 
 	
+	public Double getsimtest(){
+		String path = "D:\\ETT\\";
+		String contenta = util.FileUtil.readAll(path + "a.txt").toString();
+		String contentb = util.FileUtil.readAll(path + "b.txt").toString();
+		Double score = util.Similarity.ContentOverlap(contenta, contentb);
+		System.out.println(score);
+		return score;		
+	}
+	
 	public static void main(String[] args) throws IOException{
 		test ts = new test();
-		ts.TIMethod();
 		
+		ts.getsimtest();
 	}
 }

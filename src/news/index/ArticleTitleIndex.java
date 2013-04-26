@@ -61,8 +61,13 @@ public class ArticleTitleIndex extends Index{
 			if(tmpat.getTitle().equals(at.getTitle())){
 				result = tmpat.getId();
 				break;
-			}					
-			score = util.Similarity.ContentOverlap(tmpat.getContent(),at.getContent());
+			}		
+			///article index only contains id and title.
+			/// use id to get article from db
+			Article tmpatdb = util.Util.getArticleById(tmpat.getId());
+			if(tmpatdb != null){
+				score = util.Similarity.ContentOverlap(tmpatdb.getContent(),at.getContent());
+			}
 			if(score > 0.85){
 				result = tmpat.getId();
 				break;
@@ -83,7 +88,6 @@ public class ArticleTitleIndex extends Index{
 	        	Document doc = new Document();
 	   		 	doc.add(new StringField("id", at.getId().toString(), Store.YES));  
 	            doc.add(new TextField("title", at.getTitle(), Store.YES));  
-//	            doc.add(new StringField("time", at.getCrawltime().toString(), Store.YES)); 
 				iwriter.addDocument(doc);					
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -164,10 +168,8 @@ public class ArticleTitleIndex extends Index{
 	        }  
 	        reader.close();  
 		} catch (IOException e) {
-//			e.printStackTrace();
 			return results;
 		} catch (ParseException e) {
-//			e.printStackTrace();
 			return results;
 		} 
 		return results;
