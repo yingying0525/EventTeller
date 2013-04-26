@@ -58,19 +58,19 @@ public class ArticleTitleIndex extends Index{
 		for(Article tmpat : sims){
 			if(tmpat.getId() == at.getId())
 				continue;
-			if(tmpat.getTitle().equals(at.getTitle())){
-				result = tmpat;
-				break;
-			}		
 			///article index only contains id and title.
 			/// use id to get article from db
 			Article tmpatdb = util.Util.getArticleById(tmpat.getId());
 			if(tmpatdb != null){
+				if(tmpatdb.getTitle().equals(at.getTitle())){
+					result = tmpatdb;
+					break;
+				}		
 				score = util.Similarity.ContentOverlap(tmpatdb.getContent(),at.getContent());
-			}
-			if(score > 0.85){
-				result = tmpatdb;
-				break;
+				if(score > 0.85){
+					result = tmpatdb;
+					break;
+				}
 			}
 		}
 		return result;
@@ -153,7 +153,7 @@ public class ArticleTitleIndex extends Index{
 	        	AnsjAnalysis aas = new AnsjAnalysis();
 	  			QueryParser parser = new QueryParser(Version.LUCENE_40, "title", aas);
 	  			Query query = parser.parse(text);         
-	            topdocs=searcher.search(query, 100000);
+	            topdocs=searcher.search(query, 500);
 	        }    
 	        ScoreDoc[] scoreDocs=topdocs.scoreDocs;       
 	        for(int i=0; i < scoreDocs.length; i++) {  
