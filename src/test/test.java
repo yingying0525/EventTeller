@@ -38,9 +38,6 @@ import db.data.Word;
 
 
 
-//
-
-
 class DoubleWords{
 	public String words;
 	public int count;
@@ -72,7 +69,7 @@ class html {
 	public String title;
 	public int id;
 	public Map<Word,Double> words;
-	public Map<Word,Double> contents;
+	public String contents;
 }
 
 
@@ -136,7 +133,8 @@ public class test {
 	
 	public void TIMethod(){
 		Map<String,Integer> IDF = new HashMap<String,Integer>();
-//		int total_word = 0;
+		List<StringBuilder> events = new ArrayList<StringBuilder>();
+		List<List<Integer>> eventsids = new ArrayList<List<Integer>>();
 		List<html> htmls = new ArrayList<html>();
 		String file = "D:\\ETT\\tianyi";
 		try {
@@ -149,8 +147,8 @@ public class test {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 				ht.time = sdf.parse(its[1]);
 				ht.title = its[2];
-				String[] pas = its[3].split("!##!");
-				ht.words = util.ChineseSplit.SplitStrWithPosDoubleTF(pas[1] + " " + ht.title);
+				ht.contents = its[3];
+				ht.words = util.ChineseSplit.SplitStrWithPosDoubleTF(its[3] + " " + ht.title);
 				Iterator<Word> it_words = ht.words.keySet().iterator();
 				while(it_words.hasNext()){
 					Word it_wd = it_words.next();
@@ -171,22 +169,61 @@ public class test {
 			e.printStackTrace();
 		}
 		
+		///single link
+//		for(int i = htmls.size() -1; i>=0; i--){
+//			double max_sim = -1.0;
+//			int max_id = -1;
+//			for(int j = i -1 ; j>=0;j--){
+//				double sim = util.Similarity.SimilarityWithIDF(htmls.get(i).words, htmls.get(j).words,IDF) ;
+//				if(sim > max_sim ){
+//					max_sim = sim;
+//					max_id = j;
+//				}
+//			}
+//			if(max_sim < 0.15)
+//				continue;
+////			String var = "var t" + i + "= graph.newNode({label: 't"+i +" "+ htmls.get(i).title + "'});";
+//			String edgs = "graph.newEdge(t" + max_id + ",t" +  i+",{label: '" + max_sim + "'});";
+//			System.out.println(edgs);
+//		}
 		
-		for(int i = htmls.size() -1; i>=0; i--){
-			double max_sim = -1.0;
-			int max_id = -1;
-			for(int j = i -1 ; j>=0;j--){
-				double sim = util.Similarity.SimilarityWithIDF(htmls.get(i).words, htmls.get(j).words,IDF) ;
-				if(sim > max_sim ){
-					max_sim = sim;
-					max_id = j;
+		///single cluster
+		for(int i = 0; i<  htmls.size();i++){
+			
+			double maxscore = -1;
+			int maxevent =-1;
+			int num = 0;
+			
+			System.out.println(i + "\t" + events.size());
+			
+			for(StringBuilder event : events){
+				Map<Word,Double> etwords = util.ChineseSplit.SplitStrWithPosDoubleTF(event.toString());
+				double score =  util.Similarity.SimilarityWithIDF(htmls.get(i).words, etwords,IDF);
+				if(score > maxscore){
+					maxscore = score;
+					maxevent = num;
 				}
+				num++;
 			}
-			if(max_sim < 0.15)
-				continue;
-//			String var = "var t" + i + "= graph.newNode({label: 't"+i +" "+ htmls.get(i).title + "'});";
-			String edgs = "graph.newEdge(t" + max_id + ",t" +  i+",{label: '" + max_sim + "'});";
-			System.out.println(edgs);
+			if(maxscore > 0.3){
+				events.get(maxevent).append(htmls.get(i).contents);
+				eventsids.get(maxevent).add(i);
+			}else{
+				StringBuilder sbtmp = new StringBuilder();
+				sbtmp.append(htmls.get(i).contents);
+				events.add(sbtmp);
+				List<Integer> tids = new ArrayList<Integer>();
+				tids.add(i);
+				eventsids.add(tids);
+			}
+		}
+		
+		for(List<Integer> tid : eventsids){
+			System.out.println("--------------");
+			for(int td : tid){
+				System.out.println(htmls.get(td).title);
+			}
+			System.out.println("");
 		}
 		
 	}
@@ -353,6 +390,6 @@ public class test {
 	public static void main(String[] args) throws IOException{
 		test ts = new test();
 		
-		ts.getsimtest();
+		ts.TIMethod();
 	}
 }

@@ -149,6 +149,8 @@ public class ChineseSplit {
     	List<Word> tmps = SplitStrWithPos(text);
     	double total = 0.001;
     	for(Word tmp : tmps){
+    		if(tmp.getName().length() == 0)
+    			continue;
     		if(counts.containsKey(tmp.getName())){
     			counts.put(tmp.getName(), counts.get(tmp.getName())+1);
     		}else{
