@@ -67,7 +67,11 @@ public class ArticleTitleIndex extends Index{
 					break;
 				}		
 				score = util.Similarity.ContentOverlap(tmpatdb.getContent(),at.getContent());
-				if(score > 0.85){
+				if(score > 1.85){
+					tmpatdb.setContent(at.getContent());
+					tmpatdb.setTitle(at.getTitle());
+				}
+				if(score > 0.85 && score < 1.0 || score > 1.85){
 					result = tmpatdb;
 					break;
 				}

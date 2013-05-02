@@ -10,6 +10,8 @@ import db.data.Word;
 public class Similarity {
 
 	/**
+	 * if content_a is a substring of content_b , the results will be 1.x such as 1.9
+	 * else results will be 0.x such as 0.8
 	 * get the overlap of two content
 	 * @param content_a
 	 * @param content_b
@@ -21,24 +23,41 @@ public class Similarity {
 			return -1;
 		}
 		Map<String,Boolean> check =new HashMap<String,Boolean>();
+		Map<String,Boolean> check_b =new HashMap<String,Boolean>();
 		List<Word> words = ChineseSplit.SplitStrWithPos(content_a);
 		List<Word> words_b = ChineseSplit.SplitStrWithPos(content_b);
+		
 		for(Word wd : words){
 			check.put(wd.getName(),true);
 		}
-		
 		for(Word wd : words_b){
-			if(check.containsKey(wd.getName())){
-				if(check.get(wd.getName())){
-					hits++;
-					check.put(wd.getName(), false);
-				}			
-			}
+			check_b.put(wd.getName(),true);
 		}
-		if(check.size() == 0){
+		if(check.size() == 0 || check_b.size() == 0){
 			return 0;
 		}
-		return hits/check.size();
+		///for content_a small than content_b
+		if(words.size() < words_b.size() * 1.2){
+			for(Word wd : words){
+				if(check_b.containsKey(wd.getName())){
+					if(check_b.get(wd.getName())){
+						hits++;
+						check_b.put(wd.getName(), false);
+					}			
+				}
+			}
+			return 1 + hits/check.size();
+		}else{
+			for(Word wd : words_b){
+				if(check.containsKey(wd.getName())){
+					if(check.get(wd.getName())){
+						hits++;
+						check.put(wd.getName(), false);
+					}			
+				}
+			}
+			return hits/check_b.size();
+		}	
 	}
 	
 	public static double SimilarityOfTF(Map<Word,Double> arg1,Map<Word,Double> arg2){

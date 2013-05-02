@@ -131,7 +131,11 @@ public class Crawler {
 			if(mem_ats.containsKey(at_tmp_id)){
 				Article tmp_at = mem_ats.get(at_tmp_id);
 				score =  util.Similarity.ContentOverlap(tmp_at.getContent(),at.getContent());
-				if(score > 0.85){
+				if(score > 1.85){
+					tmp_at.setContent(at.getContent());
+					tmp_at.setTitle(at.getTitle());
+				}
+				if(score > 0.85 && score < 1.0 || score > 1.85){
 					mem_find = true;
 					if(at.getImgs().length() > 0 && tmp_at.getImgs().length() == 0){
 						tmp_at.setImgs(at.getImgs());
@@ -338,12 +342,6 @@ public class Crawler {
 			Crawler ac = new Crawler();
 			ac.runTask();
 			//for gc test
-			ac.mem_ats = null;
-			ac.mem_index = null;
-			ac.update_index = null;
-			ac.DDF = null;
-			ac.DDF_doc_num = null;
-			ac.DDF_word_num = null;
 			ac = null;
 			try {
 				System.out.println("now end of one crawler,sleep for:"+Const.AritcleSleepTime /1000 /60 +" minutes. "+new Date().toString());
