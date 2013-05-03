@@ -197,7 +197,7 @@ public class Extractor {
 				title = titles.get(0).text();
 			}				
 		}
-		return title;
+		return cleanTitle(title);
 	}
 	
 	private Date getDateFromStr(String time){
