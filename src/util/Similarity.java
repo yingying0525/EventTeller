@@ -82,7 +82,7 @@ public class Similarity {
 		return total_up / Math.sqrt(total_a) / Math.sqrt(total_b);
 	}
 	
-	public static double SimilarityWithIDF(Map<Word,Double> arg1,Map<Word,Double> arg2,Map<String,Integer> idf){
+	public static double SimilarityWithIDF(Map<Word,Double> arg1,Map<Word,Double> arg2,Map<String,Integer> idf , long totalDocNum){
 		Map<String,Double> checks = new HashMap<String,Double>();
 		double total_a = 0.001;
 		double total_b = 0.001;
@@ -90,14 +90,17 @@ public class Similarity {
 		Iterator<Word> it_a = arg1.keySet().iterator();
 		while(it_a.hasNext()){
 			Word key = it_a.next();
-			double idf_score = Math.log(idf.size()/ idf.get(key.getName()));
+			double idf_score = Math.log(totalDocNum / idf.get(key.getName()));
 			total_a += arg1.get(key) * arg1.get(key) * idf_score * idf_score;
 			checks.put(key.getName(),arg1.get(key));
 		}
 		Iterator<Word> it_b = arg2.keySet().iterator();
 		while(it_b.hasNext()){
 			Word key = it_b.next();
-			double idf_score = Math.log(idf.size()/ idf.get(key.getName()));
+			if(key.getName() == null || idf.get(key.getName()) == null){
+				continue;
+			}
+			double idf_score = Math.log(totalDocNum / idf.get(key.getName()));
 			if(checks.containsKey(key.getName())){
 				total_up += arg2.get(key) * checks.get(key.getName()) * Math.pow(idf_score, 2.0);
 			}
@@ -105,6 +108,5 @@ public class Similarity {
 		}
 		return total_up / Math.sqrt(total_a) / Math.sqrt(total_b);
 	}
-	
 	
 }

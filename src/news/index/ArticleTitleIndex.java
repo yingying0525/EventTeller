@@ -54,7 +54,7 @@ public class ArticleTitleIndex extends Index{
 			return null;
 		}
 		ArticleTitleIndex ati = new ArticleTitleIndex(IndexPath);
-		List<Article> sims = ati.search(tmpQuery.toString(), false);	
+		List<Article> sims = ati.search(tmpQuery.toString(), false,500);	
 		for(Article tmpat : sims){
 			if(tmpat.getId() == at.getId())
 				continue;
@@ -71,7 +71,7 @@ public class ArticleTitleIndex extends Index{
 					tmpatdb.setContent(at.getContent());
 					tmpatdb.setTitle(at.getTitle());
 				}
-				if(score > 0.85 && score < 1.0 || score > 1.85){
+				if(score > 0.85 && score <= 1.0 || score > 1.85){
 					result = tmpatdb;
 					break;
 				}
@@ -135,7 +135,7 @@ public class ArticleTitleIndex extends Index{
      * 查询 
      * @throws Exception 
      */       
-	public List<Article> search(String text,boolean single){  
+	public List<Article> search(String text,boolean single, int maxsize){  
 
     	Directory dir;
         List<Article> results = new ArrayList<Article>();
@@ -157,7 +157,7 @@ public class ArticleTitleIndex extends Index{
 	        	AnsjAnalysis aas = new AnsjAnalysis();
 	  			QueryParser parser = new QueryParser(Version.LUCENE_40, "title", aas);
 	  			Query query = parser.parse(text);         
-	            topdocs=searcher.search(query, 500);
+	            topdocs=searcher.search(query, maxsize);
 	        }    
 	        ScoreDoc[] scoreDocs=topdocs.scoreDocs;       
 	        for(int i=0; i < scoreDocs.length; i++) {  

@@ -42,6 +42,23 @@ public class Util {
 	}
 	
 	/**
+	 * @param hql
+	 * @return
+	 * @Description: get element from db
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> T getElementFromDB(String hql) {
+		Session session = new HSession().createSession();
+		Query query = session.createQuery(hql);	
+		List res = query.list();
+		session.close();
+		if(res.size() == 1){
+			return (T)res.get(0);
+		}
+		return null;
+	}
+	
+	/**
 	 * @param id
 	 * @return
 	 * @Description:from id to get article
