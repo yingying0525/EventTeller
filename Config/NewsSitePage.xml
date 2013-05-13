@@ -1113,4 +1113,249 @@
 			<BaseUrl>!no!</BaseUrl>
 		</NewsImg>
 	</Site>
+	
+	<!-- for some law sites -->
+	
+	<!-- 法律界 -->
+	<Site name="mylegist.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>aboutInfo</Class>
+			<Format>yyyy-mm-dd hh:mm</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Class>text</Class>
+			<Subtag index="4">p</Subtag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>img_wrapper</Class>
+			<Subtag index="0">img</Subtag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+		</NewsImg>
+	</Site>
+	<!-- 法邦网 -->
+	<Site name="fabao365.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>hxing</Class>
+			<Subtag index="0">font</Subtag>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Class>actime</Class>
+			<Format>yyyy年mm月dd日 hh:mm</Format>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>ztext pbodr</Class>
+			<Id>pcontent</Id>
+			<Subtag index="0">p</Subtag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>pcontent</Id>
+			<Class>ztext pbodr</Class>
+			<Subtag index="0">img</Subtag>
+			<LinkAtt>src</LinkAtt>
+		</NewsImg>
+	</Site>
+	<!-- 百家法坛 -->
+	<Site name="dffy.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>ph</Class>
+		</Title>
+		<Time>
+			<Tag>p</Tag>
+			<Class>xg1</Class>
+			<Format>yyyy-mm-dd hh:mm</Format>
+		</Time>
+		<Content>
+			<Tag>td</Tag>
+			<Id>article_content</Id>
+			<Subtag index="0">span</Subtag>
+			<Subtag index="1">div</Subtag>
+		</Content>
+		<NewsImg>
+			<Tag>a</Tag>
+			<Subtag index="0">img</Subtag>
+			<LinkAtt>src</LinkAtt>
+		</NewsImg>
+	</Site>
+	<!-- 法制网 -->
+	<Site name="legaldaily.com.cn">
+		<Title>
+			<Tag>td</Tag>
+			<Class>f22 b black</Class>
+		</Title>
+		<Time>
+			<Tag>td</Tag>
+			<Class>f12 black</Class>
+			<Format>yyyy-mm-dd hh:mm:ss</Format>
+		</Time>
+		<Source>
+			<Tag>td</Tag>
+			<Class>f12 black</Class>
+			<Subtag index="0">a</Subtag>
+			<LinkAtt>href</LinkAtt>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>ShowContent</Id>
+			<Subtag index="0">p</Subtag>
+		</Content>
+		<NewsImg>
+			<Tag>center</Tag>
+			<Subtag index="0">img</Subtag>
+			<LinkAtt>src</LinkAtt>
+		</NewsImg>
+	</Site>
+	<!-- 正义网 -->
+	<Site name="jcrb.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Format>yyyy-mm-dd hh:mm:ss</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Id>about</Id>
+			<Subtag index="2">span</Subtag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>fontzoom</Id>
+			<Class>mainContent</Class>
+			<Subtag index="1">p</Subtag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>Custom_UnionStyle</Class>
+			<Subtag index="0">img</Subtag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+		</NewsImg>
+	</Site>
+	<!-- 中国法院网 -->
+	<Site name="chinacourt.org">
+		<Title>
+			<Tag>div</Tag>
+			<Class>detail_title</Class>
+			<Subtag index="0">div</Subtag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>detail_thr</Class>
+			<Format>yyyy-mm-dd hh:mm:ss</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Class>from</Class>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Class>detail_txt detail_general</Class>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>resize</Class>
+			<Subtag index="0">img</Subtag>
+			<LinkAtt>src</LinkAtt>
+		</NewsImg>
+	</Site>
+	<!-- 北大法律信息网 -->
+	<Site name="chinalawinfo.org">
+		<Title>
+			<Tag>span</Tag>
+			<Id>LabTitle</Id>
+			<Class>NewTitle</Class>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Id>divQT</Id>
+			<Format>yyyy-mm-dd</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Id>divQT</Id>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>fontzoom</Id>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>resize</Class>
+			<Subtag index="0">img</Subtag>
+			<LinkAtt>src</LinkAtt>
+		</NewsImg>
+		<NewsTag>
+			<Tag>div</Tag>
+			<Id>divKeyword</Id>
+		</NewsTag>
+	</Site>
+	<!-- 中国普法网 -->
+	<Site name="legalinfo.gov.cn">
+		<Title>
+			<Tag>td</Tag>
+			<Class>wz1</Class>
+		</Title>
+		<Time>
+			<Tag>td</Tag>
+			<Class>wz3</Class>
+			<Format>yyyy-mm-dd hh:mm:ss</Format>
+		</Time>
+		<Source>
+			<Tag>a</Tag>
+			<Class>wz3</Class>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>ozoom</Id>
+			<Subtag index="0">p</Subtag>
+		</Content>
+		<NewsImg>
+			<Tag>center</Tag>
+			<Subtag index="0">img</Subtag>
+			<LinkAtt>src</LinkAtt>
+		</NewsImg>
+	</Site>
+	<!-- 中国刑事法律网 -->
+	<Site name="criminallaw.com.cn">
+		<Title>
+			<Tag>td</Tag>
+			<Class>wztitle</Class>
+		</Title>
+		<Time>
+			<Tag>td</Tag>
+			<Class>wztime</Class>
+			<Format>yyyy-mm-dd</Format>
+		</Time>
+		<Source>
+			<Tag>td</Tag>
+			<Class>wztyzt</Class>
+		</Source>
+		<Content>
+			<Tag>td</Tag>
+			<Id>rcontent</Id>
+			<Class>ccontent</Class>
+			<Subtag index="0">p</Subtag>
+		</Content>
+		<NewsImg>
+			<Tag>o:p</Tag>
+			<Subtag index="0">img</Subtag>
+			<LinkAtt>src</LinkAtt>
+		</NewsImg>
+	</Site>
 </Sites>
