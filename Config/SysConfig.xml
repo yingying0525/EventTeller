@@ -20,6 +20,10 @@
 		<!-- Path>/home/iir/hgj/bloom/urls</Path -->
 		<Path>D:\\ETT\\AI</Path>
 	</Config>
+	<Config name="TopicIndex">
+		<!-- Path>/home/iir/hgj/bloom/urls</Path -->
+		<Path>D:\\ETT\\TI</Path>
+	</Config>
 	<Config name="TotalDF">
 		<!-- Path>/home/iir/EventTeller/bloom/urls</Path -->
 		<Path>D:\\ETT\\DF\\ddf</Path>

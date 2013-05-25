@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import news.crawler.Article.Extractor;
+import news.crawler.article.Extractor;
 import news.index.ArticleTitleIndex;
 
 import db.data.Article;
@@ -51,13 +51,13 @@ public class test{
 				continue;
 			sb.append(twd + " ");
 		}  
-		List<Article> sims = ati.search(sb.toString(), false,50);
-		for(Article tat : sims){
-			if(tat.getId().intValue() - at.getId().intValue() == 0){
+		List<Integer> sims = ati.search(sb.toString(), false,50);
+		for(Integer tat : sims){
+			if(tat - at.getId().intValue() == 0){
 				continue;
 			}
-			System.out.println(at.getId() + "\t" + tat.getId());
-			String ahql = "from Article as obj where obj.id = " + tat.getId();
+			System.out.println(at.getId() + "\t" + tat);
+			String ahql = "from Article as obj where obj.id = " + tat;
 			Article ata = util.Util.getElementFromDB(ahql);
 			double osim = util.Similarity.ContentOverlap(at.getContent(), ata.getContent());
 			double ssim = getTwoArticleSim(at,ata);
@@ -66,7 +66,7 @@ public class test{
 			}
 			if(osim < 0.2 )
 				continue;
-			bw.write(osim + "\t" + ssim + "\t" + tat.getId() + "\t" + tat.getTitle() + "\t" + ata.getNumber() + "\t" + "\t" + ata.getUrl() + "\n");
+			bw.write(osim + "\t" + ssim + "\t" + tat + "\t" + ata.getTitle() + "\t" + ata.getNumber() + "\t" + "\t" + ata.getUrl() + "\n");
 		}
 		bw.write("---------------" + "\n");	
 		bw.close();
@@ -74,7 +74,7 @@ public class test{
 	
 	public void evaluateArticlePR() throws IOException{
 		List<Article> ats = new ArrayList<Article>();
-		String hql = "from Article as obj where obj.publishtime >= '2013-5-5' and obj.number > 0 order by number desc";
+		String hql = "from Article as obj where obj.publishtime >= '2013-5-24' and obj.number > 0 order by number desc";
 		ats = util.Util.getElementsFromDB(hql, 30);
 		///for precision
 		for(Article at : ats){
@@ -105,7 +105,9 @@ public class test{
 	
 	public static void main(String[] args) throws IOException{
 		test ts = new test();
-		ts.evaluateArticlePR();
+//		ts.evaluateArticlePR();
+		double sim = ts.getTwoArticleSim(1226693, 1225893);
+		System.out.println(sim);
 
 	}
 		

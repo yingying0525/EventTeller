@@ -64,10 +64,10 @@ public class Util {
 	 * @Description:from id to get article
 	 */
 	@SuppressWarnings("unchecked")
-	public static Article getArticleById(int id){
+	public static Article getArticleById(String id){
 		Session session = new HSession().createSession();
 		List<Article> results = new ArrayList<Article>();
-		String hql = "from Article as obj where obj.id=" + String.valueOf(id);
+		String hql = "from Article as obj where obj.id=" + id;
 		Query query = session.createQuery(hql);
 		results = (List<Article>)query.list();
 		Article result = new Article();

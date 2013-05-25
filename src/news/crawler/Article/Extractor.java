@@ -1,4 +1,4 @@
-package news.crawler.Article;
+package news.crawler.article;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -42,7 +42,7 @@ public class Extractor {
 	//////////for some urls which has templete
 	public Extractor(String url){
 		try {
-			Doc = Jsoup.connect(url).timeout(5000).userAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.152 Safari/537.22").get();
+			Doc = Jsoup.connect(url).timeout(5000).userAgent(util.Const.CrawlerUserAgent).get();
 			if(Doc != null){
 				List<String> sites = NewsPageTags.getSiteName();
 				for(String site : sites){

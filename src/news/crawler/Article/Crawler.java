@@ -1,9 +1,7 @@
-package news.crawler.Article;
+package news.crawler.article;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +23,7 @@ import news.index.ArticleTitleIndex;
 import util.ChineseSplit;
 import util.Config;
 import util.Const;
+import util.IOReader;
 
 import db.HSession;
 import db.data.Article;
@@ -67,7 +66,7 @@ public class Crawler {
 	 */
 	private void initTDF(){
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(TDF_Path));
+			IOReader br = new IOReader(TDF_Path);
 			String line = "";
 			//first line is doc_num \t word_num
 			line = br.readLine();
@@ -135,7 +134,7 @@ public class Crawler {
 					tmp_at.setContent(at.getContent());
 					tmp_at.setTitle(at.getTitle());
 				}
-				if(score > 0.85 && score < 1.0 || score > 1.85){
+				if(score > util.Const.MaxEventSimNum && score <= 1.0 || score > 1 + util.Const.MaxEventSimNum){
 					mem_find = true;
 					if(at.getImgs().length() > 0 && tmp_at.getImgs().length() == 0){
 						tmp_at.setImgs(at.getImgs());
@@ -287,17 +286,17 @@ public class Crawler {
 	
 	private void runTask(){
 		
-		///get all urls which haven't been downloaded per batch is 1500
-		List<Url> urls = util.Util.getElementsFromDB(HQL,500);			
+		///get all urls which haven't been downloaded per batch is 500
+		List<Url> urls = util.Util.getElementsFromDB(HQL,util.Const.UrlToArticlePerTimeNum);			
 		int tmp_number = 0;
 		List<ArticleContent> update_idf = new ArrayList<ArticleContent>();
 		for(Url url : urls){
 			//for some special site
 			//now ifeng blocked our ip , so can't connect to it
-			if(url.getUrl().contains("ifeng")){
-				url.setTaskStatus(-1);
-				continue;
-			}
+//			if(url.getUrl().contains("ifeng")){
+//				url.setTaskStatus(-1);
+//				continue;
+//			}
 			///extract article content
 			Extractor etor = new Extractor(url.getUrl());			
 			Article at = new Article();			

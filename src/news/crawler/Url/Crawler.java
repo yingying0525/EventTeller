@@ -1,4 +1,4 @@
-package news.crawler.Url;
+package news.crawler.url;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -111,11 +111,11 @@ public class Crawler{
 	public Map<String,String> getUrls(String url){
 		Map<String,String> result = new HashMap<String,String>();
 		try{
-			Document doc = Jsoup.connect(url).timeout(5000).get();
+			Document doc = Jsoup.connect(url).timeout(5000).userAgent(util.Const.CrawlerUserAgent).get();
 			result = getALLhrefs(doc);
 			result = filterForHrefs(result);	
 		}catch(Exception e){
-			System.out.println("can't connect to the url: "+url);
+			System.err.println("can't connect to the url: "+url);
 		}	
 		return result;
 	}
@@ -225,10 +225,9 @@ public class Crawler{
 				mp_tn.put(url, tn);
 				url_size++;
 			}
-			System.out.println(str_url+"-----" + url_size);
-			//for gc
-			mp_url = null;
-			st_mp = null;
+			if(url_size == 0){
+				System.out.println(str_url);
+			}
 		}
 		Collection<Url> st_tn_mp = mp_tn.values();
 		Iterator<Url> it_tn_mp = st_tn_mp.iterator();
@@ -369,22 +368,6 @@ public class Crawler{
 		}
 	}
 	
-//	public void updateUrlsDB(List<Url> tns){
-//		Session session = new HSession().createSession();
-//		Transaction tx = session.beginTransaction();		
-//		for(Url tn : tns){
-//			try{
-//				session.merge(tn);				
-//			}catch(Exception e){
-//				System.out.println("update error" );
-//			}
-//		}
-//		//for gc
-//		tns = null;
-//		tx.commit();
-//		session.flush();
-//	}
-	
 	public  void runTask(){
 		Const.loadTaskid();
 		BloomFilter bf = InitBloomFilter();
@@ -407,10 +390,7 @@ public class Crawler{
 			}
 			util.Util.updateDB(updateUrls);
 			WriterToBloomFile(updateUrls);			
-			System.out.println("now end of Crawler..update urls -- " + updateUrls.size());			
-			///for gc
-			updateUrls = null;
-			NewUrls = null;			
+			System.out.println("now end of Crawler..update urls -- " + updateUrls.size());					
 			System.out.println("end of java_gc..so happy~!");	
 	}
 	

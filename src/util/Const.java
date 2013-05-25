@@ -8,7 +8,7 @@ import java.util.Map;
 * @ClassName: Const
 * @author: mblank
 * @date: 2012-2-20 上午10:12:57
-* @Description: the const parameters of the system
+* @Description: const parameters of the system
 * @Marks: TODO
 */
 public class Const implements IConst{
@@ -17,16 +17,12 @@ public class Const implements IConst{
 	public static String SYS_CONFIG_PATH = rootdir+"Config/SysConfig.xml";
 	public static String HIBERNATE_CFG_PATH = rootdir+"Config/hibernate.cfg.xml";
 	public static String LOG4J_CONFIG_PATH = rootdir+"Config/log4j.xml";
-	public static String HBASE_CONFIG_PATH = "/usr/local/hbase/conf/hbase-site.xml";
-	public static String HBASE_CONFIG_PATH_Local = rootdir + "Config/hbase-site.xml";
 	
 	
-	//////for duplicate removal file path
-//	public static String 
+	
+	public static String CrawlerUserAgent = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31";
 	
 	public static String Split_To_Sentences_Sign = "。";
-	
-	public static int IDF_DB_Split_Nums = 1000;
 	
 	public static int WebSiteUrlTitleFilerLength = 5;
 	public static int PublistTimeLengthPlus = 8;
@@ -34,24 +30,16 @@ public class Const implements IConst{
 	public static int MeaningFulStrLen = 10;
 	public static int NoMeaningSigns = 3;
 	public static int SummaryTitleWordsWeighs = 3;
-	public static double MaxEventSimNum = 0.4;
-	public static double MaxTopicSimNum = 0.2;
+	public static double MaxEventSimNum = 0.7;
+	public static double MaxTopicSimNum = 0.3;
 	public static double AVGIDF = 8;
 	public static long AVGIDFTF = 8;
 	
-	public static int HbaseToMysqlOneTimeHandleNum = 2010;
+	public static int UrlToArticlePerTimeNum = 500;
 	public static int MysqlToIndexMaxItemNum = 20;
-	public static int ArticleToWebIndexNum = 300;
 	public static int NEIGHBORHORDSIZE = 500;
 	public static int ReleventEvents = 50;
 	public static int ReleventArticles = 50;
-	public static int EventSummaryWordsTopN = 100;
-	public static int EventSummaryWordsTopNLest = 10;
-	public static int TopicSummaryWordsTopNLest = 30;
-	
-	public static int EventInfoGeneratorLeastNum = 0;
-	
-	public static int SameArticleEarlyDay = 3;
 	
 	
 	public static int[] SUBTOPICID =new int[]{1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192};
@@ -88,8 +76,8 @@ public class Const implements IConst{
 			TASKID = new HashMap<String,Integer>();
 			TASKID.put("urlToMysql", 0);
 			TASKID.put("UrlToArticle", 1);
-			TASKID.put("ArticleToEvent", 2);
-			TASKID.put("UseUrlsFromHbaseToDownloadHtml", 3);
+			TASKID.put("ArticleToTopic", 2);
+			TASKID.put("TopicToIndex", 3);
 			TASKID.put("HtmlFromHbaseToMysql", 4);
 			TASKID.put("HtmlFromSHbaseToTHbase", 8);
 			TASKID.put("MysqlToIDF", 5);

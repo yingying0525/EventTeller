@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 
-import news.crawler.Article.Extractor;
+import news.crawler.article.Extractor;
 
 
 

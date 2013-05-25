@@ -109,4 +109,8 @@ public class Similarity {
 		return total_up / Math.sqrt(total_a) / Math.sqrt(total_b);
 	}
 	
+	public static double similarity(){
+		
+	}
+	
 }
