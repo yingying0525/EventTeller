@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -77,7 +78,7 @@ public class Util {
 		return result;
 	}
 	
-	public static <T> void updateDB(List<T> scrs) {
+	public static <T> void updateDB(Collection<T> scrs) {
 		Session session = new HSession().createSession();
 		Transaction tx = session.beginTransaction();		
 		for(T t : scrs){
@@ -92,7 +93,28 @@ public class Util {
 		scrs = null;
 		tx.commit();
 		session.flush();	
-		session.clear();
+		session.close();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static int getMaxIdFromDB(String hql){
+		 Session session = new HSession().createSession();
+         int results = 0;
+         if(session!=null){
+             Query query = session.createQuery(hql);
+             List<Integer> ls_results = query.list();
+             if(ls_results != null && ls_results.size()>0){
+            	 if(ls_results.get(0) == null){
+            		 results = -1;
+            	 }else{
+            		 results = ls_results.get(0);
+            	 }
+             }else{
+            	 results = -1;
+             }
+         }
+         session.close();
+         return results;
 	}
 	
 	public static String getDateStr(Date date){

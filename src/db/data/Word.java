@@ -38,6 +38,23 @@ public class Word {
 		this.nature = nature;
 	}
 	
+	@Override
+    public boolean equals(Object anObject) {
+        if (this == anObject) {
+            return true;
+        }
+        if (anObject instanceof Word) {
+        	if(((Word) anObject).getName().equals(this.name) && 
+        			((Word)anObject).getNature().equals(this.getNature())){
+        		return true;
+        	}
+        }
+        return false;
+    }
 	
+	@Override
+	public int hashCode(){
+		return name.hashCode() * 37 + nature.hashCode();
+	}
 
 }

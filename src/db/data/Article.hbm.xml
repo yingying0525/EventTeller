@@ -62,8 +62,8 @@
 			length="100"
 		/>
 		<property
-			name="eventid"
-			column="eventid"
+			name="topicid"
+			column="topicid"
 			type="integer"
 			not-null="false"
 			length="32"

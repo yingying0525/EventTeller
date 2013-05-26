@@ -131,7 +131,7 @@ public class Crawler{
 
 		if(!url.contains("http")){
 			if(ws.SiteName.equalsIgnoreCase("tencent")){
-				if((str_url.indexOf(".shtml")>0)){
+				if((str_url.indexOf("htm")>0)){
 					url = "http://news.qq.com" + url;
 				}
 			}else if(ws.SiteName.equalsIgnoreCase("chinanews")){
@@ -225,9 +225,7 @@ public class Crawler{
 				mp_tn.put(url, tn);
 				url_size++;
 			}
-			if(url_size == 0){
-				System.out.println(str_url);
-			}
+			System.out.println(str_url + "\t" + url_size);
 		}
 		Collection<Url> st_tn_mp = mp_tn.values();
 		Iterator<Url> it_tn_mp = st_tn_mp.iterator();

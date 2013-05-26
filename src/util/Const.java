@@ -41,6 +41,10 @@ public class Const implements IConst{
 	public static int ReleventEvents = 50;
 	public static int ReleventArticles = 50;
 	
+	public static int TitleWordsWeight = 5;
+	public static int NameEntityWeight = 3;
+	public static int LocationWeight = 4;
+	
 	
 	public static int[] SUBTOPICID =new int[]{1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192};
 
@@ -48,13 +52,10 @@ public class Const implements IConst{
 	
 	public static long WebSiteSleepTime = 30*60*1000;
 	public static long AritcleSleepTime = 5*60*1000;
-	public static long MysqlToHbaseSleepTime = 20*60*1000;
-	public static long HbaseToMysqlSleepTime = 20*60*1000;
+	public static long ClusterToTopicSleepTime = 20*60*1000;
+
 	public static long ArticleIndexSleepTime = 120*60*1000;
-	public static long ArticleToEventSleepTime = 20*60*1000;
-	public static long TopicTrackSleepTime = 20*60*1000;
-	public static long MysqlToIDFSleepTime = 1*5*1000;
-	public static long EventInfoGeneratorSleepTime = 30*60*1000;
+
 	
 	public static int TopicNearDayNum = 7;
 	

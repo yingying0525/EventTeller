@@ -4,14 +4,20 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import news.index.Index;
 import news.index.TopicIndex;
 
 import org.dom4j.Node;
+
+import core.infoGenerator.KeyWords;
 
 import util.Config;
 import util.Const;
@@ -19,7 +25,6 @@ import util.IOReader;
 
 import db.data.Article;
 import db.data.Topic;
-import db.data.Word;
 
 public class ClusterToTopic {
 	
@@ -27,12 +32,14 @@ public class ClusterToTopic {
 	public String IndexPath;
 	public Index TopicIndex;
 	public String IDFPath;
+	public Map<Integer,Topic> MemoryTopics ;
+	public Map<String,Set<Integer>> MemoryIndex ;
 	
 	
 	private int TotalDocNum ;
 	private Map<String,Integer> Idf ;
 	
-	ClusterToTopic(){
+	public ClusterToTopic(){
 		Const.loadTaskid();
 		Config cfg = new Config(Const.SYS_CONFIG_PATH);
 		Node elem = cfg.selectNode("/Configs/Config[@name='TopicIndex']/Path");
@@ -42,6 +49,8 @@ public class ClusterToTopic {
 		IDFPath = elemIdf.getText();
 		Idf = new HashMap<String,Integer>();
 		initIdf();
+		MemoryTopics = new HashMap<Integer,Topic>();
+		MemoryIndex = new HashMap<String,Set<Integer>>();
 	}
 	
 	////get articles from article table where taskstatus = 1 (stands for only article)
@@ -76,6 +85,7 @@ public class ClusterToTopic {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println(Idf.size());
 	}
 	
 	/**
@@ -94,52 +104,172 @@ public class ClusterToTopic {
 		return result.toString();
 	}
 	
-	private int getMostSimId(Article at){
+	private Set<Integer> getMemoryIndexSimTopic(String text){
+		List<String> words = util.ChineseSplit.SplitStr(text);
+		Set<Integer> results = new HashSet<Integer>();
+		for(String wd : words){
+			if(MemoryIndex.containsKey(wd)){
+				results.addAll(MemoryIndex.get(wd));
+			}
+		}
+		return results;
+	}
+	
+	private Topic getMostSimTopic(Article at){
 		double maxSim = -1.0;
-		int maxId = -1;
+		Topic maxtp = null;
 		String searchText = titleToSearchString(at.getTitle());
-		List<Integer> simIds = TopicIndex.search(searchText, false, 50);
+		List<Integer> simIdsInIndex = TopicIndex.search(searchText, false, 50);
+		Set<Integer> simIds = getMemoryIndexSimTopic(at.getTitle());
+		for(Integer simId : simIdsInIndex){
+			if(!simIds.contains(simId)){
+				simIds.add(simId);
+			}			
+		}
 		for(Integer simId : simIds){
 			double totalSim = 0.0;
-			String hql = "from Topic as obj where obj.id = " + simId;
-			Topic tp = util.Util.getElementFromDB(hql);
+			Topic tp = null;
+			if(MemoryTopics.containsKey(simId)){
+				tp = MemoryTopics.get(simId);
+			}else{
+				String hql = "from Topic as obj where obj.id = " + simId;
+				tp = util.Util.getElementFromDB(hql);
+			}
+			if(tp == null){
+				continue;
+			}
 			String[] simAts = tp.getArticles().split(" ");
 			if(simAts.length == 0){
 				continue;
 			}
-			Map<Word, Double> wordsA = util.ChineseSplit.SplitStrWithPosDoubleTF(at.getContent() + at.getTitle());
 			for(String simAt : simAts){
 				Article tat = util.Util.getArticleById(simAt);
-				Map<Word, Double> wordsB = util.ChineseSplit.SplitStrWithPosDoubleTF(tat.getContent() + tat.getTitle());
-				double score = util.Similarity.SimilarityWithIDF(wordsA, wordsB, Idf, TotalDocNum);
+				double score = util.Similarity.similarityOfEvent(tat, at, Idf, TotalDocNum);
 				totalSim += score;
 			}
 			if(totalSim / simAts.length > maxSim){
 				maxSim = totalSim / simAts.length;
-				maxId = simId;
+				maxtp = tp;
 			}			
 		}
 		if(maxSim < util.Const.MaxTopicSimNum){
-			maxId = -1;
+			maxtp = null;
 		}
-		return maxId;
+		return maxtp;
 	}
 	
-	public void RunCluster(){
-		List<Article> articles = getInstances();
-		for(Article at : articles){
-			int simId = getMostSimId(at);
-			if(simId > 0){
-				at.setEventid(simId);
-				at.setTaskstatus(util.Const.TASKID.get("ArticleToTopic"));
+	public void updateTopicInfo(Topic tp,Article at){
+		tp.setTitle(tp.getTitle() + "!##!" + at.getTitle());
+		tp.setArticles(tp.getArticles() + " " + at.getId());
+		Date time = at.getPublishtime();
+		if(tp.getStartTime().compareTo(time) > 0){
+			tp.setStartTime(time);
+		}
+		if(tp.getEndTime().compareTo(time) < 0){
+			tp.setEndTime(time);
+		}
+		//update keywords
+		KeyWords kw = new KeyWords(tp.getTitle());
+		tp.setKeyWords(kw.getTopNwords(7, 0));
+		//update imgs
+		tp.setImgs(tp.getImgs() + "!##!" + at.getImgs());
+		//update number
+		if(tp.getNumber() == null){
+			tp.setNumber(1);
+		}else{
+			tp.setNumber(tp.getNumber() + 1);
+		}
+		//update subtopic temp is 0
+		tp.setSubtopic(0);
+		//update summary
+		//update relations
+		//should add at to the relationships of topic tp
+	}
+	
+	public Topic newTopic(Topic simTopic,Article at){
+		simTopic = new Topic();
+		//get the max topic id
+		String hql = "select max(id) from Topic";
+		int maxid = util.Util.getMaxIdFromDB(hql);
+		Iterator<Integer> ids = MemoryTopics.keySet().iterator();
+		while(ids.hasNext()){
+			int tid = ids.next();
+			if(maxid < tid){
+				maxid = tid;
 			}
 		}
-		///now should update index and db
+		if(maxid < 0){
+			maxid = 0;
+		}
+		simTopic.setId(maxid + 1);
+		simTopic.setArticles(String.valueOf(at.getId()));
+		simTopic.setEndTime(at.getPublishtime());
+		simTopic.setStartTime(at.getPublishtime());
+		simTopic.setTitle(at.getTitle());
+		simTopic.setImgs(at.getImgs());
+		KeyWords kw = new KeyWords(at.getTitle());
+		simTopic.setKeyWords(kw.getTopNwords(7, 0));
+		simTopic.setNumber(1);
+		//should update summary and relations
 		
-		//update db
-		
+		return simTopic;
+	}
+	
+	
+	public void updateMemory(Topic tp){
+		MemoryTopics.put(tp.getId(), tp);
+		List<String> words = util.ChineseSplit.SplitStr(tp.getTitle());
+		for(String wd : words){
+			if(wd.length() < 2){
+				continue;
+			}
+			Set<Integer> topics = new HashSet<Integer>();
+			if(MemoryIndex.containsKey(wd)){
+				topics = MemoryIndex.get(wd);
+			}
+			topics.add(tp.getId());
+			MemoryIndex.put(wd, topics);			
+		}
+	}
+	
+	
+	public void RunCluster(){
+		Set<Topic> updateTopics = new HashSet<Topic>();
+		List<Article> articles = getInstances();
+		for(Article at : articles){
+			//find most similar topic in memory and index
+			Topic simTopic = getMostSimTopic(at);
+			if(simTopic != null){
+				at.setTopicid(simTopic.getId());
+				at.setTaskstatus(util.Const.TASKID.get("ArticleToTopic"));
+				updateTopicInfo(simTopic,at);	
+				System.out.println("find sim topic ..." + at.getId() + "\t" + simTopic.getId());
+			}else{
+				simTopic = newTopic(simTopic,at);
+			}
+			updateTopics.add(simTopic);
+			updateMemory(simTopic);
+		}
+		//update artices
+		util.Util.updateDB(articles);
+		//update topics
+		util.Util.updateDB(updateTopics);
 		//update index
-		
+		TopicIndex ti = new TopicIndex(IndexPath);
+		ti.update(updateTopics);
+	}
+	
+	public static void main(String[] args){
+		while(true){
+			ClusterToTopic ctt = new ClusterToTopic();
+			ctt.RunCluster();
+			try {
+				System.out.println("now end of one cluster,sleep for:"+Const.ClusterToTopicSleepTime /1000 /60 +" minutes. "+new Date().toString());
+				Thread.sleep(Const.ClusterToTopicSleepTime );
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}			
+		}
 	}
 	
 }

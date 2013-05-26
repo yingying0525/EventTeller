@@ -16,7 +16,7 @@ public class Article {
 	private Integer subtopic;
 	private Integer number;
 	private String  sameurls;
-	private Integer eventid;
+	private Integer topicid;
 	
 	public String getUrl() {
 		return url;
@@ -90,14 +90,31 @@ public class Article {
 	public void setSource(String source) {
 		this.source = source;
 	}
-	public Integer getEventid() {
-		return eventid;
+	public Integer getTopicid() {
+		return topicid;
 	}
-	public void setEventid(Integer eventid) {
-		this.eventid = eventid;
+	public void setTopicid(Integer topicid) {
+		this.topicid = topicid;
 	}
 	
 	
+	@Override
+    public boolean equals(Object anObject) {
+        if (this == anObject) {
+            return true;
+        }
+        if (anObject instanceof Article) {
+        	if(((Article) anObject).getId() == this.id){
+        		return true;
+        	}
+        }
+        return false;
+    }
+	
+	@Override
+	public int hashCode(){
+		return id;
+	}
 	
 	
 	

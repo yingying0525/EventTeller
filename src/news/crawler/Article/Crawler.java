@@ -291,12 +291,6 @@ public class Crawler {
 		int tmp_number = 0;
 		List<ArticleContent> update_idf = new ArrayList<ArticleContent>();
 		for(Url url : urls){
-			//for some special site
-			//now ifeng blocked our ip , so can't connect to it
-//			if(url.getUrl().contains("ifeng")){
-//				url.setTaskStatus(-1);
-//				continue;
-//			}
 			///extract article content
 			Extractor etor = new Extractor(url.getUrl());			
 			Article at = new Article();			
@@ -328,7 +322,7 @@ public class Crawler {
 		util.Util.updateDB(toupdate);
 		util.Util.updateDB(urls);
 		//update index	
-		ati.update(update_index);
+		ati.addDocument(update_index);
 		//for gc
 		update_idf = null;
 		urls = null;

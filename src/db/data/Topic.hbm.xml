@@ -5,8 +5,8 @@
 
 <hibernate-mapping package="db.data">
 	<class
-		name="Article"
-		table="article" dynamic-update="true"
+		name="Topic"
+		table="topic" dynamic-update="true"
 	>
 		<meta attribute="sync-DAO">false</meta>
 		<id
@@ -19,34 +19,39 @@
 			name="title"
 			column="title"
 			type="string"
-			not-null="true"
+			not-null="false"
 			length="200"
 		/>
 		<property
-			name="url"
-			column="url"
+			name="keyWords"
+			column="keywords"
 			type="string"
-			not-null="true"
+			not-null="false"
 			length="300"
 		/>
 		<property
-			name="publishtime"
-			column="pubtime"
-			type="java.util.Date"
-			not-null="false"
-		/>
-		<property
-			name="content"
-			column="content"
+			name="summary"
+			column="summary"
 			type="string"
 			not-null="false"
 		/>
 		<property
-			name="crawltime"
-			column="crawltime"
+			name="endTime"
+			column="endtime"
 			type="java.util.Date"
-			not-null="true"
-			length="14"
+			not-null="false"
+		/>
+		<property
+			name="startTime"
+			column="starttime"
+			type="java.util.Date"
+			not-null="false"
+		/>
+		<property
+			name="articles"
+			column="articles"
+			type="string"
+			not-null="false"
 		/>
 		<property
 			name="imgs"
@@ -55,25 +60,10 @@
 			not-null="false"
 		/>
 		<property
-			name="source"
-			column="source"
+			name="relations"
+			column="relations"
 			type="string"
 			not-null="false"
-			length="100"
-		/>
-		<property
-			name="topicid"
-			column="topicid"
-			type="integer"
-			not-null="false"
-			length="32"
-		/>
-		<property
-			name="taskstatus"
-			column="taskstatus"
-			type="integer"
-			not-null="false"
-			length="32"
 		/>
 		<property
 			name="subtopic"
@@ -81,12 +71,6 @@
 			type="integer"
 			not-null="false"
 			length="32"
-		/>
-		<property
-			name="sameurls"
-			column="sameurls"
-			type="string"
-			not-null="false"
 		/>
 		<property
 			name="number"

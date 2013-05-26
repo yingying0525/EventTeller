@@ -13,6 +13,8 @@ public class Topic {
 	private Date   endTime;
 	private String articles;
 	private String relations;
+	private Integer number;
+	private Integer subtopic;
 	
 	
 	
@@ -70,7 +72,37 @@ public class Topic {
 	public void setRelations(String relations) {
 		this.relations = relations;
 	}
+	public Integer getNumber() {
+		return number;
+	}
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
+	public Integer getSubtopic() {
+		return subtopic;
+	}
+	public void setSubtopic(Integer subtopic) {
+		this.subtopic = subtopic;
+	}
 	
 	
+	
+	@Override
+    public boolean equals(Object anObject) {
+        if (this == anObject) {
+            return true;
+        }
+        if (anObject instanceof Topic) {
+        	if(((Topic) anObject).getId() == this.id){
+        		return true;
+        	}
+        }
+        return false;
+    }
+	
+	@Override
+	public int hashCode(){
+		return id;
+	}
 
 }

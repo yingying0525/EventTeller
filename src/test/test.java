@@ -105,10 +105,10 @@ public class test{
 	
 	public static void main(String[] args) throws IOException{
 		test ts = new test();
-//		ts.evaluateArticlePR();
+		ts.evaluateArticlePR();
 		double sim = ts.getTwoArticleSim(1226693, 1225893);
 		System.out.println(sim);
-
+		
 	}
 		
 }

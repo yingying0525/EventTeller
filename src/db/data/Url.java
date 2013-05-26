@@ -47,7 +47,23 @@ public class Url {
 		this.taskStatus = taskStatus;
 	}
 	
+	@Override
+    public boolean equals(Object anObject) {
+        if (this == anObject) {
+            return true;
+        }
+        if (anObject instanceof Url) {
+        	if(((Url) anObject).getId() == this.id){
+        		return true;
+        	}
+        }
+        return false;
+    }
 	
+	@Override
+	public int hashCode(){
+		return id;
+	}
 	
 
 }

@@ -1134,12 +1134,12 @@
 		<Content>
 			<Tag>div</Tag>
 			<Class>text</Class>
-			<Subtag index="4">p</Subtag>
+			<SubTag index="4">p</SubTag>
 		</Content>
 		<NewsImg>
 			<Tag>div</Tag>
 			<Class>img_wrapper</Class>
-			<Subtag index="0">img</Subtag>
+			<SubTag index="0">img</SubTag>
 			<LinkAtt>src</LinkAtt>
 			<TextAtt>alt</TextAtt>
 		</NewsImg>
@@ -1149,7 +1149,7 @@
 		<Title>
 			<Tag>h1</Tag>
 			<Class>hxing</Class>
-			<Subtag index="0">font</Subtag>
+			<SubTag index="0">font</SubTag>
 		</Title>
 		<Time>
 			<Tag>span</Tag>
@@ -1158,16 +1158,15 @@
 		</Time>
 		<Content>
 			<Tag>div</Tag>
-			<Class>ztext pbodr</Class>
 			<Id>pcontent</Id>
-			<Subtag index="0">p</Subtag>
+			<SubTag index="0">p</SubTag>
 		</Content>
 		<NewsImg>
 			<Tag>div</Tag>
 			<Id>pcontent</Id>
-			<Class>ztext pbodr</Class>
-			<Subtag index="0">img</Subtag>
+			<SubTag index="0">img</SubTag>
 			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
 		</NewsImg>
 	</Site>
 	<!-- 百家法坛 -->
@@ -1200,7 +1199,7 @@
 		<Source>
 			<Tag>div</Tag>
 			<Id>about</Id>
-			<Subtag index="2">span</Subtag>
+			<SubTag index="2">span</SubTag>
 		</Source>
 		<Content>
 			<Tag>div</Tag>
@@ -1230,7 +1229,7 @@
 		<NewsImg>
 			<Tag>div</Tag>
 			<Class>resize</Class>
-			<Subtag index="0">img</Subtag>
+			<SubTag index="0">img</SubTag>
 			<LinkAtt>src</LinkAtt>
 		</NewsImg>
 	</Site>

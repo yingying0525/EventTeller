@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configs>
 	<Config name="indexPath">
-		<Path>/home/iir/hgj/index</Path>
+		<Path>/home/iir/EventTeller/index</Path>
 	</Config>
 	<Config name="EventIndexPath">
-		<Path>/home/iir/hgj/EventIndex</Path>
+		<Path>/home/iir/EventTeller/EventIndex</Path>
 	</Config>
 	<Config name="WebindexPath">
 		<Path>/home/mblank/index</Path>
@@ -26,6 +26,6 @@
 	</Config>
 	<Config name="TotalDF">
 		<!-- Path>/home/iir/EventTeller/bloom/urls</Path -->
-		<Path>D:\\ETT\\DF\\ddf</Path>
+		<Path>D:\\ETT\\TDF</Path>
 	</Config>
 </Configs>

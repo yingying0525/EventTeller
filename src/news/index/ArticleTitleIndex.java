@@ -10,9 +10,9 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
 
 import util.ChineseSplit;
-
 
 
 import db.data.Article;
@@ -66,7 +66,7 @@ public class ArticleTitleIndex extends Index{
 	}
 	
 	
-	public void update(List<Article> scrs){
+	public void addDocument(List<Article> scrs){
 		File file = new File(IndexPath);
 		if(!file.exists()){
 			file.mkdir();
@@ -91,10 +91,43 @@ public class ArticleTitleIndex extends Index{
 		scrs = null;
 	}
 	
-	public void update(Article at){
+	public void addDocument(Article at){
 		List<Article> ats = new ArrayList<Article>();
 		ats.add(at);
-		update(ats);
+		addDocument(ats);
+	}
+	
+	public void update(Article instance){
+		List<Article> instances = new ArrayList<Article>();
+		instances.add(instance);
+		update(instances);
+	}
+	
+	public void update(List<Article> instances){
+		File file = new File(IndexPath);
+		if(!file.exists()){
+			file.mkdir();
+		}
+		IndexWriter iwriter = CreateWriter(IndexPath);
+		for(Article instance : instances){
+			Term term=new Term("id", String.valueOf(instance.getId()));
+			Document doc = new Document();
+			doc.add(new StringField("id", String.valueOf(instance.getId()), Store.YES));  
+			doc.add(new TextField("title", instance.getTitle(), Store.YES));  
+			try {
+				iwriter.updateDocument(term, doc);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			iwriter.commit();
+			iwriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }
