@@ -7,6 +7,8 @@ public class Word {
 	private String nature;
 	private Integer  tf;
 	private double    score;
+	
+	
 	public Integer getId() {
 		return id;
 	}

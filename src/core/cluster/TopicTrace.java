@@ -26,7 +26,7 @@ import util.IOReader;
 import db.data.Article;
 import db.data.Topic;
 
-public class ClusterToTopic {
+public class TopicTrace {
 	
 	
 	public String IndexPath;
@@ -39,7 +39,7 @@ public class ClusterToTopic {
 	private int TotalDocNum ;
 	private Map<String,Integer> Idf ;
 	
-	public ClusterToTopic(){
+	public TopicTrace(){
 		Const.loadTaskid();
 		Config cfg = new Config(Const.SYS_CONFIG_PATH);
 		Node elem = cfg.selectNode("/Configs/Config[@name='TopicIndex']/Path");
@@ -172,7 +172,7 @@ public class ClusterToTopic {
 		KeyWords kw = new KeyWords(tp.getTitle());
 		tp.setKeyWords(kw.getTopNwords(7, 0));
 		//update imgs
-		tp.setImgs(tp.getImgs() + "!##!" + at.getImgs());
+		tp.setImgs(tp.getImgs() + "@@@@" + at.getImgs());
 		//update number
 		if(tp.getNumber() == null){
 			tp.setNumber(1);
@@ -240,13 +240,13 @@ public class ClusterToTopic {
 			//find most similar topic in memory and index
 			Topic simTopic = getMostSimTopic(at);
 			if(simTopic != null){
-				at.setTopicid(simTopic.getId());
-				at.setTaskstatus(util.Const.TASKID.get("ArticleToTopic"));
 				updateTopicInfo(simTopic,at);	
-				System.out.println("find sim topic ..." + at.getId() + "\t" + simTopic.getId());
+				System.out.println("find sim topic ..." + simTopic.getId() + "\t" + simTopic.getArticles());
 			}else{
 				simTopic = newTopic(simTopic,at);
 			}
+			at.setTopicid(simTopic.getId());
+			at.setTaskstatus(util.Const.TASKID.get("ArticleToTopic"));
 			updateTopics.add(simTopic);
 			updateMemory(simTopic);
 		}
@@ -261,7 +261,7 @@ public class ClusterToTopic {
 	
 	public static void main(String[] args){
 		while(true){
-			ClusterToTopic ctt = new ClusterToTopic();
+			TopicTrace ctt = new TopicTrace();
 			ctt.RunCluster();
 			try {
 				System.out.println("now end of one cluster,sleep for:"+Const.ClusterToTopicSleepTime /1000 /60 +" minutes. "+new Date().toString());

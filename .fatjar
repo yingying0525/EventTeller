@@ -1,12 +1,12 @@
 #Fat Jar Configuration File
-#Sat May 25 00:25:30 CST 2013
+#Wed May 29 00:18:16 CST 2013
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=false
-jarname=C\:\\Users\\mblank\\Desktop\\ArticleCrawler.jar
+jarname=D\:\\UrlCrawler.jar
 manifest.mergeall=true
-manifest.mainclass=news.crawler.Article.Crawler
+manifest.mainclass=news.crawler.url.Crawler
 manifest.file=<createnew>
 jarname.isextern=true
 onejar.expand=

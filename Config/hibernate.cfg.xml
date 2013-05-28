@@ -23,6 +23,7 @@
 		<property name="hibernate.show_sql">false</property>
 		
 		<mapping resource="db/data/Url.hbm.xml" />
+		<mapping resource="db/data/Ddf.hbm.xml" />
 		<mapping resource="db/data/Article.hbm.xml" />
 		<mapping resource="db/data/Topic.hbm.xml" />
 	</session-factory>

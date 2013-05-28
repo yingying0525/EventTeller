@@ -128,31 +128,54 @@ public class Crawler{
 	 * @Description:add some str to the url crawl from the page
 	 */
 	public String addSomeConditon(WebSite ws,String str_url,String url){
-
-		if(!url.contains("http")){
-			if(ws.SiteName.equalsIgnoreCase("tencent")){
-				if((str_url.indexOf("htm")>0)){
-					url = "http://news.qq.com" + url;
-				}
-			}else if(ws.SiteName.equalsIgnoreCase("chinanews")){
-				
-				if(url.indexOf("/ty")==0){
-					url = "sports.chinanews.com" +url;
+		
+		///some relative url
+		// 0 - xx/xx.html
+		// 1 - /xx/xx.html
+		// 2 - ./xx/xx.html
+		// 3 - ../../xx/xx.html
+		if(!url.contains("http:")){
+			String[] its = str_url.split("/");
+			if(url.indexOf("/") == 0){
+				if(its.length >= 3){
+					url = its[0] + "//" + its[2] + url; 
 				}else{
-					url = "http://www.chinanews.com" +url;
-				}								
-			}else if(str_url.equalsIgnoreCase("http://news.cyol.com/node_10005.htm")||str_url.equalsIgnoreCase("http://news.cyol.com/node_10006.htm")){
-				url = "http://news.cyol.com/"+url;
-			}else if(str_url.equalsIgnoreCase("http://news.china.com/social")||str_url.equalsIgnoreCase("http://news.china.com/international")||str_url.equalsIgnoreCase("http://news.china.com/domestic")){
-				url = "http://news.china.com" + url;
-			}else if(str_url.contains("china.com.cn")&&str_url.contains("node_")){
-				String[] temp = str_url.split("/");
-				url = temp[0]+"//"+temp[2]+"/"+temp[3]+"/"+url;
-			}else if(str_url.contains("gmw.cn")&&str_url.contains("node_")){
-				String[] temp = str_url.split("/");
-				url = temp[0]+"//"+temp[2]+"/"+"/"+url;
+					url = "";
+				}
+			}else if(url.indexOf("./") == 0){
+				if(its.length > 0){
+					StringBuffer tmp = new StringBuffer();
+					tmp.append("http://");
+					for(int i = 2; i < its.length - 1; i++){
+						tmp.append(its[i] + "/");
+					}
+					url = url.replace("./", "");
+					url = tmp.append(url).toString();
+				}else{
+					url = "";
+				}
+			}else if(url.indexOf("../") == 0){
+				StringBuffer tmp = new StringBuffer();
+				tmp.append("http://");
+				String[] tmps = url.split("\\.\\./");
+				String pox = tmps[tmps.length - 1];
+				int k = tmps.length - 1;
+				if(its[its.length - 1].equals("")){
+					k++;
+				}
+				for(int i = 2;i< its.length - k;i++){
+					tmp.append(its[i] + "/");
+				}
+				tmp.append(pox);
+				url = tmp.toString();
+			}else if(url.indexOf(".") != 0){
+				if(its.length >= 3){
+					url = its[0] + "//" + its[2] + url; 
+				}else{
+					url = "";
+				}
 			}else{
-				url = str_url + url;
+				url = "";
 			}
 		}
 		return url;
@@ -208,6 +231,8 @@ public class Crawler{
 			while(it_urls.hasNext()){
 				String url = it_urls.next();
 				url = addSomeConditon(ws,str_url,url);
+				if(url.length() == 0)
+					continue;
 				Url tn = new Url();
 				tn.setCrawlTime(new java.util.Date());
 				tn.setUrl(url);
@@ -405,7 +430,7 @@ public class Crawler{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}			
-		}		
+		}
 	}
-
+	
 }

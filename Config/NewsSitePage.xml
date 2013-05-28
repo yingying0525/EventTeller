@@ -62,7 +62,6 @@
 			<Id>main_content</Id>
 			<SubTag index="0">img</SubTag>
 			<LinkAtt>src</LinkAtt>
-			<TextAtt>alt</TextAtt>
 			<BaseUrl>!no!</BaseUrl>
 		</NewsImg>
 		<NewsTag>
@@ -1183,6 +1182,7 @@
 		<Content>
 			<Tag>td</Tag>
 			<Id>article_content</Id>
+			<SubTag index = "0">p</SubTag>
 		</Content>
 	</Site>
 	<!-- 正义网 -->
@@ -1204,7 +1204,7 @@
 		<Content>
 			<Tag>div</Tag>
 			<Id>fontzoom</Id>
-			<Class>mainContent</Class>
+			<SubTag index = "0">p</SubTag>
 		</Content>
 	</Site>
 	<!-- 中国法院网 -->
@@ -1225,6 +1225,7 @@
 		<Content>
 			<Tag>div</Tag>
 			<Class>detail_txt</Class>
+			<SubTag index = "0">p</SubTag>
 		</Content>
 		<NewsImg>
 			<Tag>div</Tag>

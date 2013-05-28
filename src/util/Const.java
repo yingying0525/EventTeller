@@ -52,7 +52,7 @@ public class Const implements IConst{
 	
 	public static long WebSiteSleepTime = 30*60*1000;
 	public static long AritcleSleepTime = 5*60*1000;
-	public static long ClusterToTopicSleepTime = 20*60*1000;
+	public static long ClusterToTopicSleepTime = 6*60*1000;
 
 	public static long ArticleIndexSleepTime = 120*60*1000;
 

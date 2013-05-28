@@ -16,11 +16,11 @@ class KeyComparetor implements Comparator<tWord>{
 	@Override
 	public int compare(tWord wa, tWord wb) {
 		if(wa.score > wb.score){
-			return 	1;
+			return 	-1;
 		}else if(wa.score == wb.score){
 			return 0;
 		}else{
-			return -1;
+			return 1;
 		}
 	}
 }
@@ -48,6 +48,7 @@ public class KeyWords {
 			tWord tw = new tWord();
 			tw.name = key;
 			tw.score = words.get(key);
+			results.add(tw);
 		}
 		Collections.sort(results,new KeyComparetor());
 		return results;		
