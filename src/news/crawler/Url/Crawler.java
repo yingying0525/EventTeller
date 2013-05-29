@@ -115,7 +115,15 @@ public class Crawler{
 			result = getALLhrefs(doc);
 			result = filterForHrefs(result);	
 		}catch(Exception e){
-			System.err.println("can't connect to the url: "+url);
+			System.err.println("can't connect to the url: "+url + " will try again..");
+			Document doc;
+			try {
+				doc = Jsoup.connect(url).timeout(5000).userAgent(util.Const.CrawlerUserAgent).get();
+				result = getALLhrefs(doc);
+				result = filterForHrefs(result);
+			} catch (IOException e1) {
+				System.err.println("try again, but failed.." + "\t" + url);
+			}
 		}	
 		return result;
 	}
@@ -127,7 +135,7 @@ public class Crawler{
 	 * @return
 	 * @Description:add some str to the url crawl from the page
 	 */
-	public String addSomeConditon(WebSite ws,String str_url,String url){
+	public String addSomeConditon(String str_url,String url){
 		
 		///some relative url
 		// 0 - xx/xx.html
@@ -170,7 +178,7 @@ public class Crawler{
 				url = tmp.toString();
 			}else if(url.indexOf(".") != 0){
 				if(its.length >= 3){
-					url = its[0] + "//" + its[2] + url; 
+					url = its[0] + "//" + its[2] + "/" + url; 
 				}else{
 					url = "";
 				}
@@ -204,6 +212,7 @@ public class Crawler{
 			}	
 		}catch(Exception e){
 			e.printStackTrace();
+			System.out.println(tn.getUrl());
 		}
 		if(url.length()<=tnf.getUrl_avg_len()){
 			return false;
@@ -230,7 +239,7 @@ public class Crawler{
 			Iterator<String> it_urls = st_mp.iterator();			
 			while(it_urls.hasNext()){
 				String url = it_urls.next();
-				url = addSomeConditon(ws,str_url,url);
+				url = addSomeConditon(str_url,url);
 				if(url.length() == 0)
 					continue;
 				Url tn = new Url();

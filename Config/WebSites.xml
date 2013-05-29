@@ -927,10 +927,16 @@
      <AvgUrlLength>55</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
-   <!-- Site>
-     <Addr>http://news.ifeng.com/mainland</Addr>
+   <Site>
+     <Addr>http://www.news.cn/politics/</Addr>
      <Type>2</Type>
-   </Site-->
+     <Filter>
+     	<Pattern level="1">news.xinhuanet.com</Pattern>
+     	<Pattern level="2">politics</Pattern>
+     </Filter>
+     <AvgUrlLength>55</AvgUrlLength>
+     <AvgTitleLength>10</AvgTitleLength>
+   </Site>
    <Site>
      <Addr>http://www.news.cn/world</Addr>
      <Type>3</Type>
@@ -1752,7 +1758,7 @@
      <Filter>
      	<Pattern level="1">news.takungpao.com</Pattern>
      </Filter>
-     <AvgUrlLength>55</AvgUrlLength>
+     <AvgUrlLength>30</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
@@ -1762,7 +1768,7 @@
      	<Pattern level="1">news.takungpao.com</Pattern>
      	<Pattern level="2">mainland</Pattern>
      </Filter>
-     <AvgUrlLength>55</AvgUrlLength>
+     <AvgUrlLength>30</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
@@ -1772,7 +1778,7 @@
      	<Pattern level="1">news.takungpao.com</Pattern>
      	<Pattern level="2">world</Pattern>
      </Filter>
-     <AvgUrlLength>55</AvgUrlLength>
+     <AvgUrlLength>30</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
@@ -1782,7 +1788,7 @@
      	<Pattern level="1">news.takungpao.com</Pattern>
      	<Pattern level="2">society</Pattern>
      </Filter>
-     <AvgUrlLength>55</AvgUrlLength>
+     <AvgUrlLength>30</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
@@ -1792,7 +1798,7 @@
      	<Pattern level="1">news.takungpao.com</Pattern>
      	<Pattern level="2">military</Pattern>
      </Filter>
-     <AvgUrlLength>55</AvgUrlLength>
+     <AvgUrlLength>30</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
@@ -1801,7 +1807,7 @@
      <Filter>
      	<Pattern level="1">health.takungpao.com</Pattern>
      </Filter>
-     <AvgUrlLength>55</AvgUrlLength>
+     <AvgUrlLength>30</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
@@ -1810,7 +1816,7 @@
      <Filter>
      	<Pattern level="1">sports.takungpao.com</Pattern>
      </Filter>
-     <AvgUrlLength>55</AvgUrlLength>
+     <AvgUrlLength>30</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
@@ -1819,7 +1825,7 @@
      <Filter>
      	<Pattern level="1">ent.takungpao.com</Pattern>
      </Filter>
-     <AvgUrlLength>55</AvgUrlLength>
+     <AvgUrlLength>30</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
@@ -1829,7 +1835,7 @@
      	<Pattern level="1">finance.takungpao.com</Pattern>
      	<Pattern level="2">tech</Pattern>
      </Filter>
-     <AvgUrlLength>55</AvgUrlLength>
+     <AvgUrlLength>30</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
       <Site>
@@ -1838,7 +1844,7 @@
      <Filter>
      	<Pattern level="1">edu.takungpao.com</Pattern>
      </Filter>
-     <AvgUrlLength>55</AvgUrlLength>
+     <AvgUrlLength>30</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
 </WebSite> 
@@ -2002,138 +2008,128 @@
 		<Filter>
 			<Pattern level="1">www.fabao365.com</Pattern>
 		</Filter>
-		<AvgUrlLength>35</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site> 
 	<Site>
 		<Addr>http://www.fabao365.com/news/opinion</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news/hot</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">zt</Pattern>
 			<Pattern level="3">hot</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news/bgt</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news/shyf</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news/fzpl</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news/msjd</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news/bgt</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news/ffcl</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news/lfdt</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news/sfdt</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 	<Site>
 		<Addr>http://www.fabao365.com/news/mthz</Addr>
 		<Type>12</Type>
 		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
+			<Pattern level="1">www.fabao365.com</Pattern>
 			<Pattern level="2">news</Pattern>
 		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.fabao365.com/hunyin/beijing</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.fabao165.com</Pattern>
-			<Pattern level="2">hunyin</Pattern>
-		</Filter>
-		<AvgUrlLength>30</AvgUrlLength>
+		<AvgUrlLength>20</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 </WebSite>
@@ -2267,16 +2263,6 @@
 		<AvgUrlLength>50</AvgUrlLength>
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
-	<Site>
-		<Addr>http://www.jcrb.com/photo/</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.jcrb.com</Pattern>
-			<Pattern level="2">photo</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
 </WebSite>
 <!--for chinacourt.com-->
 <WebSite name="chinacourt">
@@ -2361,153 +2347,6 @@
 		<AvgTitleLength>0</AvgTitleLength>
 	</Site>
 </WebSite>
-<!--for chinalawinfo.com-->
-<WebSite name="chinalawinfo">
-	<Site>
-		<Addr>http://www.chinalawinfo.com/fzdt/NewsList.aspx</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.chinalawinfo.com</Pattern>
-			<Pattern level="2">fzdt</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-</WebSite>
-<!--for legalinfo.com-->
-<WebSite name="legalinfo">
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legalinfo.gov.cn</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/node_7863.htm</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legalinfo.gov.cn</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/Case_record/node_40468.htm</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legalinfo.gov.cn</Pattern>
-			<Pattern level="2">Case_record</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/pfzx/node_7885.htm</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legalinfo.gov.cn</Pattern>
-			<Pattern level="2">pfzx</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/pfkt/node_7886.htm</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legalinfo.gov.cn</Pattern>
-			<Pattern level="2">pfkt</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/node_7870.htm</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legaldaily.com.cn</Pattern>
-			<Pattern level="2">direct_seeding</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/node_7865.htm</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legaldaily.com.cn</Pattern>
-			<Pattern level="2">video</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/node_7871.htm</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legalinfo.gov.cn</Pattern>
-			<Pattern level="2">index</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/node_7866.htm</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legalinfo.gov.cn</Pattern>
-			<Pattern level="2">index</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://bbs.legaldaily.com.cn/</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">bbs.legaldaily.com.cn</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/node_7879.htm</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legalinfo.gov.cn</Pattern>
-			<Pattern level="2">index</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-	<Site>
-		<Addr>http://www.legalinfo.gov.cn/Extraterritorial_jurisdiction/node_40688.htm</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.legalinfo.gov.cn</Pattern>
-			<Pattern level="2">Extraterritorial_jurisdiction</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-</WebSite>
-<!-- for criminallaw.com.cn -->
-<WebSite name="criminallaw">
-	<Site>
-		<Addr>http://www.criminallaw.com.cn/</Addr>
-		<Type>12</Type>
-		<Filter>
-			<Pattern level="1">www.criminallaw.com.cn</Pattern>
-			<Pattern level="2">article</Pattern>
-		</Filter>
-		<AvgUrlLength>50</AvgUrlLength>
-		<AvgTitleLength>0</AvgTitleLength>
-	</Site>
-</WebSite>
-
 </WebSites>
 
 
