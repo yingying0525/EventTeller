@@ -48,9 +48,9 @@ public class Crawler {
 	private List<Article> update_index ;
 	private ArticleTitleIndex ati ;
 	private String ArticleIndexPath ;
+	private Map<String,Integer> TDF;
 	
 	///will be loaded into memory
-	private Map<String,Integer> TDF;
 	private int TDF_doc_num;
 	private int TDF_word_num;			
 	private String TDF_Path ;
@@ -75,8 +75,8 @@ public class Crawler {
 			TDF_word_num = Integer.valueOf(nums[1]);
 			while((line = br.readLine())!= null){
 				String[] its = line.split("\t");
-				int count = Integer.valueOf(its[1]);
-				TDF.put(its[0], count);
+				Integer count = Integer.valueOf(new String(its[1]));
+				TDF.put(new String(its[0]), count);				
 			}
 			br.close();
 		} catch (FileNotFoundException e) {
@@ -156,7 +156,7 @@ public class Crawler {
 		Article sameat = ati.checkSameInIndex(at);
 		if(sameat != null){
 			sameat.setNumber(sameat.getNumber() + 1);
-			sameat.setSameurls(sameat.getSameurls() + " " + at.getId());
+			sameat.setSameurls(new String(sameat.getSameurls() + " " + at.getId()));
 			mem_ats.put(sameat.getId(), sameat);
 			System.out.println("find in index " + sameat.getId() + " --- " + at.getId() + " -- ");
 		}else if(sameat == null){
@@ -291,7 +291,7 @@ public class Crawler {
 		int tmp_number = 0;
 		List<ArticleContent> update_idf = new ArrayList<ArticleContent>();
 		for(Url url : urls){
-			///extract article content
+//			///extract article content
 			Extractor etor = new Extractor(url.getUrl());			
 			Article at = new Article();			
 			at = etor.getArticleFromUrl(url);	
@@ -313,32 +313,27 @@ public class Crawler {
 				System.out.println(url.getId());
 			}
 		}
-		///update the IDF and DDF
+		//update the IDF and DDF
 		updateDDF(update_idf);
 		updateTDF(update_idf);
-		///update DB
+		//update DB
 		List<Article> toupdate = new ArrayList<Article>();
 		toupdate.addAll(mem_ats.values());
 		util.Util.updateDB(toupdate);
 		util.Util.updateDB(urls);
 		//update index	
-		ati.addDocument(update_index);
-		//for gc
-		update_idf = null;
-		urls = null;
-		toupdate = null;		
+		ati.addDocument(update_index);	
 	}
 
 	
 	public static void main(String[] args){
+		Crawler ac = new Crawler();
 		while(true){
-			Crawler ac = new Crawler();
 			ac.runTask();
-			//for gc test
-			ac = null;
 			try {
 				System.out.println("now end of one crawler,sleep for:"+Const.AritcleSleepTime /1000 /60 +" minutes. "+new Date().toString());
-				Thread.sleep(Const.AritcleSleepTime );
+				System.gc();
+				Thread.sleep(Const.AritcleSleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}			

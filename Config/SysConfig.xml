@@ -14,7 +14,7 @@
 	</Config>
 	<Config name="UrlsBloomFilterFilePath">
 		<!-- Path>/home/iir/hgj/bloom/urls</Path -->
-		<Path>D:\\et\\abc.txt</Path>
+		<Path>D:\\ett\\urls</Path>
 	</Config>
 	<Config name="ArticleIndex">
 		<!-- Path>/home/iir/hgj/bloom/urls</Path -->

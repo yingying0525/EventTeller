@@ -16,9 +16,8 @@ import db.data.Word;
 
 
 
-public class test{
+public class test implements Runnable{
 		
-	
 	public void calPrecision(Article at){
 		System.out.println(at.getTitle() + "\t" + at.getNumber() + "\t" + at.getUrl());
 		String[] ids = at.getSameurls().split(" ");
@@ -108,6 +107,14 @@ public class test{
 		ts.evaluateArticlePR();
 		double sim = ts.getTwoArticleSim(1226693, 1225893);
 		System.out.println(sim);
+		
+	}
+
+	
+	
+	@Override
+	public void run() {
+		
 		
 	}
 		

@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import news.index.Index;
@@ -115,6 +116,25 @@ public class TopicTrace {
 		return results;
 	}
 	
+	private List<String> sampleIds(String ats){
+		String[] ids = ats.split(" ");
+		List<String> results = new ArrayList<String>(10);
+		Random rd = new Random(System.currentTimeMillis());
+		for(String id : ids){
+			if(ids.length <= 1){
+				continue;
+			}
+			int nextid = rd.nextInt(ids.length -1);
+			if(nextid > 0){
+				results.add(id);
+				if(results.size() >= 10){
+					break;
+				}
+			}
+		}
+		return results;
+	}
+	
 	private Topic getMostSimTopic(Article at){
 		double maxSim = -1.0;
 		Topic maxtp = null;
@@ -138,8 +158,11 @@ public class TopicTrace {
 			if(tp == null){
 				continue;
 			}
-			String[] simAts = tp.getArticles().split(" ");
-			if(simAts.length == 0){
+			///all the articles 
+			///get some sample articles to stand for the whole set
+			///accelerate speed
+			List<String> simAts = sampleIds(tp.getArticles());
+			if(simAts.size() == 0){
 				continue;
 			}
 			for(String simAt : simAts){
@@ -147,8 +170,8 @@ public class TopicTrace {
 				double score = util.Similarity.similarityOfEvent(tat, at, Idf, TotalDocNum);
 				totalSim += score;
 			}
-			if(totalSim / simAts.length > maxSim){
-				maxSim = totalSim / simAts.length;
+			if(totalSim / simAts.size() > maxSim){
+				maxSim = totalSim / simAts.size();
 				maxtp = tp;
 			}			
 		}
@@ -241,9 +264,10 @@ public class TopicTrace {
 			Topic simTopic = getMostSimTopic(at);
 			if(simTopic != null){
 				updateTopicInfo(simTopic,at);	
-				System.out.println("find sim topic ..." + simTopic.getId() + "\t" + simTopic.getArticles());
+				System.out.println("find sim topic ..." + simTopic.getId());
 			}else{
 				simTopic = newTopic(simTopic,at);
+				System.out.println("new topic ..." + simTopic.getId());
 			}
 			at.setTopicid(simTopic.getId());
 			at.setTaskstatus(util.Const.TASKID.get("ArticleToTopic"));

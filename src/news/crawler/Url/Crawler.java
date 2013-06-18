@@ -38,15 +38,18 @@ import db.data.Url;
  * @author mblank
  *
  */
-public class Crawler{
+public class Crawler implements Runnable{
 		
 	private static String Bloom_File_Path;
+	private BloomFilter bloomfilter;
 	
 	public Crawler(){
 		Log.getLogger().info("Start TitleCrawler!");
 		Config cfg = new Config(Const.SYS_CONFIG_PATH);
 		Node elm = cfg.selectNode("/Configs/Config[@name='UrlsBloomFilterFilePath']/Path");
 		Bloom_File_Path =elm.getText();
+		bloomfilter =  InitBloomFilter();
+		System.out.println("bloom filter init ok...");	
 	}
 	
 	
@@ -400,41 +403,38 @@ public class Crawler{
 		}
 	}
 	
-	public  void runTask(){
+	@Override
+	public  void run(){
 		Const.loadTaskid();
-		BloomFilter bf = InitBloomFilter();
-		System.out.println("bloom filter init ok...");	
-			Log.getLogger().info("Start Crawler for titleCrawler");
-			List<Url> NewUrls = new ArrayList<Url>();
-			NewUrls = getAllTitleNews();
-			if(bf == null)
-				return;		
-			List<Url> updateUrls = new ArrayList<Url>();	
-			int max_len_url = 0;
-			for(Url tn : NewUrls){
-				if(!bf.contains(tn.getUrl().toLowerCase())){
-					updateUrls.add(tn);
-					bf.add(tn.getUrl().toLowerCase());
-				}
-				if(tn.getUrl().length() > max_len_url){
-					max_len_url = tn.getUrl().length();
-				}
+		Log.getLogger().info("Start Crawler for titleCrawler");
+		List<Url> NewUrls = new ArrayList<Url>();
+		NewUrls = getAllTitleNews();
+		if(bloomfilter == null)
+			return;		
+		List<Url> updateUrls = new ArrayList<Url>();	
+		int max_len_url = 0;
+		for(Url tn : NewUrls){
+			if(!bloomfilter.contains(tn.getUrl().toLowerCase())){
+				updateUrls.add(tn);
+				bloomfilter.add(tn.getUrl().toLowerCase());
 			}
-			util.Util.updateDB(updateUrls);
-			WriterToBloomFile(updateUrls);			
-			System.out.println("now end of Crawler..update urls -- " + updateUrls.size());					
-			System.out.println("end of java_gc..so happy~!");	
+			if(tn.getUrl().length() > max_len_url){
+				max_len_url = tn.getUrl().length();
+			}
+		}
+		util.Util.updateDB(updateUrls);
+		WriterToBloomFile(updateUrls);		
+		System.out.println("now end of Crawler..update urls -- " + updateUrls.size());	
 	}
 	
 	
 	public static void main(String[] args){
+		Crawler uc = new Crawler();
 		while(true){
-			Crawler uc = new Crawler();
-			uc.runTask();
-			//for gc
-			uc = null;
+			uc.run();
 			try {
 				System.out.println("now end of one crawler,sleep for:"+Const.WebSiteSleepTime/1000/60+" minutes. "+new Date().toString());
+				System.gc();
 				Thread.sleep(Const.WebSiteSleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

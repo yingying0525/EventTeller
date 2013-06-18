@@ -89,11 +89,13 @@ public class Util {
 				e.printStackTrace();
 			}
 		}
-		//for gc
-		scrs = null;
-		tx.commit();
-		session.flush();	
-		session.close();
+		try{
+			tx.commit();
+			session.flush();	
+			session.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

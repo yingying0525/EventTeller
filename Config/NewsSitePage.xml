@@ -62,6 +62,7 @@
 			<Id>main_content</Id>
 			<SubTag index="0">img</SubTag>
 			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
 			<BaseUrl>!no!</BaseUrl>
 		</NewsImg>
 		<NewsTag>
