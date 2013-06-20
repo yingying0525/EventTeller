@@ -25,6 +25,8 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+import db.data.Article;
+
 public abstract class Index {
 	
 		
@@ -49,10 +51,10 @@ public abstract class Index {
      * 查询 
      * @throws Exception 
      */       
-	public List<Integer> search(String text,boolean single, int maxsize){  
+	public List<Article> search(String text,boolean single, int maxsize){  
 
     	Directory dir;
-        List<Integer> results = new ArrayList<Integer>();
+        List<Article> results = new ArrayList<Article>();
         ///check if there is the index
 		File file = new File(IndexPath);
 		if(!file.exists()){
@@ -77,8 +79,16 @@ public abstract class Index {
 	        for(int i=0; i < scoreDocs.length; i++) {  
 	            int doc = scoreDocs[i].doc;  
 	            Document document = searcher.doc(doc);
+	            Article at = new Article();
 	            String id = document.get("id");
-	            results.add(Integer.valueOf(id));
+	            String title = document.get("title");
+	            String content = document.get("content");
+	            String topicId = document.get("topicId");
+	            at.setId(Integer.valueOf(id));
+	            at.setTitle(title);
+	            at.setContent(content);
+	            at.setTopicid(Integer.valueOf(topicId));
+	            results.add(at);
 	        }  
 	        reader.close();  
 		} catch (IOException e) {

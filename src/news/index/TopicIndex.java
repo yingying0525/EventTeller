@@ -13,7 +13,7 @@ import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 
-import db.data.Topic;
+import db.data.Article;
 
 public class TopicIndex extends Index{
 	
@@ -22,17 +22,19 @@ public class TopicIndex extends Index{
 		IndexPath = index;
 	}
 	
-	public void addDocument(List<Topic> scrs){
+	public void addDocument(List<Article> scrs){
 		File file = new File(IndexPath);
 		if(!file.exists()){
 			file.mkdir();
 		}
 		IndexWriter iwriter = CreateWriter(IndexPath);
-		for(Topic tp : scrs){
+		for(Article tp : scrs){
 			try {
 	        	Document doc = new Document();
 	   		 	doc.add(new StringField("id", tp.getId().toString(), Store.YES));  
 	            doc.add(new TextField("title", tp.getTitle(), Store.YES));  
+	            doc.add(new StringField("content",tp.getContent(),Store.YES));
+	            doc.add(new StringField("topicId",tp.getTopicid().toString(),Store.YES));
 				iwriter.addDocument(doc);					
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -46,29 +48,31 @@ public class TopicIndex extends Index{
 		}
 	}
 	
-	public void addDocument(Topic instance){
-		List<Topic> topics = new ArrayList<Topic>();
+	public void addDocument(Article instance){
+		List<Article> topics = new ArrayList<Article>();
 		topics.add(instance);
 		addDocument(topics);
 	}
 	
-	public void update(Topic instance){
-		List<Topic> instances = new ArrayList<Topic>();
+	public void update(Article instance){
+		List<Article> instances = new ArrayList<Article>();
 		instances.add(instance);
 		update(instances);
 	}
 	
-	public void update(Collection<Topic> instances){
+	public void update(Collection<Article> instances){
 		File file = new File(IndexPath);
 		if(!file.exists()){
 			file.mkdir();
 		}
 		IndexWriter iwriter = CreateWriter(IndexPath);
-		for(Topic instance : instances){
+		for(Article instance : instances){
 			Term term=new Term("id", String.valueOf(instance.getId()));
 			Document doc = new Document();
 			doc.add(new StringField("id", String.valueOf(instance.getId()), Store.YES));  
 			doc.add(new TextField("title", instance.getTitle(), Store.YES));  
+            doc.add(new StringField("content",instance.getContent(),Store.YES));
+            doc.add(new StringField("topicId",instance.getTopicid().toString(),Store.YES));
 			try {
 				iwriter.updateDocument(term, doc);
 			} catch (IOException e) {

@@ -255,9 +255,7 @@ public class Crawler implements Runnable{
 					continue;
 				}			
 				if(mp_tn.containsKey(url)){
-					int type = tn.getSubtopicId();
-					type = type | mp_tn.get(url).getSubtopicId();
-					tn.setSubtopicId(type);
+					continue;
 				}
 				mp_tn.put(url, tn);
 				url_size++;

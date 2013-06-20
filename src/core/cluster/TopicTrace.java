@@ -33,8 +33,8 @@ public class TopicTrace {
 	public String IndexPath;
 	public Index TopicIndex;
 	public String IDFPath;
-	public Map<Integer,Topic> MemoryTopics ;
-	public Map<String,Set<Integer>> MemoryIndex ;
+	public Map<Integer,Article> MemoryArticles ;
+	public Map<String,Set<Article>> MemoryIndex ;
 	
 	
 	private int TotalDocNum ;
@@ -50,8 +50,8 @@ public class TopicTrace {
 		IDFPath = elemIdf.getText();
 		Idf = new HashMap<String,Integer>();
 		initIdf();
-		MemoryTopics = new HashMap<Integer,Topic>();
-		MemoryIndex = new HashMap<String,Set<Integer>>();
+		MemoryArticles = new HashMap<Integer,Article>();
+		MemoryIndex = new HashMap<String,Set<Article>>();
 	}
 	
 	////get articles from article table where taskstatus = 1 (stands for only article)
@@ -60,7 +60,7 @@ public class TopicTrace {
 	private List<Article> getInstances(){
 		List<Article> results = new ArrayList<Article>();
 		String hql = "from Article as obj where obj.taskstatus = 1 and pubtime is not null order by obj.publishtime asc";
-		results = util.Util.getElementsFromDB(hql,500);
+		results = util.Util.getElementsFromDB(hql,2000);
 		return results;
 	}
 	
@@ -105,9 +105,9 @@ public class TopicTrace {
 		return result.toString();
 	}
 	
-	private Set<Integer> getMemoryIndexSimTopic(String text){
+	private Set<Article> getMemoryIndexSimTopic(String text){
 		List<String> words = util.ChineseSplit.SplitStr(text);
-		Set<Integer> results = new HashSet<Integer>();
+		Set<Article> results = new HashSet<Article>();
 		for(String wd : words){
 			if(MemoryIndex.containsKey(wd)){
 				results.addAll(MemoryIndex.get(wd));
@@ -135,50 +135,44 @@ public class TopicTrace {
 		return results;
 	}
 	
-	private Topic getMostSimTopic(Article at){
+	private int getMostSimTopic(Article at){
+		Map<Integer,Double> totalSims = new HashMap<Integer,Double>();
+		Map<Integer,Integer> totalCount = new HashMap<Integer,Integer>();
 		double maxSim = -1.0;
-		Topic maxtp = null;
+		int maxId = -1;
 		String searchText = titleToSearchString(at.getTitle());
-		List<Integer> simIdsInIndex = TopicIndex.search(searchText, false, 50);
-		Set<Integer> simIds = getMemoryIndexSimTopic(at.getTitle());
-		for(Integer simId : simIdsInIndex){
+		List<Article> simIdsInIndex = TopicIndex.search(searchText, false, 100);
+		Set<Article> simIds = getMemoryIndexSimTopic(at.getTitle());
+		for(Article simId : simIdsInIndex){
 			if(!simIds.contains(simId)){
 				simIds.add(simId);
 			}			
 		}
-		for(Integer simId : simIds){
-			double totalSim = 0.0;
-			Topic tp = null;
-			if(MemoryTopics.containsKey(simId)){
-				tp = MemoryTopics.get(simId);
-			}else{
-				String hql = "from Topic as obj where obj.id = " + simId;
-				tp = util.Util.getElementFromDB(hql);
-			}
-			if(tp == null){
-				continue;
-			}
+		for(Article simId : simIds){
 			///all the articles 
 			///get some sample articles to stand for the whole set
 			///accelerate speed
-			List<String> simAts = sampleIds(tp.getArticles());
-			if(simAts.size() == 0){
-				continue;
+			double score = util.Similarity.similarityOfEvent(simId, at, Idf, TotalDocNum);
+			if(totalSims.containsKey(simId.getTopicid())){
+				totalSims.put(simId.getTopicid(), score + totalSims.get(simId.getTopicid()));
+				totalCount.put(simId.getTopicid(), 1 + totalCount.get(simId.getTopicid()));
+			}else{
+				totalSims.put(simId.getTopicid(), score );
+				totalCount.put(simId.getTopicid(), 1 );
+			}		
+		}
+		Iterator<Integer> sids = totalSims.keySet().iterator();
+		while(sids.hasNext()){
+			int key = sids.next();
+			if(totalSims.get(key) / totalCount.get(key) > maxSim){
+				maxSim = totalSims.get(key) / totalCount.get(key);
+				maxId = key;
 			}
-			for(String simAt : simAts){
-				Article tat = util.Util.getArticleById(simAt);
-				double score = util.Similarity.similarityOfEvent(tat, at, Idf, TotalDocNum);
-				totalSim += score;
-			}
-			if(totalSim / simAts.size() > maxSim){
-				maxSim = totalSim / simAts.size();
-				maxtp = tp;
-			}			
 		}
 		if(maxSim < util.Const.MaxTopicSimNum){
-			maxtp = null;
+			maxId = -1;
 		}
-		return maxtp;
+		return maxId;
 	}
 	
 	public void updateTopicInfo(Topic tp,Article at){
@@ -261,8 +255,8 @@ public class TopicTrace {
 		List<Article> articles = getInstances();
 		for(Article at : articles){
 			//find most similar topic in memory and index
-			Topic simTopic = getMostSimTopic(at);
-			if(simTopic != null){
+			int simTopicId = getMostSimTopic(at);
+			if(simTopicId > 0){
 				updateTopicInfo(simTopic,at);	
 				System.out.println("find sim topic ..." + simTopic.getId());
 			}else{
