@@ -39,25 +39,22 @@ public class ArticleTitleIndex extends Index{
 			return null;
 		}
 		ArticleTitleIndex ati = new ArticleTitleIndex(IndexPath);
-		List<Integer> sims = ati.search(tmpQuery.toString(), false,500);	
-		for(Integer tmpat : sims){
-			if(tmpat == at.getId())
+		List<Article> sims = ati.search(tmpQuery.toString(), false,500);	
+		for(Article tmpat : sims){
+			if(tmpat.getId() == at.getId())
 				continue;
-			///article index only contains id and title.
-			/// use id to get article from db
-			Article tmpatdb = util.Util.getArticleById(tmpat.toString());
-			if(tmpatdb != null){
-				if(tmpatdb.getTitle().equals(at.getTitle())){
-					result = tmpatdb;
+			if(tmpat != null){
+				if(tmpat.getTitle().equals(at.getTitle())){
+					result = tmpat;
 					break;
 				}		
-				score = util.Similarity.ContentOverlap(tmpatdb.getContent(),at.getContent());
+				score = util.Similarity.ContentOverlap(tmpat.getContent(),at.getContent());
 				if(score > 1.85){
-					tmpatdb.setContent(at.getContent());
-					tmpatdb.setTitle(at.getTitle());
+					tmpat.setContent(at.getContent());
+					tmpat.setTitle(at.getTitle());
 				}
 				if(score > util.Const.MaxEventSimNum && score <= 1.0 || score > 1.0 + util.Const.MaxEventSimNum){
-					result = tmpatdb;
+					result = tmpat;
 					break;
 				}
 			}

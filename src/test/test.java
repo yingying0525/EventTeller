@@ -50,22 +50,20 @@ public class test implements Runnable{
 				continue;
 			sb.append(twd + " ");
 		}  
-		List<Integer> sims = ati.search(sb.toString(), false,50);
-		for(Integer tat : sims){
-			if(tat - at.getId().intValue() == 0){
+		List<Article> sims = ati.search(sb.toString(), false,50);
+		for(Article tat : sims){
+			if(tat.getId() - at.getId().intValue() == 0){
 				continue;
 			}
 			System.out.println(at.getId() + "\t" + tat);
-			String ahql = "from Article as obj where obj.id = " + tat;
-			Article ata = util.Util.getElementFromDB(ahql);
-			double osim = util.Similarity.ContentOverlap(at.getContent(), ata.getContent());
-			double ssim = getTwoArticleSim(at,ata);
+			double osim = util.Similarity.ContentOverlap(at.getContent(), tat.getContent());
+			double ssim = getTwoArticleSim(at,tat);
 			if(osim > 1 && osim != 2){
 				osim = osim - 1;
 			}
 			if(osim < 0.2 )
 				continue;
-			bw.write(osim + "\t" + ssim + "\t" + tat + "\t" + ata.getTitle() + "\t" + ata.getNumber() + "\t" + "\t" + ata.getUrl() + "\n");
+			bw.write(osim + "\t" + ssim + "\t" + tat + "\t" + tat.getTitle() + "\t" + tat.getNumber() + "\t" + "\t" + tat.getUrl() + "\n");
 		}
 		bw.write("---------------" + "\n");	
 		bw.close();

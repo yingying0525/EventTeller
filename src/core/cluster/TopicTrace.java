@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import news.index.Index;
@@ -34,11 +33,14 @@ public class TopicTrace {
 	public Index TopicIndex;
 	public String IDFPath;
 	public Map<Integer,Article> MemoryArticles ;
+	public Map<Integer,Topic> MemoryTopics;
 	public Map<String,Set<Article>> MemoryIndex ;
 	
 	
 	private int TotalDocNum ;
 	private Map<String,Integer> Idf ;
+	
+	private int MaxTopicId = 0;
 	
 	public TopicTrace(){
 		Const.loadTaskid();
@@ -51,7 +53,10 @@ public class TopicTrace {
 		Idf = new HashMap<String,Integer>();
 		initIdf();
 		MemoryArticles = new HashMap<Integer,Article>();
+		MemoryTopics = new HashMap<Integer,Topic>();
 		MemoryIndex = new HashMap<String,Set<Article>>();
+		String hql = "select max(id) from Topic";
+		MaxTopicId = util.Util.getMaxIdFromDB(hql);
 	}
 	
 	////get articles from article table where taskstatus = 1 (stands for only article)
@@ -116,25 +121,6 @@ public class TopicTrace {
 		return results;
 	}
 	
-	private List<String> sampleIds(String ats){
-		String[] ids = ats.split(" ");
-		List<String> results = new ArrayList<String>(10);
-		Random rd = new Random(System.currentTimeMillis());
-		for(String id : ids){
-			if(ids.length <= 1){
-				continue;
-			}
-			int nextid = rd.nextInt(ids.length -1);
-			if(nextid > 0){
-				results.add(id);
-				if(results.size() >= 10){
-					break;
-				}
-			}
-		}
-		return results;
-	}
-	
 	private int getMostSimTopic(Article at){
 		Map<Integer,Double> totalSims = new HashMap<Integer,Double>();
 		Map<Integer,Integer> totalCount = new HashMap<Integer,Integer>();
@@ -149,9 +135,6 @@ public class TopicTrace {
 			}			
 		}
 		for(Article simId : simIds){
-			///all the articles 
-			///get some sample articles to stand for the whole set
-			///accelerate speed
 			double score = util.Similarity.similarityOfEvent(simId, at, Idf, TotalDocNum);
 			if(totalSims.containsKey(simId.getTopicid())){
 				totalSims.put(simId.getTopicid(), score + totalSims.get(simId.getTopicid()));
@@ -175,7 +158,18 @@ public class TopicTrace {
 		return maxId;
 	}
 	
-	public void updateTopicInfo(Topic tp,Article at){
+	public Topic updateTopicInfo(int tid,Article at){
+		Topic tp = new Topic();
+		if(MemoryTopics.containsKey(tid)){
+			tp = MemoryTopics.get(tid);
+		}else{
+			String hql = "from Topic as obj where obj.id = " + tid;
+			tp = util.Util.getElementFromDB(hql);
+		}
+		
+		if(tp == null){
+			return null;
+		}
 		tp.setTitle(tp.getTitle() + "!##!" + at.getTitle());
 		tp.setArticles(tp.getArticles() + " " + at.getId());
 		Date time = at.getPublishtime();
@@ -187,7 +181,7 @@ public class TopicTrace {
 		}
 		//update keywords
 		KeyWords kw = new KeyWords(tp.getTitle());
-		tp.setKeyWords(kw.getTopNwords(7, 0));
+		tp.setKeyWords(kw.getTopNwords(8, 0));
 		//update imgs
 		tp.setImgs(tp.getImgs() + "@@@@" + at.getImgs());
 		//update number
@@ -201,51 +195,52 @@ public class TopicTrace {
 		//update summary
 		//update relations
 		//should add at to the relationships of topic tp
+		
+		return tp;
 	}
 	
-	public Topic newTopic(Topic simTopic,Article at){
-		simTopic = new Topic();
+	public Topic newTopic(Article at){
+		Topic Ntopic = new Topic();
 		//get the max topic id
-		String hql = "select max(id) from Topic";
-		int maxid = util.Util.getMaxIdFromDB(hql);
 		Iterator<Integer> ids = MemoryTopics.keySet().iterator();
 		while(ids.hasNext()){
 			int tid = ids.next();
-			if(maxid < tid){
-				maxid = tid;
+			if(MaxTopicId < tid){
+				MaxTopicId = tid;
 			}
 		}
-		if(maxid < 0){
-			maxid = 0;
+		if(MaxTopicId < 0){
+			MaxTopicId = 0;
 		}
-		simTopic.setId(maxid + 1);
-		simTopic.setArticles(String.valueOf(at.getId()));
-		simTopic.setEndTime(at.getPublishtime());
-		simTopic.setStartTime(at.getPublishtime());
-		simTopic.setTitle(at.getTitle());
-		simTopic.setImgs(at.getImgs());
+		Ntopic.setId(MaxTopicId + 1);
+		Ntopic.setArticles(String.valueOf(at.getId()));
+		Ntopic.setEndTime(at.getPublishtime());
+		Ntopic.setStartTime(at.getPublishtime());
+		Ntopic.setTitle(at.getTitle());
+		Ntopic.setImgs(at.getImgs());
 		KeyWords kw = new KeyWords(at.getTitle());
-		simTopic.setKeyWords(kw.getTopNwords(7, 0));
-		simTopic.setNumber(1);
+		Ntopic.setKeyWords(kw.getTopNwords(7, 0));
+		Ntopic.setNumber(1);
 		//should update summary and relations
 		
-		return simTopic;
+		//add to memory topics
+		MemoryTopics.put(Ntopic.getId(), Ntopic);
+		return Ntopic;
 	}
 	
 	
-	public void updateMemory(Topic tp){
-		MemoryTopics.put(tp.getId(), tp);
-		List<String> words = util.ChineseSplit.SplitStr(tp.getTitle());
+	public void updateMemoryIndex(Article at){
+		List<String> words = util.ChineseSplit.SplitStr(at.getTitle());
 		for(String wd : words){
 			if(wd.length() < 2){
 				continue;
 			}
-			Set<Integer> topics = new HashSet<Integer>();
+			Set<Article> ats = new HashSet<Article>();
 			if(MemoryIndex.containsKey(wd)){
-				topics = MemoryIndex.get(wd);
+				ats = MemoryIndex.get(wd);
 			}
-			topics.add(tp.getId());
-			MemoryIndex.put(wd, topics);			
+			ats.add(at);
+			MemoryIndex.put(wd, ats);			
 		}
 	}
 	
@@ -256,17 +251,18 @@ public class TopicTrace {
 		for(Article at : articles){
 			//find most similar topic in memory and index
 			int simTopicId = getMostSimTopic(at);
+			Topic simTopic = new Topic();
 			if(simTopicId > 0){
-				updateTopicInfo(simTopic,at);	
-				System.out.println("find sim topic ..." + simTopic.getId());
+				simTopic = updateTopicInfo(simTopicId,at);	
+				System.out.println("find sim topic ..." + simTopicId);
 			}else{
-				simTopic = newTopic(simTopic,at);
-				System.out.println("new topic ..." + simTopic.getId());
+				simTopic = newTopic(at);
 			}
 			at.setTopicid(simTopic.getId());
 			at.setTaskstatus(util.Const.TASKID.get("ArticleToTopic"));
 			updateTopics.add(simTopic);
-			updateMemory(simTopic);
+			MemoryTopics.put(simTopic.getId(), simTopic);
+			updateMemoryIndex(at);
 		}
 		//update artices
 		util.Util.updateDB(articles);
@@ -274,7 +270,7 @@ public class TopicTrace {
 		util.Util.updateDB(updateTopics);
 		//update index
 		TopicIndex ti = new TopicIndex(IndexPath);
-		ti.update(updateTopics);
+		ti.update(articles);
 	}
 	
 	public static void main(String[] args){
