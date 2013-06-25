@@ -41,9 +41,9 @@ public class Const implements IConst{
 	public static int ReleventEvents = 50;
 	public static int ReleventArticles = 50;
 	
-	public static int TitleWordsWeight = 5;
-	public static int NameEntityWeight = 3;
-	public static int LocationWeight = 4;
+	public static int TitleWordsWeight = 4;
+	public static int NameEntityWeight = 2;
+	public static int LocationWeight = 1;
 	
 	
 	public static int[] SUBTOPICID =new int[]{1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192};

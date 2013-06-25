@@ -1,12 +1,12 @@
 #Fat Jar Configuration File
-#Tue Jun 18 22:25:44 CST 2013
+#Sat Jun 22 22:35:37 CST 2013
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=false
-jarname=D\:\\HtmlDownloader.jar
+jarname=D\:\\TopicTrace.jar
 manifest.mergeall=true
-manifest.mainclass=test.NewsDownloader
+manifest.mainclass=core.cluster.TopicTrace
 manifest.file=<createnew>
 jarname.isextern=true
 onejar.expand=

@@ -102,8 +102,8 @@ public class test implements Runnable{
 	
 	public static void main(String[] args) throws IOException{
 		test ts = new test();
-		ts.evaluateArticlePR();
-		double sim = ts.getTwoArticleSim(1226693, 1225893);
+//		ts.evaluateArticlePR();
+		double sim = ts.getTwoArticleSim(21675, 22105);
 		System.out.println(sim);
 		
 	}

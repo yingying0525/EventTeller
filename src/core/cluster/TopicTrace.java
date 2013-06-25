@@ -65,7 +65,7 @@ public class TopicTrace {
 	private List<Article> getInstances(){
 		List<Article> results = new ArrayList<Article>();
 		String hql = "from Article as obj where obj.taskstatus = 1 and pubtime is not null order by obj.publishtime asc";
-		results = util.Util.getElementsFromDB(hql,2000);
+		results = util.Util.getElementsFromDB(hql,500);
 		return results;
 	}
 	
@@ -91,7 +91,6 @@ public class TopicTrace {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(Idf.size());
 	}
 	
 	/**
@@ -248,13 +247,17 @@ public class TopicTrace {
 	public void RunCluster(){
 		Set<Topic> updateTopics = new HashSet<Topic>();
 		List<Article> articles = getInstances();
+		int num = 0;
 		for(Article at : articles){
 			//find most similar topic in memory and index
+			num ++;
+			if(num % 50 == 0){
+				System.out.println(at.getId() +"\t" + at.getPublishtime());
+			}
 			int simTopicId = getMostSimTopic(at);
 			Topic simTopic = new Topic();
 			if(simTopicId > 0){
 				simTopic = updateTopicInfo(simTopicId,at);	
-				System.out.println("find sim topic ..." + simTopicId);
 			}else{
 				simTopic = newTopic(at);
 			}
@@ -279,7 +282,7 @@ public class TopicTrace {
 			ctt.RunCluster();
 			try {
 				System.out.println("now end of one cluster,sleep for:"+Const.ClusterToTopicSleepTime /1000 /60 +" minutes. "+new Date().toString());
-				Thread.sleep(Const.ClusterToTopicSleepTime );
+				Thread.sleep(Const.ClusterToTopicSleepTime /60);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}			
