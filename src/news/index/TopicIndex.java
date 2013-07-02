@@ -22,6 +22,7 @@ public class TopicIndex extends Index{
 		IndexPath = index;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void addDocument(List<Article> scrs){
 		File file = new File(IndexPath);
 		if(!file.exists()){
@@ -35,6 +36,7 @@ public class TopicIndex extends Index{
 	            doc.add(new TextField("title", tp.getTitle(), Store.YES));  
 	            doc.add(new StringField("content",tp.getContent(),Store.YES));
 	            doc.add(new StringField("topicId",tp.getTopicid().toString(),Store.YES));
+	            doc.add(new StringField("publishtime",tp.getPublishtime().toLocaleString(),Store.YES));
 				iwriter.addDocument(doc);					
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -60,6 +62,7 @@ public class TopicIndex extends Index{
 		update(instances);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void update(Collection<Article> instances){
 		File file = new File(IndexPath);
 		if(!file.exists()){
@@ -73,6 +76,7 @@ public class TopicIndex extends Index{
 			doc.add(new TextField("title", instance.getTitle(), Store.YES));  
             doc.add(new StringField("content",instance.getContent(),Store.YES));
             doc.add(new StringField("topicId",instance.getTopicid().toString(),Store.YES));
+            doc.add(new StringField("publishtime",instance.getPublishtime().toLocaleString(),Store.YES));
 			try {
 				iwriter.updateDocument(term, doc);
 			} catch (IOException e) {

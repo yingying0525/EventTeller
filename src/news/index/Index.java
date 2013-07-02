@@ -2,7 +2,9 @@ package news.index;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.ansj.lucene4.AnsjAnalysis;
@@ -51,7 +53,7 @@ public abstract class Index {
      * 查询 
      * @throws Exception 
      */       
-	public List<Article> search(String text,boolean single, int maxsize){  
+	public List<Article> search(String text,boolean single, int maxsize,Date atime){  
 
     	Directory dir;
         List<Article> results = new ArrayList<Article>();
@@ -84,11 +86,22 @@ public abstract class Index {
 	            String title = document.get("title");
 	            String content = document.get("content");
 	            String topicId = document.get("topicId");
+	            String date = document.get("publishtime");
+	            try{
+	        		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        		Date dt = sdf.parse(date);
+	            	at.setPublishtime(dt);
+	            }catch(Exception e){
+	            	at.setPublishtime(new Date());
+	            	e.printStackTrace();
+	            }
 	            at.setId(Integer.valueOf(id));
 	            at.setTitle(title);
 	            at.setContent(content);
 	            at.setTopicid(Integer.valueOf(topicId));
-	            results.add(at);
+	            if(at.getPublishtime().compareTo(atime) <= 0){
+	            	results.add(at);
+	            }
 	        }  
 	        reader.close();  
 		} catch (IOException e) {

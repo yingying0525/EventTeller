@@ -25,6 +25,7 @@ import util.IOReader;
 
 import db.data.Article;
 import db.data.Topic;
+import db.data.Word;
 
 public class TopicTrace {
 	
@@ -35,6 +36,8 @@ public class TopicTrace {
 	public Map<Integer,Article> MemoryArticles ;
 	public Map<Integer,Topic> MemoryTopics;
 	public Map<String,Set<Article>> MemoryIndex ;
+	
+	private Map<Integer,String> TopicSims;
 	
 	
 	private int TotalDocNum ;
@@ -57,6 +60,7 @@ public class TopicTrace {
 		MemoryIndex = new HashMap<String,Set<Article>>();
 		String hql = "select max(id) from Topic";
 		MaxTopicId = util.Util.getMaxIdFromDB(hql);
+		TopicSims = new HashMap<Integer,String>();
 	}
 	
 	////get articles from article table where taskstatus = 1 (stands for only article)
@@ -109,25 +113,29 @@ public class TopicTrace {
 		return result.toString();
 	}
 	
-	private Set<Article> getMemoryIndexSimTopic(String text){
-		List<String> words = util.ChineseSplit.SplitStr(text);
+	private Set<Article> getMemoryIndexSimTopic(Article at){
+		List<String> words = util.ChineseSplit.SplitStr(at.getTitle());
 		Set<Article> results = new HashSet<Article>();
 		for(String wd : words){
 			if(MemoryIndex.containsKey(wd)){
-				results.addAll(MemoryIndex.get(wd));
+				Set<Article> ats = MemoryIndex.get(wd);
+				for(Article tmp : ats){
+					if(tmp.getId() != at.getId()){
+						results.add(tmp);
+					}
+				}
 			}
 		}
 		return results;
 	}
 	
 	private int getMostSimTopic(Article at){
-		Map<Integer,Double> totalSims = new HashMap<Integer,Double>();
-		Map<Integer,Integer> totalCount = new HashMap<Integer,Integer>();
 		double maxSim = -1.0;
 		int maxId = -1;
+		int maxAtId = -1;
 		String searchText = titleToSearchString(at.getTitle());
-		List<Article> simIdsInIndex = TopicIndex.search(searchText, false, 100);
-		Set<Article> simIds = getMemoryIndexSimTopic(at.getTitle());
+		List<Article> simIdsInIndex = TopicIndex.search(searchText, false, 100,at.getPublishtime());
+		Set<Article> simIds = getMemoryIndexSimTopic(at);
 		for(Article simId : simIdsInIndex){
 			if(!simIds.contains(simId)){
 				simIds.add(simId);
@@ -135,26 +143,51 @@ public class TopicTrace {
 		}
 		for(Article simId : simIds){
 			double score = util.Similarity.similarityOfEvent(simId, at, Idf, TotalDocNum);
-			if(totalSims.containsKey(simId.getTopicid())){
-				totalSims.put(simId.getTopicid(), score + totalSims.get(simId.getTopicid()));
-				totalCount.put(simId.getTopicid(), 1 + totalCount.get(simId.getTopicid()));
-			}else{
-				totalSims.put(simId.getTopicid(), score );
-				totalCount.put(simId.getTopicid(), 1 );
-			}		
-		}
-		Iterator<Integer> sids = totalSims.keySet().iterator();
-		while(sids.hasNext()){
-			int key = sids.next();
-			if(totalSims.get(key) / totalCount.get(key) > maxSim){
-				maxSim = totalSims.get(key) / totalCount.get(key);
-				maxId = key;
+			if(maxSim < score){
+				maxSim = score;
+				maxId = simId.getTopicid();
+				maxAtId = simId.getId();
 			}
 		}
 		if(maxSim < util.Const.MaxTopicSimNum){
 			maxId = -1;
+			maxSim = -1;
 		}
+		TopicSims.put(at.getId(), maxAtId + ","+maxSim);
 		return maxId;
+	}
+	
+	private String updateTitle(String org,String nw){
+		StringBuffer result = new StringBuffer();
+		Map<String,Integer> words = new HashMap<String,Integer>();
+		String[] its = org.split(" ");
+		for(String it : its){
+			String[] sits = it.split(",");
+			if(sits.length != 2){
+				continue;
+			}
+			words.put(sits[0], Integer.valueOf(sits[1]));
+		}
+		Map<Word,Integer> nwords = util.ChineseSplit.SplitStrWithPosTF(nw);
+		Iterator<Word> keys = nwords.keySet().iterator();
+		while(keys.hasNext()){
+			Word key = keys.next();
+			if(words.containsKey(key.getName())){
+				words.put(key.getName(), words.get(key.getName()) + nwords.get(key));
+			}else{
+				words.put(key.getName(), nwords.get(key));
+			}
+		}
+		Iterator<String> tmps = words.keySet().iterator();
+		int num = 0;
+		while(tmps.hasNext()){
+			String tmp = tmps.next();
+			if(num != 0){
+				result.append(" ");
+			}
+			result.append(tmp + "," + words.get(tmp));
+		}
+		return result.toString();
 	}
 	
 	public Topic updateTopicInfo(int tid,Article at){
@@ -169,7 +202,7 @@ public class TopicTrace {
 		if(tp == null){
 			return null;
 		}
-		tp.setTitle(tp.getTitle() + "!##!" + at.getTitle());
+		tp.setTitle(updateTitle(tp.getTitle() ,at.getTitle()));
 		tp.setArticles(tp.getArticles() + " " + at.getId());
 		Date time = at.getPublishtime();
 		if(tp.getStartTime().compareTo(time) > 0){
@@ -179,8 +212,9 @@ public class TopicTrace {
 			tp.setEndTime(time);
 		}
 		//update keywords
-		KeyWords kw = new KeyWords(tp.getTitle());
-		tp.setKeyWords(kw.getTopNwords(8, 0));
+//		KeyWords kw = new KeyWords(tp.getTitle());
+//		tp.setKeyWords(kw.getTopNwords(8, 0));
+		tp.setKeyWords(KeyWords.getTopWords(tp.getTitle(),at.getTitle(),8));
 		//update imgs
 		tp.setImgs(tp.getImgs() + "@@@@" + at.getImgs());
 		//update number
@@ -193,8 +227,7 @@ public class TopicTrace {
 		tp.setSubtopic(0);
 		//update summary
 		//update relations
-		//should add at to the relationships of topic tp
-		
+		tp.setRelations(tp.getRelations() + " " + at.getId() + "|" + TopicSims.get(at.getId()));
 		return tp;
 	}
 	
@@ -215,13 +248,14 @@ public class TopicTrace {
 		Ntopic.setArticles(String.valueOf(at.getId()));
 		Ntopic.setEndTime(at.getPublishtime());
 		Ntopic.setStartTime(at.getPublishtime());
-		Ntopic.setTitle(at.getTitle());
+		Ntopic.setTitle(updateTitle("",at.getTitle()));
 		Ntopic.setImgs(at.getImgs());
 		KeyWords kw = new KeyWords(at.getTitle());
-		Ntopic.setKeyWords(kw.getTopNwords(7, 0));
+		Ntopic.setKeyWords(kw.getTopNwords(8, 0));
 		Ntopic.setNumber(1);
 		//should update summary and relations
 		
+		Ntopic.setRelations(at.getId() + "|" + TopicSims.get(at.getId()));
 		//add to memory topics
 		MemoryTopics.put(Ntopic.getId(), Ntopic);
 		return Ntopic;

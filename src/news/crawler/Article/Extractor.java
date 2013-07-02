@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import news.model.NewsPage;
 import news.model.NewsPageTags;
@@ -14,6 +12,8 @@ import news.model.NewsPageTags;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import db.data.Article;
@@ -80,7 +80,15 @@ public class Extractor {
 			List<String> imgs = getImgsG(mainEle);
 			String title = getTitleG();
 			////construct a new article
-			at.setPublishtime(new Date());
+			String pubtime = extractPublishTime();
+			if(pubtime.length() > 0){
+				Date pdt = getDateFromStr(pubtime);
+				if(pdt != null){
+					at.setPublishtime(pdt);
+				}else{
+					at.setPublishtime(new Date());
+				}
+			}
 			at.setTitle(title);
 			at.setContent(paras);
 			StringBuilder sb_imgs = new StringBuilder();
@@ -202,6 +210,7 @@ public class Extractor {
 	
 	private Date getDateFromStr(String time){
 		Date result = new Date();
+		time = time.replaceAll("/", "-");
 		time = time.replaceAll("年", "-");
 		time = time.replaceAll("月", "-");
 		time = time.replaceAll("日\\s?", "-");
@@ -233,20 +242,35 @@ public class Extractor {
 		return result;
 	}
 	
+	
+	private String extractPublishTime(){
+		String result = "";
+		Elements els = Doc.getAllElements();
+		for(Element el : els){
+			for(Node nd : el.childNodes()){
+				if(nd instanceof TextNode){
+					String text = ((TextNode)nd).text();
+					text = util.Util.extractTimeFromText(text);
+					if(text.length() > 0){
+						return text;
+					}
+				}
+			}
+		}
+		return result;
+	}
+	
+	
 	public Date getPublishTime(){
 		String time = "";
 		if(Doc == null || Npt == null)
 			return null;
 		NewsPage nptime = Npt.getTime();
 		time = getInformation(nptime);
-		if(time.length() == 0){
-			time = Doc.html();
-		}
-		///use regex to extract time
-		Pattern pattern = Pattern.compile("\\d{2,4}.\\d{1,2}.\\d{1,2}.?\\s?\\d{1,2}:\\d{1,2}:?\\d{0,2}");
-		Matcher matcher = pattern.matcher(time);
-		if(matcher.find()){
-			time = matcher.group().trim();
+		if(time.length() != 0){
+			time = util.Util.extractTimeFromText(time);
+		}else{
+			time = extractPublishTime();
 		}
 		return getDateFromStr(time);
 	}

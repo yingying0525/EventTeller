@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -285,6 +287,15 @@ public class Util {
 				a[i][j] = b[i][j];
 			}
 		}
+	}
+	
+	public static String extractTimeFromText(String text){
+		Pattern pattern = Pattern.compile("\\d{2,4}.\\d{1,2}.\\d{1,2}.?\\s?\\d{1,2}:\\d{1,2}:?\\d{0,2}");
+		Matcher matcher = pattern.matcher(text);
+		if(matcher.find()){
+			return matcher.group().trim();
+		}
+		return "";
 	}
 
 }

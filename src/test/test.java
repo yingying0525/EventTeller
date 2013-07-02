@@ -1,9 +1,12 @@
 package test;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +53,7 @@ public class test implements Runnable{
 				continue;
 			sb.append(twd + " ");
 		}  
-		List<Article> sims = ati.search(sb.toString(), false,50);
+		List<Article> sims = ati.search(sb.toString(), false,50,at.getPublishtime());
 		for(Article tat : sims){
 			if(tat.getId() - at.getId().intValue() == 0){
 				continue;
@@ -100,12 +103,50 @@ public class test implements Runnable{
 	
 	
 	
+	
+	
+	
+	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException{
-		test ts = new test();
-//		ts.evaluateArticlePR();
-		double sim = ts.getTwoArticleSim(21675, 22105);
-		System.out.println(sim);
+//		test ts = new test();
+////		ts.evaluateArticlePR();
+//		double sim = ts.getTwoArticleSim(4184, 4091);
+//		System.out.println(sim);
+	
+		Map<String,Integer> idfs = new HashMap<String,Integer>();
+		BufferedReader br = new BufferedReader(new FileReader("d:\\ett\\TDF"));
+		String line = "";
+		String[] tmps = br.readLine().split("\t");
 		
+		long total = 0;
+		double avg = 0;
+		while((line = br.readLine())!= null){
+			String[] its = line.split("\t");
+			idfs.put(its[0], Integer.valueOf(its[1]));
+			avg += Integer.valueOf(its[1]);
+			total++;
+		}
+		
+		System.out.println(avg / total);
+		br.close();
+		
+		
+		news.index.TopicIndex ti = new news.index.TopicIndex("d:\\ETT\\TI\\");
+		Article inat = util.Util.getArticleById("10490");
+		List<Article> ats = ti.search("丁俊晖", false, 100,inat.getPublishtime());
+		
+		System.out.println(inat.getTitle() + "\t" + inat.getPublishtime() );
+		
+		System.out.print(ats.size());
+		
+		
+		for(Article at : ats){
+			Double score = util.Similarity.similarityOfEvent(inat, at, idfs, 848360);
+			if(score < 0.1 ){
+				continue;
+			}
+			System.out.println(at.getId() + "\t" + at.getTitle() + "\t" + score);
+		}
 	}
 
 	

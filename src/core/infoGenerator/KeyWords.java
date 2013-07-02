@@ -54,6 +54,44 @@ public class KeyWords {
 		return results;		
 	}
 	
+	public static String getTopWords(String content,String nstr,int N){
+		List<tWord> words = new ArrayList<tWord>();
+		StringBuffer result = new StringBuffer();
+		String[] its = content.split(" ");
+		Map<String,Integer> nwords = util.ChineseSplit.SplitStrWithPosTFS(nstr);
+		for(String it : its){
+			String[] sits = it.split(",");
+			if(sits.length != 2){
+				continue;
+			}
+			if(nwords.containsKey(sits[0])){
+				nwords.put(sits[0], Integer.valueOf(sits[1]) + nwords.get(sits[0]));
+			}else{
+				nwords.put(sits[0], Integer.valueOf(sits[1]));
+			}
+		}
+		Iterator<String> iwords = nwords.keySet().iterator();
+		while(iwords.hasNext()){
+			String key = iwords.next();
+			tWord ntw = new tWord();
+			Word nw = new Word();
+			nw.setName(key);
+			ntw.name = nw;
+			ntw.score = nwords.get(key);
+			words.add(ntw);
+		}
+		Collections.sort(words,new KeyComparetor());
+		int num = 0;
+		for(tWord tmp : words){
+			if(num >= N){
+				break;
+			}
+			result.append(tmp.name.getName() + " ");
+			num++;
+		}
+		return result.toString().trim();
+	}
+	
 	/**
 	 * type = 0 all 
 	 * type = 1 only person

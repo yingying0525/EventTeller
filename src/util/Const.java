@@ -31,7 +31,7 @@ public class Const implements IConst{
 	public static int NoMeaningSigns = 3;
 	public static int SummaryTitleWordsWeighs = 3;
 	public static double MaxEventSimNum = 0.7;
-	public static double MaxTopicSimNum = 0.3;
+	public static double MaxTopicSimNum = 0.5;
 	public static double AVGIDF = 8;
 	public static long AVGIDFTF = 8;
 	
@@ -41,8 +41,8 @@ public class Const implements IConst{
 	public static int ReleventEvents = 50;
 	public static int ReleventArticles = 50;
 	
-	public static int TitleWordsWeight = 4;
-	public static int NameEntityWeight = 2;
+	public static int TitleWordsWeight = 2;
+	public static int NameEntityWeight = 1;
 	public static int LocationWeight = 1;
 	
 	

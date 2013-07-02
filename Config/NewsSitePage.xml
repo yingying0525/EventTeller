@@ -102,7 +102,7 @@
 		</NewsImg>
 	</Site>
 	<!-- 新华网 2013.3.2.10.43 -->
-	<!--  Site name="xinhuanet.com">
+	<Site name="xinhuanet.com">
 		<Title>
 			<Tag>h1</Tag>
 			<Id>title</Id>
@@ -113,25 +113,25 @@
 			<Format>xxxx年xx月xx日 xx:xx:xx</Format>
 		</Time>
 		<Source>
-			<Tag>span</Tag>
+			<Tag>div</Tag>
 			<Id>from</Id>
 			<SubTag index = "1">a</SubTag>			
 			<LinkAtt>href</LinkAtt>
 		</Source>
 		<Content>
-			<Tag>span</Tag>
+			<Tag>div</Tag>
 			<Id>content</Id>
 			<SubTag index = "0">p</SubTag>
 		</Content>
 		<NewsImg>
-			<Tag>span</Tag>
-			<Id>from</Id>
+			<Tag>div</Tag>
+			<Id>content</Id>
 			<SubTag index="0">img</SubTag>
 			<BaseUrl>!total!</BaseUrl>
 			<LinkAtt>src</LinkAtt>
 			<TextAtt>alt</TextAtt>
 		</NewsImg>
-	</Site -->
+	</Site>
 	<!-- CCTV新闻 2013.3.2.11.43 -->
 	<Site name="cntv.cn">
 		<Title>
@@ -422,7 +422,7 @@
 		</NewsImg>
 	</Site>
 	<!-- 中国经济网 2013.3.2.10.43 -->
-	<Site name="www.ce.cn">
+	<Site name="ce.cn">
 		<Title>
 			<Tag>h1</Tag>
 			<Id>articleTitle</Id>
@@ -437,8 +437,7 @@
 		</Source>
 		<Content>
 			<Tag>div</Tag>
-			<Class>content</Class>
-			<SubTag index = "0">p</SubTag>
+			<Id>articleText</Id>
 		</Content>
 		<NewsImg>
 			<Tag>div</Tag>
@@ -515,6 +514,33 @@
 			<BaseUrl>!no!</BaseUrl>
 		</NewsImg>
 	</Site>
+	
+	<!-- Msn-北青网 2013.7.1.13.12 -->
+	<Site name="msn.ynet.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>h1title</Id>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>info</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>endText</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>endText</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	
+	
 	<!-- 中青在线 2013.3.2.10.43 -->
 	<Site name="cyol">
 		<Title>
@@ -610,6 +636,7 @@
 			<BaseUrl>!no!</BaseUrl>
 		</NewsImg>
 	</Site>
+	
 	<!-- 大河报 2013.3.2.10.43 -->
 	<Site name="dahe.cn">
 		<Title>
@@ -638,6 +665,35 @@
 			<BaseUrl>!no!</BaseUrl>
 		</NewsImg>
 	</Site>
+	<!-- 杨子晚报 2013.7.1.11.28 -->
+	<Site name="yangtse.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>date</Tag>
+			<Format>xxxx-xx-xx xx:xx:xx</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Id>msg</Id>
+			<SubTag index="2">span</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>content-txt</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>main</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	
+	
 	<!-- 中国日报 2013.3.2.10.43 -->
 	<Site name="chinadaily.com.cn">
 		<Title>
@@ -1113,6 +1169,32 @@
 			<BaseUrl>!no!</BaseUrl>
 		</NewsImg>
 	</Site>
+	
+	<!-- 中国军网 2013.7.1.12.57 -->
+	<Site name="chinamil.com.cn">
+		<Title>
+			<Tag>span</Tag>
+			<Class>biaoti</Class>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Class>sj</Class>
+			<Format>yyyy-mm-dd hh:mm</Format>
+		</Time>
+		<Content>
+			<Tag>span</Tag>
+			<Class>zw</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>span</Tag>
+			<Class>zw</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	
 	
 	<!-- for some law sites -->
 	

@@ -39,7 +39,7 @@ public class ArticleTitleIndex extends Index{
 			return null;
 		}
 		ArticleTitleIndex ati = new ArticleTitleIndex(IndexPath);
-		List<Article> sims = ati.search(tmpQuery.toString(), false,500);	
+		List<Article> sims = ati.search(tmpQuery.toString(), false,500,at.getPublishtime());	
 		for(Article tmpat : sims){
 			if(tmpat.getId() == at.getId())
 				continue;
