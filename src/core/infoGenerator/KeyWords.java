@@ -3,9 +3,7 @@ package core.infoGenerator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import db.data.Word;
 
@@ -39,57 +37,23 @@ public class KeyWords {
 	}
 	
 	
-	private List<tWord> getKeyWords(String content){
-		List<tWord> results = new ArrayList<tWord>();
-		Map<Word,Integer> words = util.ChineseSplit.SplitStrWithPosTF(content);
-		Iterator<Word> its = words.keySet().iterator();
-		while(its.hasNext()){
-			Word key = its.next();
-			tWord tw = new tWord();
-			tw.name = key;
-			tw.score = words.get(key);
-			results.add(tw);
-		}
-		Collections.sort(results,new KeyComparetor());
-		return results;		
-	}
-	
-	public static String getTopWords(String content,String nstr,int N){
+	public List<tWord> getKeyWords(String content){
 		List<tWord> words = new ArrayList<tWord>();
-		StringBuffer result = new StringBuffer();
 		String[] its = content.split(" ");
-		Map<String,Integer> nwords = util.ChineseSplit.SplitStrWithPosTFS(nstr);
 		for(String it : its){
 			String[] sits = it.split(",");
 			if(sits.length != 2){
 				continue;
 			}
-			if(nwords.containsKey(sits[0])){
-				nwords.put(sits[0], Integer.valueOf(sits[1]) + nwords.get(sits[0]));
-			}else{
-				nwords.put(sits[0], Integer.valueOf(sits[1]));
-			}
-		}
-		Iterator<String> iwords = nwords.keySet().iterator();
-		while(iwords.hasNext()){
-			String key = iwords.next();
 			tWord ntw = new tWord();
 			Word nw = new Word();
-			nw.setName(key);
+			nw.setName(sits[0]);
 			ntw.name = nw;
-			ntw.score = nwords.get(key);
+			ntw.score = Integer.valueOf(sits[1]);
 			words.add(ntw);
 		}
 		Collections.sort(words,new KeyComparetor());
-		int num = 0;
-		for(tWord tmp : words){
-			if(num >= N){
-				break;
-			}
-			result.append(tmp.name.getName() + " ");
-			num++;
-		}
-		return result.toString().trim();
+		return words;
 	}
 	
 	/**

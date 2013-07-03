@@ -3,6 +3,7 @@ package core.cluster;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,9 +34,9 @@ public class TopicTrace {
 	public String IndexPath;
 	public Index TopicIndex;
 	public String IDFPath;
-	public Map<Integer,Article> MemoryArticles ;
+	public Map<Integer,Article> MemoryArticles;
 	public Map<Integer,Topic> MemoryTopics;
-	public Map<String,Set<Article>> MemoryIndex ;
+	public Map<String,Set<Article>> MemoryIndex;
 	
 	private Map<Integer,String> TopicSims;
 	
@@ -69,7 +70,7 @@ public class TopicTrace {
 	private List<Article> getInstances(){
 		List<Article> results = new ArrayList<Article>();
 		String hql = "from Article as obj where obj.taskstatus = 1 and pubtime is not null order by obj.publishtime asc";
-		results = util.Util.getElementsFromDB(hql,500);
+		results = util.Util.getElementsFromDB(hql,1000);
 		return results;
 	}
 	
@@ -142,6 +143,9 @@ public class TopicTrace {
 			}			
 		}
 		for(Article simId : simIds){
+			if(simId.getId() == at.getId()){
+				continue;
+			}
 			double score = util.Similarity.similarityOfEvent(simId, at, Idf, TotalDocNum);
 			if(maxSim < score){
 				maxSim = score;
@@ -153,7 +157,8 @@ public class TopicTrace {
 			maxId = -1;
 			maxSim = -1;
 		}
-		TopicSims.put(at.getId(), maxAtId + ","+maxSim);
+		DecimalFormat df = new DecimalFormat("#.000");
+		TopicSims.put(at.getId(), maxAtId + ","+ df.format(maxSim));
 		return maxId;
 	}
 	
@@ -186,6 +191,7 @@ public class TopicTrace {
 				result.append(" ");
 			}
 			result.append(tmp + "," + words.get(tmp));
+			num++;
 		}
 		return result.toString();
 	}
@@ -198,7 +204,6 @@ public class TopicTrace {
 			String hql = "from Topic as obj where obj.id = " + tid;
 			tp = util.Util.getElementFromDB(hql);
 		}
-		
 		if(tp == null){
 			return null;
 		}
@@ -212,9 +217,8 @@ public class TopicTrace {
 			tp.setEndTime(time);
 		}
 		//update keywords
-//		KeyWords kw = new KeyWords(tp.getTitle());
-//		tp.setKeyWords(kw.getTopNwords(8, 0));
-		tp.setKeyWords(KeyWords.getTopWords(tp.getTitle(),at.getTitle(),8));
+		KeyWords kw = new KeyWords(tp.getTitle());
+		tp.setKeyWords(kw.getTopNwords(8, 0));
 		//update imgs
 		tp.setImgs(tp.getImgs() + "@@@@" + at.getImgs());
 		//update number
@@ -250,7 +254,7 @@ public class TopicTrace {
 		Ntopic.setStartTime(at.getPublishtime());
 		Ntopic.setTitle(updateTitle("",at.getTitle()));
 		Ntopic.setImgs(at.getImgs());
-		KeyWords kw = new KeyWords(at.getTitle());
+		KeyWords kw = new KeyWords(Ntopic.getTitle());
 		Ntopic.setKeyWords(kw.getTopNwords(8, 0));
 		Ntopic.setNumber(1);
 		//should update summary and relations
@@ -294,6 +298,9 @@ public class TopicTrace {
 				simTopic = updateTopicInfo(simTopicId,at);	
 			}else{
 				simTopic = newTopic(at);
+			}
+			if(simTopic == null){
+				continue;
 			}
 			at.setTopicid(simTopic.getId());
 			at.setTaskstatus(util.Const.TASKID.get("ArticleToTopic"));

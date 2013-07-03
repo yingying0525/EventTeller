@@ -37,7 +37,7 @@ public class Const implements IConst{
 	
 	public static int UrlToArticlePerTimeNum = 500;
 	public static int MysqlToIndexMaxItemNum = 20;
-	public static int NEIGHBORHORDSIZE = 500;
+	public static int NEIGHBORHORDSIZE = 100;
 	public static int ReleventEvents = 50;
 	public static int ReleventArticles = 50;
 	

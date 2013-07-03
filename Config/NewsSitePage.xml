@@ -1230,8 +1230,6 @@
 	<Site name="fabao365.com">
 		<Title>
 			<Tag>h1</Tag>
-			<Class>hxing</Class>
-			<SubTag index="0">font</SubTag>
 		</Title>
 		<Time>
 			<Tag>span</Tag>
