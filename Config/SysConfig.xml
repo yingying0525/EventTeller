@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configs>
+	<Config name="HtmlSavePath">
+		<Path>/home/iir/EventTeller/HTML/</Path>
+	</Config>
 	<Config name="indexPath">
 		<Path>/home/iir/EventTeller/index</Path>
 	</Config>

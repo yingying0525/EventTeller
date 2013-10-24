@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="D:/jar/ans_seg-20130615.jar"/>
 	<classpathentry kind="lib" path="D:/jar/antlr-2.7.6.jar"/>
 	<classpathentry kind="lib" path="D:/jar/asm-3.3.jar"/>
 	<classpathentry kind="lib" path="D:/jar/asm-commons-3.3.jar"/>
@@ -24,7 +23,7 @@
 	<classpathentry kind="lib" path="D:/jar/jaxen-1.1.1.jar"/>
 	<classpathentry kind="lib" path="D:/jar/je-analysis-1.5.3.jar"/>
 	<classpathentry kind="lib" path="D:/jar/jsonplugin-0.34.jar"/>
-	<classpathentry kind="lib" path="D:/jar/jsoup-1.7.1.jar"/>
+	<classpathentry kind="lib" path="D:/jar/jsoup-1.7.2.jar"/>
 	<classpathentry kind="lib" path="D:/jar/jta-1.1.jar"/>
 	<classpathentry kind="lib" path="D:/jar/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="D:/jar/lucene-analyzers-common-4.0.0.jar"/>
@@ -38,5 +37,8 @@
 	<classpathentry kind="lib" path="D:/jar/struts2-core-2.3.1.2.jar"/>
 	<classpathentry kind="lib" path="D:/jar/tinymt-1.0.jar"/>
 	<classpathentry kind="lib" path="D:/jar/xwork-core-2.3.1.2.jar"/>
+	<classpathentry kind="lib" path="D:/jar/ansj_seg-0.9.jar"/>
+	<classpathentry kind="lib" path="D:/jar/ansj_lucene4_plug-1.0.jar"/>
+	<classpathentry kind="lib" path="D:/jar/tree_split-1.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,12 +1,12 @@
 #Fat Jar Configuration File
-#Sat Jun 22 22:35:37 CST 2013
-onejar.license.required=true
+#Wed Oct 23 17:26:51 CST 2013
+onejar.license.required=false
 manifest.classpath=
 manifest.removesigners=true
-onejar.checkbox=false
-jarname=D\:\\TopicTrace.jar
+onejar.checkbox=true
+jarname=C\:\\Users\\v-quzhao\\Desktop\\HtmlDownloader.jar
 manifest.mergeall=true
-manifest.mainclass=core.cluster.TopicTrace
+manifest.mainclass=crawler.html.Downloader
 manifest.file=<createnew>
 jarname.isextern=true
 onejar.expand=

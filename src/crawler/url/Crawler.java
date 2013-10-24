@@ -1,4 +1,4 @@
-package news.crawler.url;
+package crawler.url;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,6 +33,13 @@ import db.data.Url;
 
 
 
+/////for URL crawler taskStatus
+// 0 -- no operations, just insert into the DB
+// 1 -- download to HTML
+// 2 -- extract information from HTML
+// -1 -- can't download the HTML, wait for try again
+// -2 -- try again, but failed again, will not try any more.
+
 /**
  * @time 2013-3-16
  * @author mblank
@@ -42,6 +49,8 @@ public class Crawler implements Runnable{
 		
 	private static String Bloom_File_Path;
 	private BloomFilter bloomfilter;
+	
+
 	
 	public Crawler(){
 		Log.getLogger().info("Start TitleCrawler!");
@@ -248,7 +257,7 @@ public class Crawler implements Runnable{
 				Url tn = new Url();
 				tn.setCrawlTime(new java.util.Date());
 				tn.setUrl(url);
-				tn.setTaskStatus(Const.TASKID.get("urlToMysql"));
+				tn.setTaskStatus(0);
 				tn.setWebSite(ws.SiteName);
 				tn.setSubtopicId(Const.SUBTOPICID[ws.getSites().get(str_url)]);
 				if(!filterTitleNews(ws.getFilters().get(str_url),tn)){

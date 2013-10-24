@@ -6,10 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 import org.ansj.domain.Term;
+import org.ansj.recognition.NatureRecognition;
 import org.ansj.splitWord.analysis.ToAnalysis;
-import org.ansj.util.recognition.NatureRecognition;
 
 import db.data.Word;
 
@@ -24,7 +23,7 @@ import db.data.Word;
 * @date: 2012-3-6 下午8:55:38
 * @Description: split chinese words
 * @Marks: using ikanaylzer.jar
-* @chages: add a new pos tool (ansj_seg.jar https://github.com/ansjsun/ansj_seg),this tool can give out word pos.
+* @chages: add a new pos tool (ansj_seg.jar https://github.com/ansjsun/ansj_seg),this tool can give out word nature.
 */
 public class ChineseSplit {
 	
@@ -65,7 +64,9 @@ public class ChineseSplit {
      */
     public static List<String> SplitStr(String text){
     	List<String> result = new ArrayList<String>();
-    	List<Term> terms = ToAnalysis.paser(text);
+    	List<Term> terms = ToAnalysis.parse(text);
+    	new NatureRecognition(terms).recognition();
+    	
     	new NatureRecognition(terms).recognition();
 		for(Term term : terms){
 			String nature = term.getNatrue().natureStr;
@@ -86,7 +87,7 @@ public class ChineseSplit {
     	List<Word> result = new ArrayList<Word>();
     	List<Term> terms = null;
     	try{
-    		terms = ToAnalysis.paser(text);
+    		terms = ToAnalysis.parse(text);
     	}catch(Exception e){
     		return result;
     	}    	
