@@ -1,5 +1,7 @@
 package test;
 
+import index.ArticleTitleIndex;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import extractor.article.Extractor;
-import news.index.ArticleTitleIndex;
-
 import db.data.Article;
 import db.data.Url;
 import db.data.Word;

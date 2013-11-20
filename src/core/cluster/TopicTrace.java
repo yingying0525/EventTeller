@@ -1,5 +1,8 @@
 package core.cluster;
 
+import index.Index;
+import index.TopicIndex;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -13,17 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import news.index.Index;
-import news.index.TopicIndex;
-
 import org.dom4j.Node;
 
 import core.infoGenerator.KeyWords;
-
 import util.Config;
 import util.Const;
 import util.IOReader;
-
 import db.data.Article;
 import db.data.Topic;
 import db.data.Word;

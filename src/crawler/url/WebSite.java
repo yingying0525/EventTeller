@@ -1,11 +1,11 @@
-package news.model;
+package crawler.url;
 
 
 
 import java.util.Map;
 
 
-import news.filter.UrlFilter;
+import crawler.url.filter.UrlFilter;
 
 public class WebSite {
 	

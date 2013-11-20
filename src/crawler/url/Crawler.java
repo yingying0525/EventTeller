@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.Set;
 
 import util.BloomFilter;
-import news.filter.UrlFilter;
-import news.model.WebSite;
+import crawler.url.filter.UrlFilter;
+import crawler.url.WebSite;
 
 import org.dom4j.Element;
 import org.dom4j.Node;

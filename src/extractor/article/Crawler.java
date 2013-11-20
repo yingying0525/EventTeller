@@ -1,5 +1,7 @@
 package extractor.article;
 
+import index.ArticleTitleIndex;
+
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -17,14 +19,12 @@ import org.dom4j.Node;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import news.index.ArticleTitleIndex;
 
 
 import util.ChineseSplit;
 import util.Config;
 import util.Const;
 import util.IOReader;
-
 import db.HSession;
 import db.data.Article;
 import db.data.Ddf;

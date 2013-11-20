@@ -1,4 +1,4 @@
-package news.filter;
+package crawler.url.filter;
 
 public class UrlFilter {
 	

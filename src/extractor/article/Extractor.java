@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import news.model.NewsPage;
-import news.model.NewsPageTags;
+import extractor.article.NewsPage;
+import extractor.article.NewsPageTags;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

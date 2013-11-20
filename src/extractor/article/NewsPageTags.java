@@ -1,4 +1,4 @@
-package news.model;
+package extractor.article;
 
 import java.io.File;
 import java.util.ArrayList;

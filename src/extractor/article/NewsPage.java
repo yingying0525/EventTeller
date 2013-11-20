@@ -1,4 +1,4 @@
-package news.model;
+package extractor.article;
 
 public class NewsPage {
 	
