@@ -80,7 +80,7 @@ public class NewsDownloader implements Runnable{
 			if(its.length != 2){
 				continue;
 			}
-			news.crawler.article.Extractor etor = new news.crawler.article.Extractor(its[1]);
+			extractor.article.Extractor etor = new extractor.article.Extractor(its[1]);
 			Url nurl = new Url();
 			nurl.setUrl(its[1]);
 			nurl.setId(Integer.valueOf(its[0]));

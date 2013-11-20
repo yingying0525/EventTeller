@@ -1,4 +1,4 @@
-package news.crawler.article;
+package extractor.article;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 
-import news.crawler.article.Extractor;
+import extractor.article.Extractor;
 
 
 
@@ -66,7 +66,7 @@ class html {
 
 
 
-public class SingleLinkModel {
+public class SingleLinkageModel {
 	
 
 	private static String Path = "D:\\ETT\\";
@@ -596,7 +596,7 @@ public class SingleLinkModel {
 	}
 	
 	public static void main(String[] args) throws IOException{
-		SingleLinkModel ts = new SingleLinkModel();
+		SingleLinkageModel ts = new SingleLinkageModel();
 		ts.TIMethod();		
 	}
 }
