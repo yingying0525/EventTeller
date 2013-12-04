@@ -21,13 +21,10 @@
 	<classpathentry kind="lib" path="D:/jar/javassist-3.12.0.GA.jar"/>
 	<classpathentry kind="lib" path="D:/jar/javax.servlet.jar"/>
 	<classpathentry kind="lib" path="D:/jar/jaxen-1.1.1.jar"/>
-	<classpathentry kind="lib" path="D:/jar/je-analysis-1.5.3.jar"/>
-	<classpathentry kind="lib" path="D:/jar/jsonplugin-0.34.jar"/>
 	<classpathentry kind="lib" path="D:/jar/jta-1.1.jar"/>
 	<classpathentry kind="lib" path="D:/jar/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="D:/jar/lucene-analyzers-common-4.0.0.jar"/>
 	<classpathentry kind="lib" path="D:/jar/lucene-core-4.0.0.jar"/>
-	<classpathentry kind="lib" path="D:/jar/lucene-demo-4.0.0.jar"/>
 	<classpathentry kind="lib" path="D:/jar/lucene-queryparser-4.0.0.jar"/>
 	<classpathentry kind="lib" path="D:/jar/mysql-connector-java-5.1.24-bin.jar"/>
 	<classpathentry kind="lib" path="D:/jar/ognl-3.0.4.jar"/>
@@ -36,9 +33,10 @@
 	<classpathentry kind="lib" path="D:/jar/struts2-core-2.3.1.2.jar"/>
 	<classpathentry kind="lib" path="D:/jar/tinymt-1.0.jar"/>
 	<classpathentry kind="lib" path="D:/jar/xwork-core-2.3.1.2.jar"/>
-	<classpathentry kind="lib" path="D:/jar/a-nsj_lucene_plug_4.x.jar"/>
-	<classpathentry kind="lib" path="D:/jar/a-nsj_seg-0.9.1.jar"/>
+	<classpathentry kind="lib" path="D:/jar/ansj_lucene_plug_4.x.jar"/>
+	<classpathentry kind="lib" path="D:/jar/ansj_seg-0.9.1.jar"/>
 	<classpathentry kind="lib" path="D:/jar/jsoup-1.7.3.jar"/>
-	<classpathentry kind="lib" path="D:/jar/t-ree_split-1.0.1.jar"/>
+	<classpathentry kind="lib" path="D:/jar/tree_split-1.0.1.jar"/>
+	<classpathentry kind="lib" path="D:/jar/juniversalchardet-1.0.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

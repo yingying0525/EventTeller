@@ -2,7 +2,8 @@ package crawler.html;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +56,7 @@ public class Downloader {
 				if(!folder.exists()){
 					folder.mkdirs();
 				}
-				BufferedWriter bw = new BufferedWriter(new FileWriter(SaveFolderPath + date + File.separator + url.getId() ));
+				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(SaveFolderPath + date + File.separator + url.getId()),"UTF8"));
 				bw.write(html);
 				bw.close();	
 				url.setTaskStatus(1);
