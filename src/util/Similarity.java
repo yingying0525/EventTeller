@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import db.data.Article;
-import db.data.Word;
+import db.hbn.model.Article;
+import db.hbn.model.Word;
 
 public class Similarity {
 

@@ -1,0 +1,6 @@
+{
+	"HtmlSavePath":"/mnt/diskd/ETHtmls_2012_Backup",
+	"SimHashPath":"/mnt/diskb/ET/NewsSimHash",
+	"SolrIndexURI":"http://222.29.197.239:8080/solr",
+	"UrlsBloomFilterFilePath":"/mnt/diskb/ET/urls"
+}

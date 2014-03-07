@@ -1,7 +1,7 @@
 package core.cluster;
 
-import index.Index;
-import index.TopicIndex;
+import index.lucene.Index;
+import index.lucene.TopicIndex;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,9 +22,9 @@ import core.infoGenerator.KeyWords;
 import util.Config;
 import util.Const;
 import util.IOReader;
-import db.data.Article;
-import db.data.Topic;
-import db.data.Word;
+import db.hbn.model.Article;
+import db.hbn.model.Topic;
+import db.hbn.model.Word;
 
 public class TopicTrace {
 	

@@ -1,6 +1,6 @@
 package extractor.article;
 
-import index.ArticleTitleIndex;
+import index.lucene.ArticleTitleIndex;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -25,10 +25,10 @@ import util.ChineseSplit;
 import util.Config;
 import util.Const;
 import util.IOReader;
-import db.HSession;
-import db.data.Article;
-import db.data.Ddf;
-import db.data.Url;
+import db.hbn.HSession;
+import db.hbn.model.Article;
+import db.hbn.model.Ddf;
+import db.hbn.model.Url;
 
 
 ///for article content words
@@ -292,9 +292,9 @@ public class Crawler {
 		List<ArticleContent> update_idf = new ArrayList<ArticleContent>();
 		for(Url url : urls){
 //			///extract article content
-			Extractor etor = new Extractor(url.getUrl());			
+			Extractor etor = new Extractor(url);			
 			Article at = new Article();			
-			at = etor.getArticleFromUrl(url);	
+			at = etor.getArticleFromUrl();	
 			at.setSubtopic(url.getSubtopicId());
 			Map<String,Integer> at_ct_words = ChineseSplit.SplitStrWithPosTFS(at.getContent());
 			ArticleContent ac = new ArticleContent();

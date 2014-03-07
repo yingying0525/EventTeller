@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import db.data.Word;
+import db.hbn.model.Word;
 
 
 

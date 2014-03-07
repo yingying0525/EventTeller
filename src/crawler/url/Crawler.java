@@ -29,7 +29,7 @@ import org.jsoup.select.Elements;
 import util.Config;
 import util.Const;
 import util.Log;
-import db.data.Url;
+import db.hbn.model.Url;
 
 
 

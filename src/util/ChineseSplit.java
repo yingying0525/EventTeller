@@ -8,9 +8,10 @@ import java.util.Map;
 
 import org.ansj.domain.Term;
 import org.ansj.recognition.NatureRecognition;
+import org.ansj.splitWord.analysis.NlpAnalysis;
 import org.ansj.splitWord.analysis.ToAnalysis;
 
-import db.data.Word;
+import db.hbn.model.Word;
 
 
 
@@ -66,7 +67,18 @@ public class ChineseSplit {
     	List<String> result = new ArrayList<String>();
     	List<Term> terms = ToAnalysis.parse(text);
     	new NatureRecognition(terms).recognition();
-    	
+		for(Term term : terms){
+			String nature = term.getNatrue().natureStr;
+			if(!checkNature(nature) ||term.getName().length() < 2 )
+				continue;
+			result.add(term.getName());
+		}
+    	return result;
+    }
+    
+    public static List<String> SplitStrNlp(String text){
+    	List<String> result = new ArrayList<String>();
+    	List<Term> terms = NlpAnalysis.parse(text);
     	new NatureRecognition(terms).recognition();
 		for(Term term : terms){
 			String nature = term.getNatrue().natureStr;

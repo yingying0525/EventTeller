@@ -11,15 +11,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import db.data.Article;
-import db.data.Url;
+import db.hbn.model.Article;
+import db.hbn.model.Url;
 
 public class NewsDownloader implements Runnable{
 
 	String EPath = "E:\\ET\\exists";
 	String UPath = "E:\\ET\\urls";
 	String OPath = "E:\\ET\\htmls\\";
-	static int TN = 24; 
+	static int TN = 2; 
 	
 	Set<String> exists = new HashSet<String>();
 	List<String> urls = new ArrayList<String>();
@@ -80,11 +80,13 @@ public class NewsDownloader implements Runnable{
 			if(its.length != 2){
 				continue;
 			}
-			extractor.article.Extractor etor = new extractor.article.Extractor(its[1]);
+			Url curl = new Url();
+			curl.setUrl(its[1]);
+			extractor.article.Extractor etor = new extractor.article.Extractor(curl);
 			Url nurl = new Url();
 			nurl.setUrl(its[1]);
 			nurl.setId(Integer.valueOf(its[0]));
-			Article at = etor.getArticleFromUrl(nurl);
+			Article at = etor.getArticleFromUrl();
 			try {
 				try{
 					BufferedWriter bw = new BufferedWriter(new FileWriter(OPath + its[0]));

@@ -1,12 +1,12 @@
 #Fat Jar Configuration File
-#Wed Dec 04 14:35:40 CST 2013
+#Tue Jan 14 17:21:25 CST 2014
 onejar.license.required=false
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=true
-jarname=C\:\\Users\\mblank\\Desktop\\t.jar
+jarname=C\:\\Users\\mblank\\Desktop\\HtmlDownloader.jar
 manifest.mergeall=true
-manifest.mainclass=test.TransformFileEncoding
+manifest.mainclass=crawler.html.Downloader
 manifest.file=<createnew>
 jarname.isextern=true
 onejar.expand=

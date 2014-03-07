@@ -18,8 +18,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import db.HSession;
-import db.data.Article;
+import db.hbn.HSession;
+import db.hbn.model.Article;
 
 
 public class Util {
@@ -98,6 +98,41 @@ public class Util {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public static <T> void updateDB(T t) {
+		Session session = new HSession().createSession();
+		Transaction tx = session.beginTransaction();		
+		try{
+			session.merge(t);				
+		}catch(Exception e){
+			System.out.println("update error" );
+			e.printStackTrace();
+		}
+		try{
+			tx.commit();
+			session.flush();	
+			session.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void updateHQLs(List<String> hqls){
+		Session session = new HSession().createSession();
+		Transaction tx = session.beginTransaction();		
+		for(String hql : hqls){
+			try{
+				Query query = session.createQuery(hql);  
+				query.executeUpdate();  				
+			}catch(Exception e){
+				System.out.println("update hql error" + "\n" + e.getMessage());
+			}
+		}
+		tx.commit();
+		session.flush();	
+		session.close();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -290,12 +325,43 @@ public class Util {
 	}
 	
 	public static String extractTimeFromText(String text){
-		Pattern pattern = Pattern.compile("\\d{2,4}.\\d{1,2}.\\d{1,2}.?\\s?\\d{1,2}:\\d{1,2}:?\\d{0,2}");
+		Pattern pattern = Pattern.compile("\\d{2,4}.\\d{1,2}.\\d{1,2}.?\\s*\\d{1,2}:\\d{1,2}:?\\d{0,2}");
 		Matcher matcher = pattern.matcher(text);
 		if(matcher.find()){
 			return matcher.group().trim();
 		}
 		return "";
 	}
+	
+	/**
+	 * @param num_a
+	 * @param num_b
+	 * @return different bits of two number
+	 * @Description:
+	 */
+	public static int diffBitsOfNums(long num_a , long num_b){
+		int result = 0;
+		for(int i = 0 ; i < util.Const.SimHashBitNumber; i++){
+			if((num_a & 1) != (num_b & 1)){
+				result++;
+			}
+			num_a = num_a >> 1;
+			num_b = num_b >> 1;
+		}
+		return result;
+	}
+	
+	public static byte[] long2Byte(long x) { 
+		byte[] res = new byte[8];
+		res[ 0] = (byte) (x >> 56); 
+		res[ 1] = (byte) (x >> 48); 
+		res[ 2] = (byte) (x >> 40); 
+		res[ 3] = (byte) (x >> 32); 
+		res[ 4] = (byte) (x >> 24); 
+		res[ 5] = (byte) (x >> 16); 
+		res[ 6] = (byte) (x >> 8); 
+		res[ 7] = (byte) (x >> 0); 
+		return res;
+  } 
 
 }

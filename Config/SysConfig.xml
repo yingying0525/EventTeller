@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configs>
 	<Config name="HtmlSavePath">
-		<Path>/home/iir/EventTeller/HTML/</Path>
+		<Path>\\10.77.30.73\eventteller-htmls\</Path>
+	</Config>
+	<Config name="HashIndexPath">
+		<Path>D:\\ETT\\SimHashIndex</Path>
 	</Config>
 	<Config name="indexPath">
 		<Path>/home/iir/EventTeller/index</Path>

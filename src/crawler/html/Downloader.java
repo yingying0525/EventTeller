@@ -12,7 +12,7 @@ import org.dom4j.Node;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import db.data.Url;
+import db.hbn.model.Url;
 import util.Config;
 import util.Const;
 import util.Log;
@@ -33,7 +33,7 @@ public class Downloader {
 	//get 1000 urls
 	private static List<Url> getInstances(){
 		List<Url> results = new ArrayList<Url>();
-		String hql = "from Url as obj where obj.taskStatus = 0  or obj.taskStatus = -1";
+		String hql = "from Url as obj where obj.taskStatus = 0  or obj.taskStatus = -1 order by obj.id desc";
 		results = util.Util.getElementsFromDB(hql,2000);
 		return results;
 	}
@@ -75,8 +75,8 @@ public class Downloader {
 		while(true){
 			dw.runTask();
 			try {
-				System.out.println("Downloader 1000 pages ok, will sleep for 1 minutes!" + new Date());
-				Thread.sleep(1000 * 20 * 1);
+				System.out.println("Downloader 1000 pages ok, will sleep for 10 minutes!" + new Date());
+				Thread.sleep(1000 * 60 * 10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -21,11 +21,13 @@ import java.util.Set;
 import java.util.TreeMap;
 
 
+
 import extractor.article.Extractor;
 
 
 
-import db.data.Word;
+import db.hbn.model.Url;
+import db.hbn.model.Word;
 
 
 
@@ -404,7 +406,9 @@ public class SingleLinkageModel {
 		while((line = br.readLine()) != null){
 			num++;
 			String url = line;
-			Extractor etor = new Extractor(url);
+			Url curl = new Url();
+			curl.setUrl(url);
+			Extractor etor = new Extractor(curl);
 			String content = etor.getContent();
 			List<String> words = util.ChineseSplit.SplitStr(content);
 			if(words.size() == 0)

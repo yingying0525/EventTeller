@@ -16,8 +16,8 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import db.data.Article;
-import db.data.Url;
+import db.hbn.model.Article;
+import db.hbn.model.Url;
 
 /**
 * @PackageName:news.crawler.Article
@@ -29,6 +29,7 @@ import db.data.Url;
 */
 public class Extractor {
 	
+	public Url CurUrl;
 	private Document Doc;	
 	private NewsPageTags Npt ;
 	private int state = 1;
@@ -40,13 +41,13 @@ public class Extractor {
 	}
 
 	//////////for some urls which has templete
-	public Extractor(String url){
+	public Extractor(Url url){
 		try {
-			Doc = Jsoup.connect(url).timeout(5000).userAgent(util.Const.CrawlerUserAgent).get();
+			Doc = Jsoup.connect(url.getUrl()).timeout(5000).userAgent(util.Const.CrawlerUserAgent).get();
 			if(Doc != null){
 				List<String> sites = NewsPageTags.getSiteName();
 				for(String site : sites){
-					if(url.contains(site)){
+					if(url.getUrl().contains(site)){
 						Npt = new NewsPageTags(site);
 						state = 2;
 						break;
@@ -60,6 +61,23 @@ public class Extractor {
 			e.printStackTrace();
 			state = -2;
 		}
+		CurUrl = url;
+	}
+	
+	//from html source
+	public Extractor(Url url,String html){
+		Doc = Jsoup.parse(html);
+		if(Doc != null){
+			List<String> sites = NewsPageTags.getSiteName();
+			for(String site : sites){
+				if(url.getUrl().contains(site)){
+					Npt = new NewsPageTags(site);
+					state = 2;
+					break;
+				}
+			}
+		}
+		CurUrl = url;
 	}
 	
 	public String getHtml(){
@@ -68,10 +86,10 @@ public class Extractor {
 		return "";
 	}
 	
-	public Article getArticleFromUrl(Url url){
+	public Article getArticleFromUrl(){
 		Article at = new Article();
-		at.setUrl(url.getUrl());
-		at.setId(url.getId());
+		at.setUrl(CurUrl.getUrl());
+		at.setId(CurUrl.getId());
 		at.setCrawltime(new Date());
 		///if has no templete use general extractor methods
 		if(getState() == 1){
@@ -102,10 +120,10 @@ public class Extractor {
 			at.setContent(getContent());
 			at.setImgs(getImgs());
 		}
-		if(at.getContent() == null || at.getContent().length() < 500){
-			url.setTaskStatus(-3);
+		if(at.getContent() == null || at.getContent().length() < 20){
+			CurUrl.setTaskStatus(-3);
 		}else{
-			url.setTaskStatus(getState());
+			CurUrl.setTaskStatus(getState());
 		}
 		//for gc
 		return at;
@@ -268,7 +286,7 @@ public class Extractor {
 		NewsPage nptime = Npt.getTime();
 		time = getInformation(nptime);
 		if(time.length() != 0){
-			time = util.Util.extractTimeFromText(time);
+			time = util.Util.extractTimeFromText(time.replace(" ", " "));
 		}else{
 			time = extractPublishTime();
 		}

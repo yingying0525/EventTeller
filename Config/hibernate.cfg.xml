@@ -12,20 +12,19 @@
 		</property>
 		<property name="connection.url">
 			<![CDATA[
-			jdbc:mysql://10.77.110.249:3306/EventTeller?useUnicode=true&characterEncoding=utf8
+			jdbc:mysql://222.29.197.238:3306/EventTeller?useUnicode=true&characterEncoding=utf8
 			]]>
 		</property>
-		<property name="connection.username">root</property>
-		<property name="connection.password">111111</property>
+		<property name="connection.username">dbdm</property>
+		<property name="connection.password">mysql@ET453</property>
 		<property name="connection.driver_class">
 			com.mysql.jdbc.Driver
 		</property>
 		<property name="hibernate.show_sql">false</property>
-		
-		<mapping resource="db/data/Url.hbm.xml" />
-		<mapping resource="db/data/Ddf.hbm.xml" />
-		<mapping resource="db/data/Article.hbm.xml" />
-		<mapping resource="db/data/Topic.hbm.xml" />
+		<mapping resource="db/hbn/model/Url.hbm.xml" />
+		<mapping resource="db/hbn/model/Event.hbm.xml" />
+		<mapping resource="db/hbn/model/AER.hbm.xml" />
+		<mapping resource="db/hbn/model/EventStatus.hbm.xml" />
 	</session-factory>
 
 </hibernate-configuration>

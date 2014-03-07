@@ -45,6 +45,10 @@ public class Const implements IConst{
 	public static int NameEntityWeight = 1;
 	public static int LocationWeight = 1;
 	
+	///for repeated article simhash 
+	public static int SimHashBitNumber = 64;
+	public static int MinSimHashBitNumber = 7;
+	
 	
 	public static int[] SUBTOPICID =new int[]{1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192};
 
