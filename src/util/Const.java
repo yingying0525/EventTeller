@@ -20,7 +20,7 @@ public class Const implements IConst{
 	public static String LOG4J_CONFIG_PATH = rootdir+"Config/log4j.xml";
 	
 	
-	
+	public static String HtmlSaveEncode = "UTF8";
 	public static String CrawlerUserAgent = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31";
 	
 	public static String Split_To_Sentences_Sign = "。";
@@ -55,8 +55,8 @@ public class Const implements IConst{
 
 	
 	
-	public static long WebSiteSleepTime = 30*60*1000;
-	public static long AritcleSleepTime = 5*60*1000;
+	public static long UrlCrawlerSleepTime = 30*60*1000;
+	public static long DownloadArticleSleepTime = 10*60*1000;
 	public static long ClusterToTopicSleepTime = 6*60*1000;
 
 	public static long ArticleIndexSleepTime = 120*60*1000;
@@ -77,11 +77,16 @@ public class Const implements IConst{
 	/// for china provinces code e.g. beijing 1
 	public static Map<String,Integer> ZH_PS = null;
 	
+	
+	public static enum TaskId{
+		CrawlUrlToDB,DownloadUrlToHtml
+	}
+	
 	public static Map<String,Integer> loadTaskid(){
 		if(TASKID==null){
 			TASKID = new HashMap<String,Integer>();
-			TASKID.put("urlToMysql", 0);
-			TASKID.put("UrlToArticle", 1);
+			TASKID.put("CrawlUrlToDB", 0);
+			TASKID.put("DownloadUrlToHtml", 1);
 			TASKID.put("ArticleToTopic", 2);
 			TASKID.put("TopicToIndex", 3);
 			TASKID.put("HtmlFromHbaseToMysql", 4);

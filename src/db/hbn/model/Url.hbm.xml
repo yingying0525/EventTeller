@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC
 	"-//Hibernate/Hibernate Mapping DTD//EN"
@@ -44,4 +45,52 @@
 			length="8"
 		/>
 	</class>	
+=======
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="db.hbn.model">
+	<class
+		name="Url"
+		table="Url" dynamic-update="true"
+	>
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="id"
+			type="integer"
+			column="id"
+		>
+		</id>
+		<property
+			name="webSite"
+			column="webSite"
+			type="string"
+			not-null="true"
+			length="20"
+		/>
+		<property
+			name="url"
+			column="url"
+			type="string"
+			not-null="false"
+			length="200"
+		/>
+		<property
+			name="crawlTime"
+			column="crawltime"
+			type="java.util.Date"
+			not-null="true"
+			length="14"
+		/>
+		<property
+			name="subtopicId"
+			column="subtopicid"
+			type="integer"
+			not-null="false"
+			length="8"
+		/>
+	</class>	
+>>>>>>> 25105cdd516990ead7879740ae486fe0450f1e3f
 </hibernate-mapping>
