@@ -17,7 +17,6 @@ Features
 
 
 
-You can try our old version demo http://www.istoryteller.org , the new version : http://www.istoryteller.org:8080 .
 
 All of the needed jars can be downloaded from http://pan.baidu.com/share/link?shareid=377536&uk=2634814594
 
