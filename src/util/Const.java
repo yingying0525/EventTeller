@@ -15,6 +15,7 @@ public class Const implements IConst{
 	
 	public static String WEB_SITES_PATH = rootdir+"Config/WebSites.xml";
 	public static String SYS_CONFIG_PATH = rootdir+"Config/SysConfig.xml";
+	public static String SYS_JSON_CONFIG_PATH = rootdir+"Config/SysConfig.json";
 	public static String HIBERNATE_CFG_PATH = rootdir+"Config/hibernate.cfg.xml";
 	public static String LOG4J_CONFIG_PATH = rootdir+"Config/log4j.xml";
 	

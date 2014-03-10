@@ -5,19 +5,19 @@
 
 <hibernate-mapping package="db.hbn.model">
 	<class
-		name="AER"
-		table="ArticleEventRelation" dynamic-update="true"
+		name="UrlStatus"
+		table="UrlStatus" dynamic-update="true"
 	>
 		<meta attribute="sync-DAO">false</meta>
 		<id
-			name="articleId"
+			name="id"
 			type="integer"
-			column="articleId"
+			column="id"
 		>
 		</id>
 		<property
-			name="eventId"
-			column="eventId"
+			name="status"
+			column="status"
 			type="integer"
 			not-null="false"
 			length="32"

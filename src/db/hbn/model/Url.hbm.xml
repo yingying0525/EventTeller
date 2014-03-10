@@ -6,7 +6,7 @@
 <hibernate-mapping package="db.hbn.model">
 	<class
 		name="Url"
-		table="url" dynamic-update="true"
+		table="Url" dynamic-update="true"
 	>
 		<meta attribute="sync-DAO">false</meta>
 		<id
@@ -14,9 +14,7 @@
 			type="integer"
 			column="id"
 		>
-			<generator class="native"></generator>
 		</id>
-
 		<property
 			name="webSite"
 			column="webSite"
@@ -41,13 +39,6 @@
 		<property
 			name="subtopicId"
 			column="subtopicid"
-			type="integer"
-			not-null="false"
-			length="8"
-		/>
-		<property
-			name="taskStatus"
-			column="taskstatus"
 			type="integer"
 			not-null="false"
 			length="8"

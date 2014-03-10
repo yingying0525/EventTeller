@@ -21,15 +21,19 @@ import crawler.url.filter.UrlFilter;
 import crawler.url.WebSite;
 
 import org.dom4j.Element;
-import org.dom4j.Node;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import com.alibaba.fastjson.JSON;
+
+import config.JsonConfigModel;
+import config.LocalJsonConfigReader;
 import util.Config;
 import util.Const;
 import util.Log;
 import db.hbn.model.Url;
+import db.hbn.model.UrlStatus;
 
 
 
@@ -54,9 +58,10 @@ public class Crawler implements Runnable{
 	
 	public Crawler(){
 		Log.getLogger().info("Start TitleCrawler!");
-		Config cfg = new Config(Const.SYS_CONFIG_PATH);
-		Node elm = cfg.selectNode("/Configs/Config[@name='UrlsBloomFilterFilePath']/Path");
-		Bloom_File_Path =elm.getText();
+		//read Bloom filter file path from json config file
+		String fileContent = LocalJsonConfigReader.readJsonFile(Const.SYS_JSON_CONFIG_PATH);
+		JsonConfigModel jcm = JSON.parseObject(fileContent,JsonConfigModel.class);
+		Bloom_File_Path = jcm.UrlsBloomFilterFilePath;		
 		bloomfilter =  InitBloomFilter();
 		System.out.println("bloom filter init ok...");	
 	}
@@ -418,11 +423,21 @@ public class Crawler implements Runnable{
 		NewUrls = getAllTitleNews();
 		if(bloomfilter == null)
 			return;		
-		List<Url> updateUrls = new ArrayList<Url>();	
+		List<Url> updateUrls = new ArrayList<Url>();
+		List<UrlStatus> updateStatus = new ArrayList<UrlStatus>();
+		String hql = "select max(id) from Url";
+		int maxId = util.Util.getMaxIdFromDB(hql);
 		int max_len_url = 0;
 		for(Url tn : NewUrls){
 			if(!bloomfilter.contains(tn.getUrl().toLowerCase())){
+				//set url id
+				tn.setId(++maxId);
 				updateUrls.add(tn);
+				//new url status item
+				UrlStatus us = new UrlStatus();
+				us.setId(maxId);
+				us.setStatus(Const.TASKID.get("urlToMysql"));
+				updateStatus.add(us);
 				bloomfilter.add(tn.getUrl().toLowerCase());
 			}
 			if(tn.getUrl().length() > max_len_url){
@@ -430,6 +445,7 @@ public class Crawler implements Runnable{
 			}
 		}
 		util.Util.updateDB(updateUrls);
+		util.Util.updateDB(updateStatus);
 		WriterToBloomFile(updateUrls);		
 		System.out.println("now end of Crawler..update urls -- " + updateUrls.size());	
 	}
@@ -441,7 +457,6 @@ public class Crawler implements Runnable{
 			uc.run();
 			try {
 				System.out.println("now end of one crawler,sleep for:"+Const.WebSiteSleepTime/1000/60+" minutes. "+new Date().toString());
-				System.gc();
 				Thread.sleep(Const.WebSiteSleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
