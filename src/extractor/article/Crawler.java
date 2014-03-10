@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.dom4j.Node;
-import org.hibernate.Query;
-import org.hibernate.Session;
+//import org.hibernate.Query;
+//import org.hibernate.Session;
 
 
 
@@ -25,9 +25,8 @@ import util.ChineseSplit;
 import util.Config;
 import util.Const;
 import util.IOReader;
-import db.hbn.HSession;
+//import db.hbn.HSession;
 import db.hbn.model.Article;
-import db.hbn.model.Ddf;
 import db.hbn.model.Url;
 
 
@@ -210,47 +209,47 @@ public class Crawler {
 		}
 	}
 	
-	/**
-	 * combine ddf data in memory with data in DB
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private List<Ddf> CombineDBWithMemory(){
-		List<Ddf> updates = new ArrayList<Ddf>();
-		Session session = new HSession().createSession();
-		Iterator<String> days = DDF.keySet().iterator();
-		while(days.hasNext()){
-			String day = days.next();
-			String hql = "from Ddf as obj where obj.day= '" + day + "'";
-			Query query = session.createQuery(hql);
-			List<Ddf>  tmp = (List<Ddf>)query.list();
-			Ddf today = new Ddf();
-			today.setDay(day);
-			Map<String,Integer> ddf_words = new HashMap<String,Integer>();
-			if(tmp.size() != 0){
-				today = tmp.get(0);
-				ddf_words = util.Util.getDdfMap(today.getWords());
-			}
-			Iterator<String> upwords = DDF.get(day).keySet().iterator();
-			while(upwords.hasNext()){
-				String upwd = upwords.next();
-				if(ddf_words.containsKey(upwd)){
-					ddf_words.put(upwd, ddf_words.get(upwd) + DDF.get(day).get(upwd));
-				}else{
-					ddf_words.put(upwd, DDF.get(day).get(upwd));
-				}
-			}
-			String out = util.Util.DdfMapToStr(ddf_words);
-			today.setWords(out);
-			today.setWordnum(ddf_words.size());
-			updates.add(today);
-		}
-		for(int i = 0 ; i< updates.size();i++){
-			int docnum = DDF_doc_num.get(updates.get(i).getDay()) + updates.get(i).getDocnum();
-			updates.get(i).setDocnum(docnum);
-		}
-		return updates;
-	}
+//	/**
+//	 * combine ddf data in memory with data in DB
+//	 * @return
+//	 */
+//	@SuppressWarnings("unchecked")
+//	private List<Ddf> CombineDBWithMemory(){
+//		List<Ddf> updates = new ArrayList<Ddf>();
+//		Session session = new HSession().createSession();
+//		Iterator<String> days = DDF.keySet().iterator();
+//		while(days.hasNext()){
+//			String day = days.next();
+//			String hql = "from Ddf as obj where obj.day= '" + day + "'";
+//			Query query = session.createQuery(hql);
+//			List<Ddf>  tmp = (List<Ddf>)query.list();
+//			Ddf today = new Ddf();
+//			today.setDay(day);
+//			Map<String,Integer> ddf_words = new HashMap<String,Integer>();
+//			if(tmp.size() != 0){
+//				today = tmp.get(0);
+//				ddf_words = util.Util.getDdfMap(today.getWords());
+//			}
+//			Iterator<String> upwords = DDF.get(day).keySet().iterator();
+//			while(upwords.hasNext()){
+//				String upwd = upwords.next();
+//				if(ddf_words.containsKey(upwd)){
+//					ddf_words.put(upwd, ddf_words.get(upwd) + DDF.get(day).get(upwd));
+//				}else{
+//					ddf_words.put(upwd, DDF.get(day).get(upwd));
+//				}
+//			}
+//			String out = util.Util.DdfMapToStr(ddf_words);
+//			today.setWords(out);
+//			today.setWordnum(ddf_words.size());
+//			updates.add(today);
+//		}
+//		for(int i = 0 ; i< updates.size();i++){
+//			int docnum = DDF_doc_num.get(updates.get(i).getDay()) + updates.get(i).getDocnum();
+//			updates.get(i).setDocnum(docnum);
+//		}
+//		return updates;
+//	}
 	
 	private void updateDDF(List<ArticleContent> acs){
 		
@@ -280,8 +279,8 @@ public class Crawler {
 			}
 			DDF.put(day, tmp_day_words);
 		}
-		List<Ddf> updates = CombineDBWithMemory();
-		util.Util.updateDB(updates);
+//		List<Ddf> updates = CombineDBWithMemory();
+//		util.Util.updateDB(updates);
 	}
 	
 	private void runTask(){
@@ -295,13 +294,13 @@ public class Crawler {
 			Extractor etor = new Extractor(url);			
 			Article at = new Article();			
 			at = etor.getArticleFromUrl();	
-			at.setSubtopic(url.getSubtopicId());
+//			at.setSubtopic(url.getSubtopicId());
 			Map<String,Integer> at_ct_words = ChineseSplit.SplitStrWithPosTFS(at.getContent());
 			ArticleContent ac = new ArticleContent();
 			ac.at = at;
 			ac.words = at_ct_words;
-			if(url.getTaskStatus() < 0)
-				continue;				
+//			if(url.getTaskStatus() < 0)
+//				continue;				
 			update_idf.add(ac);			
 			if(FindInMemory(ac)){
 				continue;

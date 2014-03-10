@@ -79,7 +79,7 @@ public class Const implements IConst{
 	
 	
 	public static enum TaskId{
-		CrawlUrlToDB,DownloadUrlToHtml
+		CrawlUrlToDB,DownloadUrlToHtml,CantFindHtmlInDisk
 	}
 	
 	public static Map<String,Integer> loadTaskid(){

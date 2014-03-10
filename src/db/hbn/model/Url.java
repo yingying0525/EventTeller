@@ -7,8 +7,6 @@ public class Url {
 	private String  webSite;
 	private String  url;
 	private Date    crawlTime;
-	private Integer subtopicId;
-	private Integer taskStatus;
 	
 	public Integer getId() {
 		return id;
@@ -33,18 +31,6 @@ public class Url {
 	}
 	public void setCrawlTime(Date crawlTime) {
 		this.crawlTime = crawlTime;
-	}
-	public Integer getSubtopicId() {
-		return subtopicId;
-	}
-	public void setSubtopicId(Integer subtopicId) {
-		this.subtopicId = subtopicId;
-	}
-	public Integer getTaskStatus() {
-		return taskStatus;
-	}
-	public void setTaskStatus(Integer taskStatus) {
-		this.taskStatus = taskStatus;
 	}
 	
 	@Override

@@ -22,5 +22,11 @@
 			not-null="false"
 			length="32"
 		/>
+		<property
+			name="time"
+			column="time"
+			type="java.util.Date"
+			not-null="true"
+		/>
 	</class>	
 </hibernate-mapping>

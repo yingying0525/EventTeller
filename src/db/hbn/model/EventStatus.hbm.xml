@@ -5,8 +5,8 @@
 
 <hibernate-mapping package="db.hbn.model">
 	<class
-		name="Url"
-		table="Url" dynamic-update="true"
+		name="EventStatus"
+		table="EventStatus" dynamic-update="true"
 	>
 		<meta attribute="sync-DAO">false</meta>
 		<id
@@ -16,25 +16,11 @@
 		>
 		</id>
 		<property
-			name="webSite"
-			column="webSite"
-			type="string"
-			not-null="true"
-			length="20"
-		/>
-		<property
-			name="url"
-			column="url"
-			type="string"
+			name="status"
+			column="status"
+			type="integer"
 			not-null="false"
-			length="200"
+			length="32"
 		/>
-		<property
-			name="crawlTime"
-			column="crawltime"
-			type="java.util.Date"
-			not-null="true"
-			length="14"
-		/>
-	</class>
+	</class>	
 </hibernate-mapping>

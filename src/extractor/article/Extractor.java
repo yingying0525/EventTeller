@@ -120,11 +120,6 @@ public class Extractor {
 			at.setContent(getContent());
 			at.setImgs(getImgs());
 		}
-		if(at.getContent() == null || at.getContent().length() < 20){
-			CurUrl.setTaskStatus(-3);
-		}else{
-			CurUrl.setTaskStatus(getState());
-		}
 		//for gc
 		return at;
 	}

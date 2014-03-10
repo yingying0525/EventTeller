@@ -44,7 +44,7 @@ public class CalHtmlSimHash {
 		File html = new File(filePath);
 		if(!html.exists()){
 			///update db taskstatus to -1;
-			url.setTaskStatus(-1);
+//			url.setTaskStatus(-1);
 			return null;
 		}else{
 			BufferedReader br = new BufferedReader(new FileReader(html));
@@ -58,13 +58,13 @@ public class CalHtmlSimHash {
 			try{
 				Article art = etor.getArticleFromUrl();
 				if(art.getPublishtime() == null || art.getContent().length() < 30 || art.getTitle().length() < 5){
-					url.setTaskStatus(-3);
+//					url.setTaskStatus(-3);
 					return null;
 				}
-				url.setTaskStatus(2);
+//				url.setTaskStatus(2);
 				return art;
 			}catch(Exception e){
-				url.setTaskStatus(-3);
+//				url.setTaskStatus(-3);
 				return null;
 			}
 		}

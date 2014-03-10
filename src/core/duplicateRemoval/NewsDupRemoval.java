@@ -97,7 +97,7 @@ public class NewsDupRemoval {
 		File html = new File(filePath);
 		if(!html.exists()){
 			///update db taskstatus to -1;
-			url.setTaskStatus(-1);
+//			url.setTaskStatus(-1);
 			return null;
 		}else{
 			BufferedReader br = new BufferedReader(new FileReader(html));
@@ -109,7 +109,7 @@ public class NewsDupRemoval {
 			br.close();
 			Extractor etor = new Extractor(url,source.toString());
 			Article art = etor.getArticleFromUrl();
-			url.setTaskStatus(2);
+//			url.setTaskStatus(2);
 			return art;
 		}
 	}
@@ -184,7 +184,7 @@ public class NewsDupRemoval {
 		et.setNumber(1);
 		et.setPubTime(at.getPublishtime());
 		et.setSource(at.getSource());
-		et.setSubTopic(instance.getSubtopicId());
+//		et.setSubTopic(instance.getSubtopicId());
 		et.setTaskStatus(1);
 		return et;
 	}

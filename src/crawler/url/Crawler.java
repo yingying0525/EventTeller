@@ -35,6 +35,7 @@ import util.Const;
 import util.Log;
 import db.hbn.model.Url;
 import db.hbn.model.UrlStatus;
+import db.hbn.model.UrlTopic;
 
 
 
@@ -54,6 +55,7 @@ public class Crawler implements Runnable{
 		
 	private static String Bloom_File_Path;
 	private BloomFilter bloomfilter;
+	private Map<String,Integer> UrlTopicMaps;
 	
 
 	
@@ -64,6 +66,7 @@ public class Crawler implements Runnable{
 		JsonConfigModel jcm = JSON.parseObject(fileContent,JsonConfigModel.class);
 		Bloom_File_Path = jcm.UrlsBloomFilterFilePath;		
 		bloomfilter =  InitBloomFilter();
+		UrlTopicMaps = new HashMap<String,Integer>();
 		System.out.println("bloom filter init ok...");	
 	}
 	
@@ -263,9 +266,8 @@ public class Crawler implements Runnable{
 				Url tn = new Url();
 				tn.setCrawlTime(new java.util.Date());
 				tn.setUrl(url);
-				tn.setTaskStatus(0);
 				tn.setWebSite(ws.SiteName);
-				tn.setSubtopicId(Const.SUBTOPICID[ws.getSites().get(str_url)]);
+				UrlTopicMaps.put(url, Const.SUBTOPICID[ws.getSites().get(str_url)]);
 				if(!filterTitleNews(ws.getFilters().get(str_url),tn)){
 					continue;
 				}			
@@ -425,28 +427,41 @@ public class Crawler implements Runnable{
 			return;		
 		List<Url> updateUrls = new ArrayList<Url>();
 		List<UrlStatus> updateStatus = new ArrayList<UrlStatus>();
+		List<UrlTopic> updateTopics = new ArrayList<UrlTopic>();
 		String hql = "select max(id) from Url";
 		int maxId = util.Util.getMaxIdFromDB(hql);
 		int max_len_url = 0;
 		for(Url tn : NewUrls){
 			if(!bloomfilter.contains(tn.getUrl().toLowerCase())){
 				//set url id
+				if(tn.getUrl() == null || UrlTopicMaps.get(tn.getUrl()) == null){
+					System.out.println("null....");
+					continue;
+				}
 				tn.setId(++maxId);
 				updateUrls.add(tn);
 				//new url status item
 				UrlStatus us = new UrlStatus();
 				us.setId(maxId);
 				us.setStatus(Const.TaskId.CrawlUrlToDB.ordinal());
+				us.setTime(tn.getCrawlTime());
 				updateStatus.add(us);
+				//new url topic item
+				UrlTopic ut = new UrlTopic();
+				ut.setId(maxId);
+				ut.setTopic(UrlTopicMaps.get(tn.getUrl()));
+				updateTopics.add(ut);
 				bloomfilter.add(tn.getUrl().toLowerCase());
 			}
 			if(tn.getUrl().length() > max_len_url){
 				max_len_url = tn.getUrl().length();
 			}
 		}
+		util.Util.updateDB(updateTopics);
 		util.Util.updateDB(updateUrls);
 		util.Util.updateDB(updateStatus);
-		WriterToBloomFile(updateUrls);		
+		WriterToBloomFile(updateUrls);
+		UrlTopicMaps.clear();
 		System.out.println("now end of Crawler..update urls -- " + updateUrls.size());	
 	}
 	
@@ -460,7 +475,7 @@ public class Crawler implements Runnable{
 				Thread.sleep(Const.UrlCrawlerSleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}			
+			}
 		}
 	}
 	
