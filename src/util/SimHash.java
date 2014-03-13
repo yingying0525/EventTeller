@@ -16,7 +16,7 @@ class HashWord{
 public class SimHash {
 
 	
-	private long calSimHash(Map<String,Integer> words){
+	private static long calSimHash(Map<String,Integer> words){
 		long res = 0;
 		long[] bits = new long[util.Const.SimHashBitNumber];
 		List<HashWord> hws = new ArrayList<HashWord>();
@@ -43,12 +43,12 @@ public class SimHash {
 		return res;
 	}
 	
-	public long getSimHash(String text){
+	public static long getSimHash(String text){
 		Map<String, Integer> words = util.ChineseSplit.SplitStrWithPosTFS(text);
 		return calSimHash(words);
 	}
 	
-	public int getSimHashDiffBits(String texta, String textb){
+	public static int getSimHashDiffBits(String texta, String textb){
 		long simHashA = getSimHash(texta);
 		long simHashB = getSimHash(textb);
 		return util.Util.diffBitsOfNums(simHashA,simHashB);

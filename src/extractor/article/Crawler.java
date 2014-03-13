@@ -86,7 +86,6 @@ public class Crawler {
 	}
 	
 	public Crawler(){
-		Const.loadTaskid();
 		mem_ats = new HashMap<Integer,Article>();
 		mem_index = new HashMap<String,Set<Integer>>();
 		update_index = new ArrayList<Article>();
@@ -293,7 +292,7 @@ public class Crawler {
 //			///extract article content
 			Extractor etor = new Extractor(url);			
 			Article at = new Article();			
-			at = etor.getArticleFromUrl();	
+			at = etor.getArticle();	
 //			at.setSubtopic(url.getSubtopicId());
 			Map<String,Integer> at_ct_words = ChineseSplit.SplitStrWithPosTFS(at.getContent());
 			ArticleContent ac = new ArticleContent();

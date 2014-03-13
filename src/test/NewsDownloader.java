@@ -86,7 +86,7 @@ public class NewsDownloader implements Runnable{
 			Url nurl = new Url();
 			nurl.setUrl(its[1]);
 			nurl.setId(Integer.valueOf(its[0]));
-			Article at = etor.getArticleFromUrl();
+			Article at = etor.getArticle();
 			try {
 				try{
 					BufferedWriter bw = new BufferedWriter(new FileWriter(OPath + its[0]));

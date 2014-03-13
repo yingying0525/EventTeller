@@ -1,16 +1,17 @@
 
 package test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import index.solr.EventIndex;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import db.hbn.model.Event;
 import db.hbn.model.UrlStatus;
 
 
@@ -72,26 +73,16 @@ public class test {
 		
 		
 		
-		String filePath = "e:\\share\\sts.sql\\sts.sql";
-		BufferedReader br = new BufferedReader(new FileReader(filePath));
-		String line ;
-		int num = 0;
-		List<UrlStatus> lss = new ArrayList<UrlStatus>();
-		while((line = br.readLine()) != null){
-			String[] its = line.split("\t");
-			UrlStatus us = new UrlStatus();
-			us.setId(Integer.parseInt(its[0]));
-			us.setStatus(Integer.parseInt(its[1]));
-			lss.add(us);
-			num++;
-			if(lss.size() > 10000){
-				updateEvent(lss);
-				lss.clear();
-				System.out.println(num);
-			}
-		}
-		br.close();
+		Event et = new Event();
+		et.setId(1);
+		et.setTitle("我是一个中国人");
+		et.setContent("");
+		et.setPubTime(new Date());
+		EventIndex ei = new EventIndex();
+//		ei.update(et);
+		ei.deleteAll();
 		
+
 		
 	}
 }

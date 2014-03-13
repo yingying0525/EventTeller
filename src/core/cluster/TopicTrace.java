@@ -45,7 +45,7 @@ public class TopicTrace {
 	private int MaxTopicId = 0;
 	
 	public TopicTrace(){
-		Const.loadTaskid();
+//		Const.loadTaskid();
 		Config cfg = new Config(Const.SYS_CONFIG_PATH);
 		Node elem = cfg.selectNode("/Configs/Config[@name='TopicIndex']/Path");
 		Node elemIdf = cfg.selectNode("/Configs/Config[@name='TotalDF']/Path");

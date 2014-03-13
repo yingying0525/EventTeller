@@ -47,26 +47,5 @@
 			type="string"
 			not-null="false"
 		/>
-		<property
-			name="number"
-			column="number"
-			type="integer"
-			not-null="false"
-			length="32"
-		/>
-		<property
-			name="taskStatus"
-			column="taskstatus"
-			type="integer"
-			not-null="false"
-			length="32"
-		/>
-		<property
-			name="subTopic"
-			column="subtopic"
-			type="integer"
-			not-null="false"
-			length="32"
-		/>
 	</class>	
 </hibernate-mapping>

@@ -6,6 +6,9 @@ public class JsonConfigModel {
 	public String SimHashPath;
 	public String SolrIndexURI;
 	public String UrlsBloomFilterFilePath;
+	public String LocalDFPath;
+	public String LocalTDFPath;
+	public String ArticleFilePath;
 	
 	
 	
@@ -15,7 +18,9 @@ public class JsonConfigModel {
 		return HtmlSavePath + "\t" + 
 				SimHashPath + "\t" + 
 				SolrIndexURI + "\t" + 
-				UrlsBloomFilterFilePath;
+				UrlsBloomFilterFilePath + "\t" +
+				LocalDFPath + "\t" + 
+				LocalTDFPath;
 	}
 
 }

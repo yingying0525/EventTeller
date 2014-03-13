@@ -46,6 +46,10 @@ public class Const implements IConst{
 	public static int NameEntityWeight = 1;
 	public static int LocationWeight = 1;
 	
+	public static int MinTitleWordsCount = 5;
+	public static int MinContentWordsCount = 5;
+	public static int AtInfoExtractorThreadNumber = 10;
+	
 	///for repeated article simhash 
 	public static int SimHashBitNumber = 64;
 	public static int MinSimHashBitNumber = 7;
@@ -55,12 +59,15 @@ public class Const implements IConst{
 
 	
 	
-	public static long UrlCrawlerSleepTime = 30*60*1000;
-	public static long DownloadArticleSleepTime = 10*60*1000;
+	public static long UrlCrawlerSleepTime = 15*60*1000;
+	public static long DownloadArticleSleepTime = 15*60*1000;
+	public static long ArticleInfoExtractorSleepTime = 15*60*1000;
+	public static long EventDetectorSleepTime = 0*1000;
 	public static long ClusterToTopicSleepTime = 6*60*1000;
 
 	public static long ArticleIndexSleepTime = 120*60*1000;
 
+	public static int SimHashIndexNumber = 8;
 	
 	public static int TopicNearDayNum = 7;
 	
@@ -79,25 +86,7 @@ public class Const implements IConst{
 	
 	
 	public static enum TaskId{
-		CrawlUrlToDB,DownloadUrlToHtml,CantFindHtmlInDisk
-	}
-	
-	public static Map<String,Integer> loadTaskid(){
-		if(TASKID==null){
-			TASKID = new HashMap<String,Integer>();
-			TASKID.put("CrawlUrlToDB", 0);
-			TASKID.put("DownloadUrlToHtml", 1);
-			TASKID.put("ArticleToTopic", 2);
-			TASKID.put("TopicToIndex", 3);
-			TASKID.put("HtmlFromHbaseToMysql", 4);
-			TASKID.put("HtmlFromSHbaseToTHbase", 8);
-			TASKID.put("MysqlToIDF", 5);
-			TASKID.put("ArticleToEvent", 6);
-			TASKID.put("UseMysqlArticleToIndex", 7);
-			TASKID.put("ArticleToWebIndex", 8);
-			TASKID.put("EventToWebIndex", 8);
-		}
-		return TASKID;		
+		CrawlUrlToDB,DownloadUrlToHtml,CantFindHtmlInDisk,ParseHtmlSuccess,ParseHtmlFailed,CreateNewEvent
 	}
 	
 	public static void loadChinaProvince(){
@@ -139,11 +128,4 @@ public class Const implements IConst{
 			ZH_PS.put("香港", 34);
 		}
 	}
-	
-	
-	public Const(){
-		loadTaskid();
-	}
-	
-
 }

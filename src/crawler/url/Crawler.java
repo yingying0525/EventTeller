@@ -356,7 +356,6 @@ public class Crawler implements Runnable{
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Url> getAllTitleNews(){
-		Const.loadTaskid();
 		List<Url> ls_results = new ArrayList<Url>();
 		List<Url> ls_temp = new ArrayList<Url>();
 		///read the WebSites.xml

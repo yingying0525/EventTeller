@@ -1,5 +1,6 @@
 package extractor.article;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import util.Const;
 import db.hbn.model.Article;
 import db.hbn.model.Url;
 
@@ -80,13 +82,32 @@ public class Extractor {
 		CurUrl = url;
 	}
 	
+	public Extractor(Url url,File html){
+		try {
+			Doc = Jsoup.parse(html,Const.HtmlSaveEncode);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(Doc != null){
+			List<String> sites = NewsPageTags.getSiteName();
+			for(String site : sites){
+				if(url.getUrl().contains(site)){
+					Npt = new NewsPageTags(site);
+					state = 2;
+					break;
+				}
+			}
+		}
+		CurUrl = url;
+	}
+	
 	public String getHtml(){
 		if(Doc != null)
 			return Doc.html();
 		return "";
 	}
 	
-	public Article getArticleFromUrl(){
+	public Article getArticle(){
 		Article at = new Article();
 		at.setUrl(CurUrl.getUrl());
 		at.setId(CurUrl.getId());

@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ansj.domain.Term;
-import org.ansj.recognition.NatureRecognition;
 import org.ansj.splitWord.analysis.NlpAnalysis;
-import org.ansj.splitWord.analysis.ToAnalysis;
 
 import db.hbn.model.Word;
 
@@ -30,56 +28,48 @@ public class ChineseSplit {
 	
 	
 	
+	/**
+	 * @param str
+	 * @return
+	 * @Description:filter some useless words
+	 */
 	private static boolean checkNature(String str){
 		boolean result = true;
 		if(str == null || str.equals("null")){
-			result = false;
-			return result;
+			return false;
 		}
-		Map<String,Boolean> check = new HashMap<String,Boolean>();
-		check.put("w", true);//punctuation
-		check.put("p", true);//prepositional
-		check.put("c", true);//conjunction
-		check.put("un", true);//conjunction
-		check.put("r", true);//pronoun
-		check.put("y", true);
-		check.put("z", true);
-		check.put("u", true);
-		check.put("r", true);
-		check.put("o", true);
-		check.put("e", true);
-		check.put("d", true);
-		if(check.containsKey(str)|| str.indexOf("j") >= 0){
-			result = false;
+		List<String> check = new ArrayList<String>();
+		check.add("w");//punctuation
+		check.add("p");//prepositional
+		check.add("c");//conjunction
+		check.add("u");//conjunction
+		check.add("r");//pronoun
+		check.add("y");
+		check.add("z");
+		check.add("u");
+		check.add("r");
+		check.add("o");
+		check.add("e");
+		check.add("d");
+		check.add("j");
+		for(String ch : check){
+			if(str.indexOf(ch) == 0){
+				result = false;
+				break;
+			}
 		}
-		//for gc
-		check = null;
 		return result;
 	}
     
     /**
      * @param text
      * @return
-     * @Description:split chinese string using ansj_seg 
+     * @Description:split chinese string using ansj_seg using nlp paser
      * https://github.com/ansjsun/ansj_seg/wiki
      */
     public static List<String> SplitStr(String text){
     	List<String> result = new ArrayList<String>();
-    	List<Term> terms = ToAnalysis.parse(text);
-    	new NatureRecognition(terms).recognition();
-		for(Term term : terms){
-			String nature = term.getNatrue().natureStr;
-			if(!checkNature(nature) ||term.getName().length() < 2 )
-				continue;
-			result.add(term.getName());
-		}
-    	return result;
-    }
-    
-    public static List<String> SplitStrNlp(String text){
-    	List<String> result = new ArrayList<String>();
     	List<Term> terms = NlpAnalysis.parse(text);
-    	new NatureRecognition(terms).recognition();
 		for(Term term : terms){
 			String nature = term.getNatrue().natureStr;
 			if(!checkNature(nature) ||term.getName().length() < 2 )
@@ -97,13 +87,7 @@ public class ChineseSplit {
      */
     public static List<Word> SplitStrWithPos(String text){
     	List<Word> result = new ArrayList<Word>();
-    	List<Term> terms = null;
-    	try{
-    		terms = ToAnalysis.parse(text);
-    	}catch(Exception e){
-    		return result;
-    	}    	
-    	new NatureRecognition(terms).recognition() ;
+    	List<Term> terms = NlpAnalysis.parse(text);
     	for(Term tm : terms){
     		String nature = tm.getNatrue().natureStr;
 			if(tm.getName().length() < 2 || !checkNature(nature))
