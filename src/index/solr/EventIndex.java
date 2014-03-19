@@ -3,6 +3,7 @@ package index.solr;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -43,6 +44,27 @@ public class EventIndex {
 				doc.addField("et_title", et.getTitle());
 				doc.addField("et_summary", et.getContent().substring(0, Math.min(et.getContent().length(), 100)).replace("!##!", "\n"));
 				doc.addField("et_pubTime", et.getPubTime());
+				docs.add(doc);
+			}
+			server.add(docs);
+			server.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("can't update to solr...");
+		}
+	}
+	
+	public void update(Set<Event> events){
+		try{
+			SolrServer server = new HttpSolrServer(solrUrl);
+			List<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
+			for(Event et : events){
+				SolrInputDocument doc = new SolrInputDocument();
+				doc.addField("id", et.getId());
+				doc.addField("et_title", et.getTitle());
+				doc.addField("et_summary", et.getContent().substring(0, Math.min(et.getContent().length(), 200)).replace("!##!", "\n"));
+				doc.addField("et_pubTime", et.getPubTime());
+				doc.addField("et_number", et.getNumber());
 				docs.add(doc);
 			}
 			server.add(docs);

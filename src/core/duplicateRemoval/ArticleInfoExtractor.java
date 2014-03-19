@@ -44,7 +44,8 @@ public class ArticleInfoExtractor implements Runnable{
 	
 	private void getInstances(){
 		String hql = "from UrlStatus as obj where obj.status = " + Const.TaskId.DownloadUrlToHtml.ordinal();
-		UStatus = util.Util.getElementsFromDB(hql,BatchSize);
+		UStatus = util.db.Hbn.getElementsFromDB(hql,BatchSize);
+		BatchSize = UStatus.size();
 	}
 	
 	public boolean checkArticle(Article at){
@@ -94,7 +95,7 @@ public class ArticleInfoExtractor implements Runnable{
 		}
 		for(int i = startIndex; i < endIndex; ++i){
 			UrlStatus us = UStatus.get(i);
-			String folder = util.Util.getDateStr(us.getTime());
+			String folder = util.TimeUtil.getDateStr(us.getTime());
 			String filePath = HtmlPath + folder + "/" + us.getId();
 			File file = new File(filePath);
 			if(!file.exists()){
@@ -104,7 +105,11 @@ public class ArticleInfoExtractor implements Runnable{
 			//get Url from db, the extractor need Url.url to recognition html model
 			//TODO can optimize
 			String getUrl = "from Url as obj where obj.id = " + us.getId();
-			Url url = util.Util.getElementFromDB(getUrl);
+			Url url =util.db.Hbn.getElementFromDB(getUrl);
+			if(url == null){
+				us.setStatus(Const.TaskId.ParseHtmlFailed.ordinal());
+				continue;
+			}
 			//get article from Url.url and html source
 			Extractor etor = new Extractor(url,file);
 			Article at = etor.getArticle();
@@ -121,8 +126,9 @@ public class ArticleInfoExtractor implements Runnable{
 	public static void main(String[] args) throws InterruptedException{
 		while(true){
 			ArticleInfoExtractor t = new ArticleInfoExtractor();
-			if(t.UStatus.size() == 0){
-				System.out.println("no new html to process..now will sleep for " + Const.ArticleInfoExtractorSleepTime / 1000 / 60 + "minutes");
+			if(t.UStatus.size() < Const.MinArticleToProcess){
+				System.out.println(t.UStatus.size());
+				System.out.println("not enough new html to process..now will sleep for " + Const.ArticleInfoExtractorSleepTime / 1000 / 60 + " minutes");
 				Thread.sleep(Const.ArticleInfoExtractorSleepTime);
 				continue;
 			}
@@ -139,7 +145,7 @@ public class ArticleInfoExtractor implements Runnable{
 			}
 			Date processEnd = new Date();
 			System.out.print("process time : " + (processEnd.getTime() - totalStart.getTime()));
-			util.Util.updateDB(t.UStatus);
+			util.db.Hbn.updateDB(t.UStatus);
 			Date updateEnd = new Date();
 			System.out.print(" update db time:" + (updateEnd.getTime() - processEnd.getTime()));
 			System.out.println(" " + new Date());

@@ -5,6 +5,7 @@ public class EventInfo {
 	private int id;
 	private int number;
 	private int day;
+	private int topic;
 	
 	
 	public int getId() {
@@ -25,6 +26,13 @@ public class EventInfo {
 	public void setDay(int day) {
 		this.day = day;
 	}
+	public int getTopic() {
+		return topic;
+	}
+	public void setTopic(int topic) {
+		this.topic = topic;
+	}
+	
 	
 
 }

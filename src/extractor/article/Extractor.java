@@ -140,60 +140,32 @@ public class Extractor {
 			at.setPublishtime(getPublishTime());
 			at.setContent(getContent());
 			at.setImgs(getImgs());
+			at.setSource("");
 		}
 		//for gc
 		return at;
 	}
 	
 	
-	public String getInformation(NewsPage np){
-		String result = "";
-		if(np != null){
-			///first get the id tag,then get class and subtag , last get the tag
-			if(np.getId() != null){
-				Element id = Doc.getElementById(np.getId());
-				if(id == null)
-					return "";
-				if(np.getSubTag() == null){
-					result =  id.text();
-				}else{
-					Elements subels = id.getElementsByTag(np.getSubTag());
-					int subindex = np.getSubTagIndex() - 1;
-					if(subindex >= 0 && subels.size() > subindex){						
-						result = subels.get(subindex).text();
-					}else if(subindex == -1){
-						for(Element subel : subels){
-							///special for news imgs
-							if(subel.tagName().equals("img")){
-								if(np.getBaseUrl().indexOf("http") == 0){
-									result += "!##!" + np.getBaseUrl();
-								}else{
-									result += "!##!" ;
-								}
-								if(np.getTextAtt() != null && subel.attr(np.getTextAtt()).length() > 0 ){
-									result += subel.attr("src");
-								}else if(np.getTextAtt() == null){
-									result +=  subel.attr("src");																	
-								}
-							}else if(subel.text().length() > 0){
-								result += "!##!" + subel.text();
-							}
-						}
-					}
-				}
-			}else if(np.getTagClass() != null){
-				Elements tags = Doc.getElementsByClass(np.getTagClass());
-				if(tags == null)
-					return "";
-				for(Element tag : tags){
-					if(np.getSubTag() != null){
-						Elements subtags= tag.getElementsByTag(np.getSubTag());
-						int subtagindex = np.getSubTagIndex() -1;
-						if(subtags.size() > subtagindex && subtagindex >= 0){
-							result = subtags.get(subtagindex).text();
-							break;
-						}else if(subtagindex == -1){
-							for(Element subel : subtags){
+	private String getInformation(NewsPage np){
+		try{
+			String result = "";
+			if(np != null){
+				///first get the id tag,then get class and subtag , last get the tag
+				if(np.getId() != null){
+					Element id = Doc.getElementById(np.getId());
+					if(id == null)
+						return "";
+					if(np.getSubTag() == null){
+						result =  id.text();
+					}else{
+						Elements subels = id.getElementsByTag(np.getSubTag());
+						int subindex = np.getSubTagIndex() - 1;
+						if(subindex >= 0 && subels.size() > subindex){						
+							result = subels.get(subindex).text();
+						}else if(subindex == -1){
+							for(Element subel : subels){
+								///special for news imgs
 								if(subel.tagName().equals("img")){
 									if(np.getBaseUrl().indexOf("http") == 0){
 										result += "!##!" + np.getBaseUrl();
@@ -210,21 +182,54 @@ public class Extractor {
 								}
 							}
 						}
-					}else{
-						result = tag.text();
-						break;
-					}					
-				}
-			}else if(np.getTag() != null){
-				Elements tags = Doc.getElementsByTag(np.getTag());
-				if(tags == null)
-					return "";
-				if(tags.size() > 0){
-					result = tags.get(0).text();
+					}
+				}else if(np.getTagClass() != null){
+					Elements tags = Doc.getElementsByClass(np.getTagClass());
+					if(tags == null)
+						return "";
+					for(Element tag : tags){
+						if(np.getSubTag() != null){
+							Elements subtags= tag.getElementsByTag(np.getSubTag());
+							int subtagindex = np.getSubTagIndex() -1;
+							if(subtags.size() > subtagindex && subtagindex >= 0){
+								result = subtags.get(subtagindex).text();
+								break;
+							}else if(subtagindex == -1){
+								for(Element subel : subtags){
+									if(subel.tagName().equals("img")){
+										if(np.getBaseUrl().indexOf("http") == 0){
+											result += "!##!" + np.getBaseUrl();
+										}else{
+											result += "!##!" ;
+										}
+										if(np.getTextAtt() != null && subel.attr(np.getTextAtt()).length() > 0 ){
+											result += subel.attr("src");
+										}else if(np.getTextAtt() == null){
+											result +=  subel.attr("src");																	
+										}
+									}else if(subel.text().length() > 0){
+										result += "!##!" + subel.text();
+									}
+								}
+							}
+						}else{
+							result = tag.text();
+							break;
+						}					
+					}
+				}else if(np.getTag() != null){
+					Elements tags = Doc.getElementsByTag(np.getTag());
+					if(tags == null)
+						return "";
+					if(tags.size() > 0){
+						result = tags.get(0).text();
+					}
 				}
 			}
+			return result;
+		}catch(Exception e){
+			return "";
 		}
-		return result;
 	}
 	
 	public String getTitle(){
@@ -284,7 +289,7 @@ public class Extractor {
 			for(Node nd : el.childNodes()){
 				if(nd instanceof TextNode){
 					String text = ((TextNode)nd).text();
-					text = util.Util.extractTimeFromText(text);
+					text = util.TimeUtil.extractTimeFromText(text);
 					if(text.length() > 0){
 						return text;
 					}
@@ -302,7 +307,7 @@ public class Extractor {
 		NewsPage nptime = Npt.getTime();
 		time = getInformation(nptime);
 		if(time.length() != 0){
-			time = util.Util.extractTimeFromText(time.replace(" ", " "));
+			time = util.TimeUtil.extractTimeFromText(time.replace(" ", " "));
 		}else{
 			time = extractPublishTime();
 		}
@@ -341,6 +346,9 @@ public class Extractor {
 		if(Doc == null || Npt == null)
 			return "";
 		NewsPage npimgs = Npt.getImgs();
+		if(npimgs == null){
+			return imgs;
+		}
 		imgs = getInformation(npimgs);		
 		return imgs;
 	}
@@ -492,10 +500,6 @@ public class Extractor {
 		if(rawTitle.indexOf("--") > 0){
 			rawTitle = rawTitle.substring(0, rawTitle.indexOf("--"));
 		}
-		//no use now
-//		if(rawTitle.indexOf("-") > 0){
-//			rawTitle = rawTitle.substring(0, rawTitle.indexOf("-"));
-//		}
 		return rawTitle;
 	}
 		

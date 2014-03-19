@@ -47,5 +47,26 @@
 			type="string"
 			not-null="false"
 		/>
+		<property
+			name="number"
+			column="number"
+			type="integer"
+			not-null="false"
+			length="32"
+		/>
+		<property
+			name="day"
+			column="day"
+			type="integer"
+			not-null="false"
+			length="32"
+		/>
+		<property
+			name="topic"
+			column="topic"
+			type="integer"
+			not-null="false"
+			length="32"
+		/>
 	</class>	
 </hibernate-mapping>

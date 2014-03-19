@@ -58,7 +58,7 @@ public class TopicTrace {
 		MemoryTopics = new HashMap<Integer,Topic>();
 		MemoryIndex = new HashMap<String,Set<Article>>();
 		String hql = "select max(id) from Topic";
-		MaxTopicId = util.Util.getMaxIdFromDB(hql);
+		MaxTopicId =util.db.Hbn.getMaxIdFromDB(hql);
 		TopicSims = new HashMap<Integer,String>();
 	}
 	
@@ -68,7 +68,7 @@ public class TopicTrace {
 	private List<Article> getInstances(){
 		List<Article> results = new ArrayList<Article>();
 		String hql = "from Article as obj where obj.taskstatus = 1 and pubtime is not null order by obj.publishtime asc";
-		results = util.Util.getElementsFromDB(hql,1000);
+		results = util.db.Hbn.getElementsFromDB(hql,1000);
 		return results;
 	}
 	
@@ -200,7 +200,7 @@ public class TopicTrace {
 			tp = MemoryTopics.get(tid);
 		}else{
 			String hql = "from Topic as obj where obj.id = " + tid;
-			tp = util.Util.getElementFromDB(hql);
+			tp = util.db.Hbn.getElementFromDB(hql);
 		}
 		if(tp == null){
 			return null;
@@ -307,9 +307,9 @@ public class TopicTrace {
 			updateMemoryIndex(at);
 		}
 		//update artices
-		util.Util.updateDB(articles);
+		util.db.Hbn.updateDB(articles);
 		//update topics
-		util.Util.updateDB(updateTopics);
+		util.db.Hbn.updateDB(updateTopics);
 		//update index
 		TopicIndex ti = new TopicIndex(IndexPath);
 		ti.update(articles);

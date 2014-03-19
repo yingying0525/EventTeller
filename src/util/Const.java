@@ -11,13 +11,13 @@ import java.util.Map;
 * @Description: const parameters of the system
 * @Marks: TODO
 */
-public class Const implements IConst{
+public class Const{
 	
-	public static String WEB_SITES_PATH = rootdir+"Config/WebSites.xml";
-	public static String SYS_CONFIG_PATH = rootdir+"Config/SysConfig.xml";
-	public static String SYS_JSON_CONFIG_PATH = rootdir+"Config/SysConfig.json";
-	public static String HIBERNATE_CFG_PATH = rootdir+"Config/hibernate.cfg.xml";
-	public static String LOG4J_CONFIG_PATH = rootdir+"Config/log4j.xml";
+	public static String WEB_SITES_PATH = "Config/WebSites.xml";
+	public static String SYS_CONFIG_PATH = "Config/SysConfig.xml";
+	public static String SYS_JSON_CONFIG_PATH = "Config/SysConfig.json";
+	public static String HIBERNATE_CFG_PATH = "Config/hibernate.cfg.xml";
+	public static String LOG4J_CONFIG_PATH = "Config/log4j.xml";
 	
 	
 	public static String HtmlSaveEncode = "UTF8";
@@ -63,10 +63,11 @@ public class Const implements IConst{
 	public static long DownloadArticleSleepTime = 15*60*1000;
 	public static long ArticleInfoExtractorSleepTime = 15*60*1000;
 	public static long EventDetectorSleepTime = 0*1000;
+	public static long UpdateDFSleepTime = 10*60*1000;
 	public static long ClusterToTopicSleepTime = 6*60*1000;
 
-	public static long ArticleIndexSleepTime = 120*60*1000;
 
+	public static int MinArticleToProcess = 50;	
 	public static int SimHashIndexNumber = 8;
 	
 	public static int TopicNearDayNum = 7;
@@ -86,7 +87,11 @@ public class Const implements IConst{
 	
 	
 	public static enum TaskId{
-		CrawlUrlToDB,DownloadUrlToHtml,CantFindHtmlInDisk,ParseHtmlSuccess,ParseHtmlFailed,CreateNewEvent
+		CrawlUrlToDB,DownloadUrlToHtml,CantFindHtmlInDisk,ParseHtmlSuccess,ParseHtmlFailed,CreateNewEvent,UpdateDFFailed,UpdateDFSuccess
+	}
+	
+	public static enum ProvinceId{
+		BeiJing,HeBei,
 	}
 	
 	public static void loadChinaProvince(){

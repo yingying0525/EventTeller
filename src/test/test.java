@@ -1,6 +1,7 @@
 
 package test;
 
+
 import index.solr.EventIndex;
 
 import java.io.IOException;
@@ -8,10 +9,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
-import db.hbn.model.Event;
 import db.hbn.model.UrlStatus;
 
 
@@ -68,21 +67,35 @@ public class test {
 		}
 	}
 	
+	public static String changeName(String old){
+		String[] name = old.split("-");
+		if(name.length != 3){
+			System.out.println("error" + "\t" + old);
+			return "";
+		}
+		String res = "";
+		res += name[0] + "-";
+		if(name[1].length() == 1){
+			res += "0";
+		}
+		res+= name[1] + "-";
+		if(name[2].length() == 1){
+			res += "0";
+		}
+		res += name[2];
+		return res;		
+	}
+	
 	
 	public static void main(String[] args) throws IOException{
 		
-		
-		
-		Event et = new Event();
-		et.setId(1);
-		et.setTitle("我是一个中国人");
-		et.setContent("");
-		et.setPubTime(new Date());
 		EventIndex ei = new EventIndex();
-//		ei.update(et);
 		ei.deleteAll();
-		
-
+//		String id  = "from Event as obj where obj.id = " + "145583";
+//		Event et = util.Util.getElementFromDB(id);
+//		System.out.println(et.getPubTime() + "\t" + util.TimeUtil.getDayGMT8(et.getPubTime()));
+//		int size = ei.queryIds("et_title:安全", 0, 10, null).size();
+//		System.out.println(size);
 		
 	}
 }

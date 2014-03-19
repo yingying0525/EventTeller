@@ -29,5 +29,12 @@
 			not-null="false"
 			length="32"
 		/>
+		<property
+			name="topic"
+			column="topic"
+			type="integer"
+			not-null="false"
+			length="32"
+		/>
 	</class>	
 </hibernate-mapping>

@@ -1,320 +1,46 @@
 package util;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
-import db.hbn.HSession;
-import db.hbn.model.Article;
+//import java.security.MessageDigest;
+//import java.security.NoSuchAlgorithmException;
+//import java.util.HashMap;
+//import java.util.Iterator;
+//import java.util.Map;
 
 
 public class Util {
 	
 	
-	/**
-	 * @param hql
-	 * @param maxNum 
-	 * @return
-	 * @Description: get elements from db, if maxNum <= 0 will not set the maxNum per returned
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> List<T> getElementsFromDB(String hql,int maxNum) {
-		List<T> result = new ArrayList<T>();
-		Session session = new HSession().createSession();
-		Query query = session.createQuery(hql);
-		if(maxNum > 0){
-			query.setMaxResults(maxNum);
-		}		
-		result = query.list();
-		session.close();
-		return result;
-	}
-	
-	/**
-	 * @param hql
-	 * @return
-	 * @Description: get element from db
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> T getElementFromDB(String hql) {
-		Session session = new HSession().createSession();
-		Query query = session.createQuery(hql);	
-		List res = query.list();
-		session.close();
-		if(res.size() == 1){
-			return (T)res.get(0);
-		}
-		return null;
-	}
-	
-	/**
-	 * @param id
-	 * @return
-	 * @Description:from id to get article
-	 */
-	@SuppressWarnings("unchecked")
-	public static Article getArticleById(String id){
-		Session session = new HSession().createSession();
-		List<Article> results = new ArrayList<Article>();
-		String hql = "from Article as obj where obj.id=" + id;
-		Query query = session.createQuery(hql);
-		results = (List<Article>)query.list();
-		Article result = new Article();
-		if(results.size()>0){
-			result = results.get(0);
-		}
-		return result;
-	}
-	
-	public static <T> void updateDB(Collection<T> scrs) {
-		Session session = new HSession().createSession();
-		Transaction tx = session.beginTransaction();		
-		for(T t : scrs){
-			try{
-				session.merge(t);				
-			}catch(Exception e){
-				System.out.println("update error" );
-				e.printStackTrace();
-			}
-		}
-		try{
-			tx.commit();
-			session.flush();	
-			session.close();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	public static <T> void updateDB(T t) {
-		Session session = new HSession().createSession();
-		Transaction tx = session.beginTransaction();		
-		try{
-			session.merge(t);				
-		}catch(Exception e){
-			System.out.println("update error" );
-			e.printStackTrace();
-		}
-		try{
-			tx.commit();
-			session.flush();	
-			session.close();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 	
 	
-	public static void updateHQLs(List<String> hqls){
-		Session session = new HSession().createSession();
-		Transaction tx = session.beginTransaction();		
-		for(String hql : hqls){
-			try{
-				Query query = session.createQuery(hql);  
-				query.executeUpdate();  				
-			}catch(Exception e){
-				System.out.println("update hql error" + "\n" + e.getMessage());
-			}
-		}
-		tx.commit();
-		session.flush();	
-		session.close();
-	}
 	
-	@SuppressWarnings("unchecked")
-	public static int getMaxIdFromDB(String hql){
-		 Session session = new HSession().createSession();
-         int results = 0;
-         if(session!=null){
-             Query query = session.createQuery(hql);
-             List<Integer> ls_results = query.list();
-             if(ls_results != null && ls_results.size()>0){
-            	 if(ls_results.get(0) == null){
-            		 results = -1;
-            	 }else{
-            		 results = ls_results.get(0);
-            	 }
-             }else{
-            	 results = -1;
-             }
-         }
-         session.close();
-         return results;
-	}
 	
-	public static String getDateStr(Date date){
-		if(date == null){
-			date = new Date();
-		}
-		String result = "";
-		Calendar calendar = GregorianCalendar.getInstance(); 
-		calendar.setTime(date);		
-		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH) + 1;
-		int day = calendar.get(Calendar.DATE);		
-		result += year + "-" +month + "-" + day;
-		return result;
-	}
 	
-	/**
-	 * @param texts
-	 * @return
-	 * @Description:convert list to string
-	 */
-	public static String ListToStr(List<String> texts){
-		String result = "";
-		for(String text:texts ){
-			result+=text;
-		}		
-		return result;
-	}
 	
-	/**
-	 * @param texts
-	 * @return
-	 * @Description:convert list to string
-	 */
-	public static String ListToStrForm(List<String> texts){
-		String result = "";
-		for(String text:texts ){
-			result += "<p>    " + text + "</p>\n";
-		}		
-		return result;
-	}
 	
-	/**
-	 * @param texts
-	 * @return
-	 * @Description:convert list to string
-	 */
-	public static String ListToStr(List<String> texts,String split){
-		String result = "";
-		int num = 0;
-		for(String text:texts ){
-			num++;
-			if(num == 1){
-				result = text;
-			}else{
-				result += split +  text ;	
-			}		
-		}		
-		return result;
-	}
-	
-	/**
-	 * @param texts
-	 * @return
-	 * @Description:convert list to string
-	 */
-	public static String ListToStr(List<String> texts,String split,int n){
-		String result = "";
-		int num = 0;
-		for(String text:texts ){
-			num++;
-			if(num == 1){
-				result = text;
-			}else{
-				result += split +  text ;	
-			}		
-			if(num > n)
-				break;
-		}		
-		return result;
-	}
-	
-	public static String MD5(String str){
-		String result = "";
-		MessageDigest md;
-		try {
-			md = MessageDigest.getInstance("MD5");
-			  byte[] dataBytes = str.getBytes();
-		      md.update(dataBytes);
-		        byte[] mdbytes = md.digest();		 
-		        //convert the byte to hex format method 1
-		        StringBuffer sb = new StringBuffer();
-		        for (int i = 0; i < mdbytes.length; i++) {
-		          sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
-		        }
-		        //convert the byte to hex format method 2
-		        StringBuffer hexString = new StringBuffer();
-		    	for (int i=0;i<mdbytes.length;i++) {
-		    		String hex=Integer.toHexString(0xff & mdbytes[i]);
-		   	     	if(hex.length()==1) hexString.append('0');
-		   	     	hexString.append(hex);
-		    	}
-		    	result =  hexString.toString();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;     
-	}
-	
-	public static String MD5OfByte(byte[] dataBytes){
-		String result = "";
-		MessageDigest md;
-		try {
-			md = MessageDigest.getInstance("MD5");
-		      md.update(dataBytes);
-		        byte[] mdbytes = md.digest();		 
-		        //convert the byte to hex format method 1
-		        StringBuffer sb = new StringBuffer();
-		        for (int i = 0; i < mdbytes.length; i++) {
-		          sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
-		        }
-		        //convert the byte to hex format method 2
-		        StringBuffer hexString = new StringBuffer();
-		    	for (int i=0;i<mdbytes.length;i++) {
-		    		String hex=Integer.toHexString(0xff & mdbytes[i]);
-		   	     	if(hex.length()==1) hexString.append('0');
-		   	     	hexString.append(hex);
-		    	}
-		    	result =  hexString.toString();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;     
-	}
-	
-	//words string in db convert to map
-	//format is "a,5 b,10" 
-	public static  Map<String,Integer> getDdfMap(String words){
-		Map<String,Integer> results = new HashMap<String,Integer>();
-		String[] wds = words.split(" ");
-		for(String wd : wds){
-			if(wd.length() == 0)
-				continue;
-			String[] score = wd.split(",");
-			results.put(score[0], Integer.valueOf(score[1]));
-		}			
-		return results;
-	}
-	
-	///write map to str format
-	public static String DdfMapToStr(Map<String,Integer> words){
-		StringBuilder result = new StringBuilder();
-		Iterator<String> its = words.keySet().iterator();
-		while(its.hasNext()){
-			String word = its.next();
-			result.append(word + "," + words.get(word) + " ");
-		}
-		return result.toString();
-	}
+//	//words string in db convert to map
+//	//format is "a,5 b,10" 
+//	public static  Map<String,Integer> getDdfMap(String words){
+//		Map<String,Integer> results = new HashMap<String,Integer>();
+//		String[] wds = words.split(" ");
+//		for(String wd : wds){
+//			if(wd.length() == 0)
+//				continue;
+//			String[] score = wd.split(",");
+//			results.put(score[0], Integer.valueOf(score[1]));
+//		}			
+//		return results;
+//	}
+//	
+//	///write map to str format
+//	public static String DdfMapToStr(Map<String,Integer> words){
+//		StringBuilder result = new StringBuilder();
+//		Iterator<String> its = words.keySet().iterator();
+//		while(its.hasNext()){
+//			String word = its.next();
+//			result.append(word + "," + words.get(word) + " ");
+//		}
+//		return result.toString();
+//	}
 
 	public static void ArrayCopy(double a[][] , double b[][], int N, int M){
 		for(int i = 0 ;i<N;i++){
@@ -323,45 +49,10 @@ public class Util {
 			}
 		}
 	}
+
 	
-	public static String extractTimeFromText(String text){
-		Pattern pattern = Pattern.compile("\\d{2,4}.\\d{1,2}.\\d{1,2}.?\\s*\\d{1,2}:\\d{1,2}:?\\d{0,2}");
-		Matcher matcher = pattern.matcher(text);
-		if(matcher.find()){
-			return matcher.group().trim();
-		}
-		return "";
-	}
+
 	
-	/**
-	 * @param num_a
-	 * @param num_b
-	 * @return different bits of two number
-	 * @Description:
-	 */
-	public static int diffBitsOfNums(long num_a , long num_b){
-		int result = 0;
-		for(int i = 0 ; i < util.Const.SimHashBitNumber; i++){
-			if((num_a & 1) != (num_b & 1)){
-				result++;
-			}
-			num_a = num_a >> 1;
-			num_b = num_b >> 1;
-		}
-		return result;
-	}
-	
-	public static byte[] long2Byte(long x) { 
-		byte[] res = new byte[8];
-		res[ 0] = (byte) (x >> 56); 
-		res[ 1] = (byte) (x >> 48); 
-		res[ 2] = (byte) (x >> 40); 
-		res[ 3] = (byte) (x >> 32); 
-		res[ 4] = (byte) (x >> 24); 
-		res[ 5] = (byte) (x >> 16); 
-		res[ 6] = (byte) (x >> 8); 
-		res[ 7] = (byte) (x >> 0); 
-		return res;
-  } 
+
 
 }

@@ -28,5 +28,12 @@
 			type="java.util.Date"
 			not-null="true"
 		/>
+		<property
+			name="topic"
+			column="topic"
+			type="integer"
+			not-null="false"
+			length="32"
+		/>
 	</class>	
 </hibernate-mapping>

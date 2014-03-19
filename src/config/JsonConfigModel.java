@@ -1,5 +1,9 @@
 package config;
 
+import util.Const;
+
+import com.alibaba.fastjson.JSON;
+
 public class JsonConfigModel {
 	
 	public String HtmlSavePath;
@@ -8,10 +12,8 @@ public class JsonConfigModel {
 	public String UrlsBloomFilterFilePath;
 	public String LocalDFPath;
 	public String LocalTDFPath;
+	public String LocalDDNPath;
 	public String ArticleFilePath;
-	
-	
-	
 	
 	
 	public String toString(){
@@ -21,6 +23,13 @@ public class JsonConfigModel {
 				UrlsBloomFilterFilePath + "\t" +
 				LocalDFPath + "\t" + 
 				LocalTDFPath;
+	}
+	
+	
+	public static JsonConfigModel getConfig(){
+		String fileContent = LocalJsonConfigReader.readJsonFile(Const.SYS_JSON_CONFIG_PATH);
+		JsonConfigModel jcm = JSON.parseObject(fileContent,JsonConfigModel.class);
+		return jcm;
 	}
 
 }

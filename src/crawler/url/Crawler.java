@@ -26,16 +26,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import com.alibaba.fastjson.JSON;
 
 import config.JsonConfigModel;
-import config.LocalJsonConfigReader;
 import util.Config;
 import util.Const;
 import util.Log;
 import db.hbn.model.Url;
 import db.hbn.model.UrlStatus;
-import db.hbn.model.UrlTopic;
 
 
 
@@ -62,8 +59,7 @@ public class Crawler implements Runnable{
 	public Crawler(){
 		Log.getLogger().info("Start TitleCrawler!");
 		//read Bloom filter file path from json config file
-		String fileContent = LocalJsonConfigReader.readJsonFile(Const.SYS_JSON_CONFIG_PATH);
-		JsonConfigModel jcm = JSON.parseObject(fileContent,JsonConfigModel.class);
+		JsonConfigModel jcm = JsonConfigModel.getConfig();
 		Bloom_File_Path = jcm.UrlsBloomFilterFilePath;		
 		bloomfilter =  InitBloomFilter();
 		UrlTopicMaps = new HashMap<String,Integer>();
@@ -426,9 +422,8 @@ public class Crawler implements Runnable{
 			return;		
 		List<Url> updateUrls = new ArrayList<Url>();
 		List<UrlStatus> updateStatus = new ArrayList<UrlStatus>();
-		List<UrlTopic> updateTopics = new ArrayList<UrlTopic>();
 		String hql = "select max(id) from Url";
-		int maxId = util.Util.getMaxIdFromDB(hql);
+		int maxId = util.db.Hbn.getMaxIdFromDB(hql);
 		int max_len_url = 0;
 		for(Url tn : NewUrls){
 			if(!bloomfilter.contains(tn.getUrl().toLowerCase())){
@@ -444,21 +439,16 @@ public class Crawler implements Runnable{
 				us.setId(maxId);
 				us.setStatus(Const.TaskId.CrawlUrlToDB.ordinal());
 				us.setTime(tn.getCrawlTime());
+				us.setTopic(UrlTopicMaps.get(tn.getUrl()));
 				updateStatus.add(us);
-				//new url topic item
-				UrlTopic ut = new UrlTopic();
-				ut.setId(maxId);
-				ut.setTopic(UrlTopicMaps.get(tn.getUrl()));
-				updateTopics.add(ut);
 				bloomfilter.add(tn.getUrl().toLowerCase());
 			}
 			if(tn.getUrl().length() > max_len_url){
 				max_len_url = tn.getUrl().length();
 			}
 		}
-		util.Util.updateDB(updateTopics);
-		util.Util.updateDB(updateUrls);
-		util.Util.updateDB(updateStatus);
+		util.db.Hbn.updateDB(updateUrls);
+		util.db.Hbn.updateDB(updateStatus);
 		WriterToBloomFile(updateUrls);
 		UrlTopicMaps.clear();
 		System.out.println("now end of Crawler..update urls -- " + updateUrls.size());	

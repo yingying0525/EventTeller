@@ -11,15 +11,12 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import com.alibaba.fastjson.JSON;
 
 import config.JsonConfigModel;
-import config.LocalJsonConfigReader;
 import db.hbn.model.Url;
 import db.hbn.model.UrlStatus;
 import util.Const;
 import util.Log;
-import util.Util;
 
 public class Downloader {
 	
@@ -29,16 +26,15 @@ public class Downloader {
 		//get save path from the Config xml
 		Log.getLogger().info("Start HtmlDownloader!");
 		//read Bloom filter file path from json config file
-		String fileContent = LocalJsonConfigReader.readJsonFile(Const.SYS_JSON_CONFIG_PATH);
-		JsonConfigModel jcm = JSON.parseObject(fileContent,JsonConfigModel.class);
+		JsonConfigModel jcm = JsonConfigModel.getConfig();
 		SaveFolderPath = jcm.HtmlSavePath;
 	}
 	
 	//get 1000 urls
 	private static List<UrlStatus> getInstances(){
 		List<UrlStatus> results = new ArrayList<UrlStatus>();
-		String hql = "from UrlStatus as obj where obj.status = 0  or obj.status = -1";
-		results = util.Util.getElementsFromDB(hql,2000);
+		String hql = "from UrlStatus as obj where obj.status = " + Const.TaskId.CrawlUrlToDB.ordinal() + "  or obj.status = -1";
+		results = util.db.Hbn.getElementsFromDB(hql,2000);
 		return results;
 	}
 	
@@ -53,7 +49,7 @@ public class Downloader {
 			}
 			///get url from Url table accoding to the us.id;
 			String hql = "from Url as obj where obj.id = " + us.getId();
-			Url url = util.Util.getElementFromDB(hql);
+			Url url = util.db.Hbn.getElementFromDB(hql);
 			if(url == null){
 				us.setStatus(us.getStatus() - 10);
 				failNumber++;
@@ -61,9 +57,9 @@ public class Downloader {
 			}
 			Document doc;
 			try {
-				doc = Jsoup.connect(url.getUrl()).userAgent(Const.CrawlerUserAgent).timeout(1000).get();
+				doc = Jsoup.connect(url.getUrl()).userAgent(Const.CrawlerUserAgent).timeout(2000).get();
 				String html = doc.html();
-				String date = Util.getDateStr(url.getCrawlTime());
+				String date = util.TimeUtil.getDateStr(url.getCrawlTime());
 				File folder = new File(SaveFolderPath + date);
 				if(!folder.exists()){
 					folder.mkdirs();
@@ -79,7 +75,7 @@ public class Downloader {
 			}
 		}
 		System.out.println("Failed + " + failNumber + "\t" + "Successed : " + (number - failNumber));
-		Util.updateDB(uss);
+		util.db.Hbn.updateDB(uss);
 	}
 	
 	public static void main(String[] args) {

@@ -74,7 +74,11 @@ public class ChineseSplit {
 			String nature = term.getNatrue().natureStr;
 			if(!checkNature(nature) ||term.getName().length() < 2 )
 				continue;
-			result.add(term.getName());
+			String tmp = term.getName().trim();
+			if(tmp.length() == 0){
+				continue;
+			}
+			result.add(tmp);
 		}
     	return result;
     }

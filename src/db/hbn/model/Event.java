@@ -12,6 +12,11 @@ public class Event {
 	private String content;
 	private String source;
 	private String imgs;
+	private int number;
+	private int day;
+	private int topic;
+	
+	
 
 	public int getId() {
 		return id;
@@ -50,6 +55,25 @@ public class Event {
 		this.imgs = imgs;
 	}
 
+	public int getNumber() {
+		return number;
+	}
+	public void setNumber(int number) {
+		this.number = number;
+	}
+	public int getDay() {
+		return day;
+	}
+	public void setDay(int day) {
+		this.day = day;
+	}
+	public int getTopic() {
+		return topic;
+	}
+	public void setTopic(int topic) {
+		this.topic = topic;
+	}
+	
 	
 	@Override
 	public String toString(){
@@ -70,7 +94,7 @@ public class Event {
 	@Override
 	public boolean equals(Object obj){
 		if(obj instanceof Event){
-			return ((Event)obj).getId() == id && ((Event)obj).getTitle() == title;
+			return ((Event)obj).getId() == id ;
 		}else{
 			return false;
 		}
