@@ -9,7 +9,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import db.hbn.HSession;
-import db.hbn.model.Article;
 
 public class Hbn {
 	
@@ -48,25 +47,6 @@ public class Hbn {
 			return (T)res.get(0);
 		}
 		return null;
-	}
-	
-	/**
-	 * @param id
-	 * @return
-	 * @Description:from id to get article
-	 */
-	@SuppressWarnings("unchecked")
-	public static Article getArticleById(String id){
-		Session session = new HSession().createSession();
-		List<Article> results = new ArrayList<Article>();
-		String hql = "from Article as obj where obj.id=" + id;
-		Query query = session.createQuery(hql);
-		results = (List<Article>)query.list();
-		Article result = new Article();
-		if(results.size()>0){
-			result = results.get(0);
-		}
-		return result;
 	}
 	
 	public static <T> void updateDB(Collection<T> scrs) {

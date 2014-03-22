@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="db.hbn.model">
+	<class
+		name="EventSim"
+		table="EventSim" dynamic-update="true"
+	>
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="fid"
+			type="integer"
+			column="fid"
+		>
+		</id>
+		<property
+			name="sid"
+			column="day"
+			type="integer"
+			not-null="false"
+			length="32"
+		/>
+		<property
+			name="score"
+			column="score"
+			type="double"
+			not-null="false"
+		/>
+	</class>	
+</hibernate-mapping>

@@ -6,7 +6,7 @@
 <hibernate-mapping package="db.hbn.model">
 	<class
 		name="Topic"
-		table="topic" dynamic-update="true"
+		table="Topic" dynamic-update="true"
 	>
 		<meta attribute="sync-DAO">false</meta>
 		<id
@@ -15,13 +15,6 @@
 			column="id"
 		>
 		</id>
-		<property
-			name="title"
-			column="title"
-			type="string"
-			not-null="false"
-			length="200"
-		/>
 		<property
 			name="keyWords"
 			column="keywords"
@@ -46,31 +39,6 @@
 			column="starttime"
 			type="java.util.Date"
 			not-null="false"
-		/>
-		<property
-			name="articles"
-			column="articles"
-			type="string"
-			not-null="false"
-		/>
-		<property
-			name="imgs"
-			column="imgs"
-			type="string"
-			not-null="false"
-		/>
-		<property
-			name="relations"
-			column="relations"
-			type="string"
-			not-null="false"
-		/>
-		<property
-			name="subtopic"
-			column="subtopic"
-			type="integer"
-			not-null="false"
-			length="32"
 		/>
 		<property
 			name="number"

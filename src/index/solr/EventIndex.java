@@ -2,6 +2,7 @@ package index.solr;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -93,7 +94,7 @@ public class EventIndex {
 		}
 	}
 	
-	public List<Integer> queryIds(String queryStr,int start, int num,String sort){
+	public List<Integer> queryIds(String queryStr,int start, int num,String sort,String order){
 		List<Integer> res = new ArrayList<Integer>();
 		SolrServer server = new HttpSolrServer(solrUrl);
 		SolrQuery query =new SolrQuery();  
@@ -101,7 +102,11 @@ public class EventIndex {
 		query.setStart(start);
 		query.setRows(num);
 		if(sort != null){
-			query.setFacetSort(sort);		
+			if(order.equals("asc")){
+				query.setSort(sort, SolrQuery.ORDER.asc);		
+			}else{
+				query.setSort(sort, SolrQuery.ORDER.desc);
+			}
 		}
 		try {
 			QueryResponse response = server.query(query);
@@ -109,6 +114,45 @@ public class EventIndex {
 			for (SolrDocument doc : docs) { 
 				int id = Integer.parseInt(doc.getFieldValue("id").toString());
 				res.add(id);
+			}
+		}catch(Exception e){
+			return res;
+		}
+		return res;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public List<Event> queryEvents(String queryStr,int start, int num,String sort,String order){
+		List<Event> res = new ArrayList<Event>();
+		SolrServer server = new HttpSolrServer(solrUrl);
+		SolrQuery query =new SolrQuery();  
+        query.setQuery(queryStr);
+		query.setStart(start);
+		query.setRows(num);
+		if(sort != null){
+			if(order.equals("asc")){
+				query.setSort(sort, SolrQuery.ORDER.asc);		
+			}else{
+				query.setSort(sort, SolrQuery.ORDER.desc);
+			}
+		}
+		try {
+			QueryResponse response = server.query(query);
+			SolrDocumentList docs = response.getResults();
+			for (SolrDocument doc : docs) { 
+				int id = Integer.parseInt(doc.getFieldValue("id").toString());
+				String title = doc.getFieldValue("et_title").toString();
+				String time = doc.getFieldValue("et_pubTime").toString();
+				String summary = doc.getFieldValue("et_summary").toString();
+				String number = doc.getFieldValue("et_number").toString();
+//				int topic = Integer.parseInt(doc.getFieldValue("et_topicId").toString());
+				Event et = new Event();
+				et.setId(id);
+				et.setTitle(title);
+				et.setPubTime(new Date(time));
+				et.setContent(summary);
+				et.setNumber(Integer.parseInt(number));
+				res.add(et);
 			}
 		}catch(Exception e){
 			return res;

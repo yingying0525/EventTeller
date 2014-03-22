@@ -2,7 +2,7 @@
 package test;
 
 
-import index.solr.EventIndex;
+//import index.solr.EventIndex;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -11,7 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import db.hbn.model.Article;
+import db.hbn.model.Url;
 import db.hbn.model.UrlStatus;
+import extractor.article.Extractor;
 
 
 
@@ -89,13 +92,17 @@ public class test {
 	
 	public static void main(String[] args) throws IOException{
 		
-		EventIndex ei = new EventIndex();
-		ei.deleteAll();
-//		String id  = "from Event as obj where obj.id = " + "145583";
-//		Event et = util.Util.getElementFromDB(id);
-//		System.out.println(et.getPubTime() + "\t" + util.TimeUtil.getDayGMT8(et.getPubTime()));
-//		int size = ei.queryIds("et_title:安全", 0, 10, null).size();
-//		System.out.println(size);
+		String surl = "http://www.yangtse.com/system/2013/04/22/016981031.shtml";
+		Url url = new Url();
+		url.setUrl(surl);;
+		Extractor etor = new Extractor(url);
+		Article at = etor.getArticle();
+		System.out.println(at.getTitle());
+		System.out.println(at.getPublishtime());
+		System.out.println(at.getContent());
+		System.out.println(at.getImgs());
+		
+		
 		
 	}
 }

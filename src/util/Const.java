@@ -31,16 +31,11 @@ public class Const{
 	public static int MeaningFulStrLen = 10;
 	public static int NoMeaningSigns = 3;
 	public static int SummaryTitleWordsWeighs = 3;
+	
 	public static double MaxEventSimNum = 0.7;
 	public static double MaxTopicSimNum = 0.5;
-	public static double AVGIDF = 8;
-	public static long AVGIDFTF = 8;
 	
-	public static int UrlToArticlePerTimeNum = 500;
-	public static int MysqlToIndexMaxItemNum = 20;
 	public static int NEIGHBORHORDSIZE = 100;
-	public static int ReleventEvents = 50;
-	public static int ReleventArticles = 50;
 	
 	public static int TitleWordsWeight = 2;
 	public static int NameEntityWeight = 1;
@@ -50,9 +45,12 @@ public class Const{
 	public static int MinContentWordsCount = 5;
 	public static int AtInfoExtractorThreadNumber = 10;
 	
-	///for repeated article simhash 
-	public static int SimHashBitNumber = 64;
-	public static int MinSimHashBitNumber = 7;
+	public static int MaxNeighborEventCount = 50;
+	
+
+	
+	//miliseconds
+	public static int MaxTopicWindowsSize = 30 * 24 * 60 * 60 * 1000;
 	
 	
 	public static int[] SUBTOPICID =new int[]{1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192};
@@ -69,16 +67,11 @@ public class Const{
 
 	public static int MinArticleToProcess = 50;	
 	public static int SimHashIndexNumber = 8;
+	///for repeated article simhash 
+	public static int SimHashBitNumber = 64;
+	public static int MinSimHashBitNumber = 7;
 	
-	public static int TopicNearDayNum = 7;
 	
-	public static int TopicToIndex = 2;
-	public static int TopicToWebIndex = 3;
-	public static int EventToTopic = 1;
-	public static int EventToIndex = 2;
-	public static int EventToWebIndex = 2;
-	public static int NotEventToTopic = 0;
-	public static int MaxEventToTopicNum = 20;
 	
 	public static Map<String,Integer> TASKID =null;
 	
@@ -87,7 +80,8 @@ public class Const{
 	
 	
 	public static enum TaskId{
-		CrawlUrlToDB,DownloadUrlToHtml,CantFindHtmlInDisk,ParseHtmlSuccess,ParseHtmlFailed,CreateNewEvent,UpdateDFFailed,UpdateDFSuccess
+		CrawlUrlToDB,DownloadUrlToHtml,CantFindHtmlInDisk,ParseHtmlSuccess,ParseHtmlFailed,CreateNewEvent,UpdateDFFailed,UpdateDFSuccess,GenerateTopicFailed,GenerateTopicSuccess,
+		TopicInfoToUpdate,UpdatedTopicInfo
 	}
 	
 	public static enum ProvinceId{

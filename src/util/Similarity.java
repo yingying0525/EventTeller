@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import db.hbn.model.Article;
+import db.hbn.model.Event;
 import db.hbn.model.Word;
 
 public class Similarity {
@@ -83,37 +83,10 @@ public class Similarity {
 		return total_up / Math.sqrt(total_a) / Math.sqrt(total_b);
 	}
 	
-	public static double SimilarityWithIDF(Map<Word,Double> arg1,Map<Word,Double> arg2,Map<String,Integer> idf , long totalDocNum){
-		Map<String,Double> checks = new HashMap<String,Double>();
-		double total_a = 0.001;
-		double total_b = 0.001;
-		double total_up = 0.0001;
-		Iterator<Word> it_a = arg1.keySet().iterator();
-		while(it_a.hasNext()){
-			Word key = it_a.next();
-			double idf_score = Math.log(totalDocNum / idf.get(key.getName()));
-			total_a += arg1.get(key) * arg1.get(key) * idf_score * idf_score;
-			checks.put(key.getName(),arg1.get(key));
-		}
-		Iterator<Word> it_b = arg2.keySet().iterator();
-		while(it_b.hasNext()){
-			Word key = it_b.next();
-			if(key.getName() == null || idf.get(key.getName()) == null){
-				continue;
-			}
-			double idf_score = Math.log(totalDocNum / idf.get(key.getName()));
-			if(checks.containsKey(key.getName())){
-				total_up += arg2.get(key) * checks.get(key.getName()) * Math.pow(idf_score, 2.0);
-			}
-			total_b += arg2.get(key) * arg2.get(key) * Math.pow(idf_score, 2.0);
-		}
-		return total_up / Math.sqrt(total_a) / Math.sqrt(total_b);
-	}
-	
-	private static Map<String,Double> improveWordsWeight(Article at){
+	private static Map<String,Double> improveWordsWeight(Event et){
 		Map<String,Double> results = new HashMap<String,Double>();
-		Map<Word,Integer> cwdsa = util.ChineseSplit.SplitStrWithPosTF(at.getContent());
-		Map<Word,Integer> twdsa = util.ChineseSplit.SplitStrWithPosTF(at.getTitle());
+		Map<Word,Integer> cwdsa = util.ChineseSplit.SplitStrWithPosTF(et.getContent());
+		Map<Word,Integer> twdsa = util.ChineseSplit.SplitStrWithPosTF(et.getTitle());
 		int totalWordCount = 1;
 		//improve the weight of title words and who (name entity) , where (location)
 		Iterator<Word> wds = twdsa.keySet().iterator();
@@ -151,34 +124,34 @@ public class Similarity {
 	}
 	
 	
-	public static double similarityOfEvent(Article ata,Article atb,Map<String,Integer> idf , long totalDocNum){
+	public static double similarityOfEvent(Event eta,Event etb,Map<String,Double> idf,double average){
 		Map<String,Double> checks = new HashMap<String,Double>();
 		double total_a = 0.001;
 		double total_b = 0.001;
 		double total_up = 0.0001;
-		Map<String,Double> arg1 = improveWordsWeight(ata);
-		Map<String,Double> arg2 = improveWordsWeight(atb);
+		Map<String,Double> arg1 = improveWordsWeight(eta);
+		Map<String,Double> arg2 = improveWordsWeight(etb);
 		Iterator<String> it_a = arg1.keySet().iterator();
 		while(it_a.hasNext()){
 			String key = it_a.next();
-			if(key == null || idf.get(key) == null){
-				continue;
+			double idfScore = average;
+			if(key != null && idf.get(key) != null){
+				idfScore = idf.get(key);
 			}
-			double idf_score = Math.log(totalDocNum / idf.get(key));
-			total_a += arg1.get(key) * arg1.get(key) * idf_score * idf_score;
+			total_a += arg1.get(key) * arg1.get(key) * idfScore * idfScore;
 			checks.put(key,arg1.get(key));
 		}
 		Iterator<String> it_b = arg2.keySet().iterator();
 		while(it_b.hasNext()){
 			String key = it_b.next();
-			if(key == null || idf.get(key) == null){
-				continue;
+			double idfScore = average;
+			if(key != null && idf.get(key) != null){
+				idfScore = idf.get(key);
 			}
-			double idf_score = Math.log(totalDocNum / idf.get(key));
 			if(checks.containsKey(key)){
-				total_up += arg2.get(key) * checks.get(key) * Math.pow(idf_score, 2.0);
+				total_up += arg2.get(key) * checks.get(key) * Math.pow(idfScore, 2.0);
 			}
-			total_b += arg2.get(key) * arg2.get(key) * Math.pow(idf_score, 2.0);
+			total_b += arg2.get(key) * arg2.get(key) * Math.pow(idfScore, 2.0);
 		}
 		return total_up / Math.sqrt(total_a) / Math.sqrt(total_b);
 	}

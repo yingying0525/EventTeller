@@ -39,7 +39,7 @@ public class UpdateDF {
 		//another for day-df
 		TDFMap = new HashMap<String,Integer>();
 		DFMap = new HashMap<String,TreeMap<Integer,Integer>>();
-		DDNMap = new HashMap<Integer,Integer>();
+		DDNMap = new TreeMap<Integer,Integer>();
 		//load tdf file
 		String line;
 		try {
@@ -47,7 +47,8 @@ public class UpdateDF {
 			while((line = br.readLine()) != null){
 				String[] its = line.split("\t");
 				if(its.length != 2 || its[1].length() == 0){
-					System.out.println(line);
+					System.out.println(line + "\t" + line.length());
+					continue;
 				}
 				TDFMap.put(its[0], Integer.parseInt(its[1]));
 			}
@@ -69,7 +70,7 @@ public class UpdateDF {
 					if(sub.length != 2){
 						continue;
 					}
-					dayNumbers.put(Integer.parseInt(sub[0]), Integer.parseInt(sub[1]));
+					dayNumbers.put(Integer.parseInt(new String(sub[0])), Integer.parseInt(new String(sub[1])));
 				}
 				DFMap.put(its[0], dayNumbers);
 			}
@@ -81,7 +82,7 @@ public class UpdateDF {
 		try {
 			BufferedReader nbr = new BufferedReader(new FileReader(LocalDDNPath));
 			while((line = nbr.readLine()) != null){
-				String[] its = line.split(" ");
+				String[] its = line.split("\t");
 				DDNMap.put(Integer.parseInt(its[0]), Integer.parseInt(its[1]));
 			}
 			nbr.close();
@@ -108,7 +109,7 @@ public class UpdateDF {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(LocalDDNPath));
 			for(int day : DDNMap.keySet()){
-				bw.write(day + " " + DDNMap.get(day) + "\n");
+				bw.write(day + "\t" + DDNMap.get(day) + "\n");
 			}
 			bw.close();
 		} catch (IOException e) {
@@ -117,7 +118,7 @@ public class UpdateDF {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(LocalTDFPath));
 			for(String word : TDFMap.keySet()){
-				bw.write(word + " " + TDFMap.get(word) + "\n");
+				bw.write(word + "\t" + TDFMap.get(word) + "\n");
 			}
 			bw.close();
 		} catch (IOException e) {
@@ -159,6 +160,12 @@ public class UpdateDF {
 			List<String> words = util.ChineseSplit.SplitStr(et.getTitle() + et.getContent());
 			//update three map in memory
 			Set<String> has = new HashSet<String>();
+			//for Day Document Number file, one document only add one number..
+			if(DDNMap.containsKey(day)){
+				DDNMap.put(day, DDNMap.get(day) + 1);
+			}else{
+				DDNMap.put(day, 1);
+			}
 			for(String word : words){
 				if(has.contains(word)){
 					continue;
@@ -168,11 +175,6 @@ public class UpdateDF {
 					TDFMap.put(word, TDFMap.get(word) + 1);
 				}else{
 					TDFMap.put(word, 1);
-				}
-				if(DDNMap.containsKey(day)){
-					DDNMap.put(day, DDNMap.get(day) + 1);
-				}else{
-					DDNMap.put(day, 1);
 				}
 				if(DFMap.containsKey(word)){
 					if(DFMap.get(word).containsKey(day)){
@@ -196,8 +198,8 @@ public class UpdateDF {
 	}
 	
 	public static void main(String[] args){
-		UpdateDF ud = new UpdateDF();
 		while(true){
+			UpdateDF ud = new UpdateDF();
 			int num = ud.runTask();
 			if(num == 0){
 				System.out.println("no event to process.. will sleep for " +  Const.UpdateDFSleepTime / 1000 / 60 + " minutes");
