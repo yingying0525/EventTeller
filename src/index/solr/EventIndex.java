@@ -56,6 +56,9 @@ public class EventIndex {
 	}
 	
 	public void update(Set<Event> events){
+		if(events == null || events.size() == 0){
+			return;
+		}
 		try{
 			SolrServer server = new HttpSolrServer(solrUrl);
 			List<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
@@ -95,6 +98,9 @@ public class EventIndex {
 	}
 	
 	public List<Integer> queryIds(String queryStr,int start, int num,String sort,String order){
+		if(queryStr != null && queryStr.indexOf("et_title") < 0){
+			queryStr  = "et_title:" + queryStr;
+		}
 		List<Integer> res = new ArrayList<Integer>();
 		SolrServer server = new HttpSolrServer(solrUrl);
 		SolrQuery query =new SolrQuery();  

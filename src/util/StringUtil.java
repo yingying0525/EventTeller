@@ -14,7 +14,7 @@ public class StringUtil {
 	public static String ListToStr(List<String> texts){
 		String result = "";
 		for(String text:texts ){
-			result+=text;
+			result+=text + " ";
 		}		
 		return result;
 	}

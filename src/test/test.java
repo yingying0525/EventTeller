@@ -11,10 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-import db.hbn.model.Article;
-import db.hbn.model.Url;
+import db.hbn.model.EventSim;
 import db.hbn.model.UrlStatus;
-import extractor.article.Extractor;
 
 
 
@@ -92,15 +90,11 @@ public class test {
 	
 	public static void main(String[] args) throws IOException{
 		
-		String surl = "http://www.yangtse.com/system/2013/04/22/016981031.shtml";
-		Url url = new Url();
-		url.setUrl(surl);;
-		Extractor etor = new Extractor(url);
-		Article at = etor.getArticle();
-		System.out.println(at.getTitle());
-		System.out.println(at.getPublishtime());
-		System.out.println(at.getContent());
-		System.out.println(at.getImgs());
+		EventSim es = new EventSim();
+		es.setFid(1);
+		es.setSid(2);
+		es.setScore(1.0);
+		util.db.Hbn.updateDB(es);
 		
 		
 		

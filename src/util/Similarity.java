@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import core.infoGenerator.model.Word;
 import db.hbn.model.Event;
-import db.hbn.model.Word;
 
 public class Similarity {
 

@@ -17,7 +17,7 @@
 		</id>
 		<property
 			name="sid"
-			column="day"
+			column="sid"
 			type="integer"
 			not-null="false"
 			length="32"

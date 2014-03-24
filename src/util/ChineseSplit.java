@@ -9,7 +9,8 @@ import java.util.Map;
 import org.ansj.domain.Term;
 import org.ansj.splitWord.analysis.NlpAnalysis;
 
-import db.hbn.model.Word;
+import core.infoGenerator.model.Word;
+
 
 
 
@@ -27,6 +28,26 @@ import db.hbn.model.Word;
 public class ChineseSplit {
 	
 	
+	public static boolean checkPerson(Word wd){
+		if(wd.getNature() != null && wd.getNature().indexOf("nr") >= 0){
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean checkPosition(Word wd){
+		if(wd.getNature() != null && wd.getNature().indexOf("ns") >= 0){
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean checkVerb(Word wd){
+		if(wd.getNature() != null && wd.getNature().indexOf("v") == 0){
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * @param str

@@ -194,46 +194,6 @@ public class EventDetector {
 		return at != null && at.getTitle() != null && at.getPublishtime() != null && at.getContent() != null;
 	}
 	
-//	private void writeDF2Disk(){
-//		//write DDN
-//		try {
-//			BufferedWriter bw = new BufferedWriter(new FileWriter(this.LocalDDNPath));
-//			for(int day : DDNMap.keySet()){
-//				bw.write(day + " " + DDNMap.get(day) + "\n");
-//			}
-//			bw.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		//write DF
-//		try {
-//			BufferedWriter bw = new BufferedWriter(new FileWriter(this.LocalDFPath));
-//			for(String word : DfMap.keySet()){
-//				bw.write(word + "\t");
-//				Map<Integer,Integer> days = DfMap.get(word);
-//				for(int day : days.keySet()){
-//					bw.write(day + " " + days.get(day) + "\t");
-//				}
-//				bw.write("\n");
-//			}
-//			bw.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		//write TDF
-//		try {
-//			BufferedWriter bw = new BufferedWriter(new FileWriter(this.LocalTDFPath));
-//			for(String word : TdfMap.keySet()){
-//				bw.write(word + " " + TdfMap.get(word) + "\n");
-//			}
-//			bw.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//	}
-	
 	private boolean checkMessyCode(String text){
 		//just a simple checker for messy code in chinese...
 		if(text == null || text.length() < 5){
@@ -248,7 +208,7 @@ public class EventDetector {
 		return messyNum / text.length() > 0.4;
 	}
 	
-	public void runTask(){
+	public int runTask(){
 		Date start = new Date();
 		//get batchsize instances first.
 		getInstances();
@@ -382,18 +342,21 @@ public class EventDetector {
 		System.out.println("updatedb time " + (updateEnd.getTime() - updateStart.getTime()));
 		System.out.println("event detector batch ok .. " + BatchSize);
 		//finish for one batch...
+		return UStatus.size();
 	}
 	
 	
 	public static void main(String[] args){
-		EventDetector ed = new EventDetector();
 		while(true){
-			ed.runTask();
-			try {
-				System.out.println("now end of event detector ,sleep for:"+Const.EventDetectorSleepTime/1000/60+" minutes. "+new Date().toString());
-				Thread.sleep(Const.EventDetectorSleepTime);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			EventDetector ed = new EventDetector();
+			int num = ed.runTask();
+			if(num == 0){
+				try {
+					System.out.println("now end of event detector ,sleep for:"+Const.EventDetectorSleepTime/1000/60+" minutes. "+new Date().toString());
+					Thread.sleep(Const.EventDetectorSleepTime);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

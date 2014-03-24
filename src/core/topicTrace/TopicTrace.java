@@ -38,7 +38,7 @@ public class TopicTrace {
 	private int MaxTopicId = 0;
 	
 	
-	private String LocalDFPath;
+	private String LocalTDFPath;
 	private String LocalDDNPath;
 	
 	
@@ -46,10 +46,11 @@ public class TopicTrace {
 	
 	public TopicTrace(){
 		JsonConfigModel jcm = JsonConfigModel.getConfig();		
-		LocalDFPath = jcm.LocalDFPath;
+		LocalTDFPath = jcm.LocalTDFPath;
 		LocalDDNPath = jcm.LocalDDNPath;
 		IDF = new HashMap<String,Double>();
 		EStatus = new ArrayList<EventStatus>();
+		UpdateEventSims = new ArrayList<EventSim>();
 		loadIDF();
 		String hql = "select max(id) from Topic";
 		MaxTopicId =util.db.Hbn.getMaxIdFromDB(hql);
@@ -57,7 +58,7 @@ public class TopicTrace {
 	
 
 	private void getInstances(){
-		String hql = "from EventStatus as obj where obj.status = " + Const.TaskId.UpdateDFSuccess;
+		String hql = "from EventStatus as obj where obj.status = " + Const.TaskId.UpdateDFSuccess.ordinal();
 		EStatus = util.db.Hbn.getElementsFromDB(hql,BatchSize);
 	}
 	
@@ -88,7 +89,7 @@ public class TopicTrace {
 		
 		//load DF from df file
 		try {
-			IOReader reader = new IOReader(LocalDFPath);
+			IOReader reader = new IOReader(LocalTDFPath);
 			String line = "";
 			while((line = reader.readLine()) != null){
 				String[] its = line.split("\t");
@@ -120,7 +121,7 @@ public class TopicTrace {
 		StringBuffer result = new StringBuffer("");
 		List<String> words = util.ChineseSplit.SplitStr(title);
 		for(String word : words){
-			if(word.length() >= 2){
+			if(word.length() >= 1){
 				result.append(" " + word);
 			}
 		}
@@ -136,7 +137,7 @@ public class TopicTrace {
 		for(int id : ids){
 			String getEt = "from Event as obj where obj.id = " + id;
 			Event candidate = util.db.Hbn.getElementFromDB(getEt);
-			if(candidate == null || candidate.getPubTime().compareTo(scr.getPubTime()) > 0){
+			if(candidate == null || candidate.getPubTime().compareTo(scr.getPubTime()) > 0 || id == scr.getId()){
 				continue;
 			}
 			double simScore = util.Similarity.similarityOfEvent(scr, candidate, IDF, AvgWordIDF);
@@ -172,7 +173,9 @@ public class TopicTrace {
 	}
 	
 	private int runTask(){
+		Date readDbStart = new Date();
 		getInstances();
+		Date readDbEnd = new Date();
 		List<Topic> updateTopics = new ArrayList<Topic>();
 		List<EventTopicRelation> updateETRs = new ArrayList<EventTopicRelation>();
 		HashMap<Integer,TopicStatus> updateTopicStatus = new HashMap<Integer,TopicStatus>();
@@ -201,6 +204,10 @@ public class TopicTrace {
 				//get topic id;
 				String gettopic = "from EventTopicRelation as obj where obj.id = " + simEvent.getId();
 				EventTopicRelation etr = util.db.Hbn.getElementFromDB(gettopic);
+				if(etr == null){
+					//because the 
+					continue;
+				}
 				uetr.setTid(etr.getTid());
 				TopicStatus ts = new TopicStatus();
 				ts.setId(etr.getTid());
@@ -208,12 +215,19 @@ public class TopicTrace {
 				updateTopicStatus.put(ts.getId(), ts);
 			}
 			updateETRs.add(uetr);
+			es.setStatus(Const.TaskId.GenerateTopicSuccess.ordinal());
 		}
+		Date algoEnd = new Date();
 		//update event-topic table
 		util.db.Hbn.updateDB(updateETRs);
-		util.db.Hbn.updateDB(updateTopicStatus);
+		util.db.Hbn.updateDB(updateTopicStatus.values());
 		util.db.Hbn.updateDB(updateTopics);
 		util.db.Hbn.updateDB(UpdateEventSims);
+		util.db.Hbn.updateDB(EStatus);
+		Date updateDBEnd = new Date();
+		System.out.println("read db time spent.. " + (readDbEnd.getTime() - readDbStart.getTime()) / 1000);
+		System.out.println("algorithm time spent.. " + (algoEnd.getTime() - readDbEnd.getTime()) / 1000);
+		System.out.println("update db time spent .. " + (updateDBEnd.getTime() - algoEnd.getTime()) / 1000 );		
 		return EStatus.size();
 	}
 	
@@ -222,6 +236,7 @@ public class TopicTrace {
 		while(true){
 			TopicTrace ctt = new TopicTrace();
 			int num = ctt.runTask();
+			System.out.println("one batch ok for Topic Tracing.." + ctt.EStatus.size());
 			if(num == 0 ){
 				try {
 					System.out.println("now end of one cluster,sleep for:"+Const.ClusterToTopicSleepTime /1000 /60 +" minutes. "+new Date().toString());

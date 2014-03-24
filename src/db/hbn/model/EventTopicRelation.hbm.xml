@@ -16,8 +16,8 @@
 		>
 		</id>
 		<property
-			name="fid"
-			column="fid"
+			name="tid"
+			column="tid"
 			type="integer"
 			not-null="false"
 			length="32"

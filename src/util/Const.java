@@ -33,7 +33,7 @@ public class Const{
 	public static int SummaryTitleWordsWeighs = 3;
 	
 	public static double MaxEventSimNum = 0.7;
-	public static double MaxTopicSimNum = 0.5;
+	public static double MaxTopicSimNum = 0.26;
 	
 	public static int NEIGHBORHORDSIZE = 100;
 	
@@ -60,9 +60,10 @@ public class Const{
 	public static long UrlCrawlerSleepTime = 15*60*1000;
 	public static long DownloadArticleSleepTime = 15*60*1000;
 	public static long ArticleInfoExtractorSleepTime = 15*60*1000;
-	public static long EventDetectorSleepTime = 0*1000;
+	public static long EventDetectorSleepTime = 10*60*1000;
 	public static long UpdateDFSleepTime = 10*60*1000;
 	public static long ClusterToTopicSleepTime = 6*60*1000;
+	public static long UpdateTopicInfoSleepTime = 10 * 60 * 1000;
 
 
 	public static int MinArticleToProcess = 50;	
@@ -80,8 +81,19 @@ public class Const{
 	
 	
 	public static enum TaskId{
-		CrawlUrlToDB,DownloadUrlToHtml,CantFindHtmlInDisk,ParseHtmlSuccess,ParseHtmlFailed,CreateNewEvent,UpdateDFFailed,UpdateDFSuccess,GenerateTopicFailed,GenerateTopicSuccess,
-		TopicInfoToUpdate,UpdatedTopicInfo
+		CrawlUrlToDB,
+		DownloadUrlToHtml,
+		CantFindHtmlInDisk,
+		ParseHtmlSuccess,
+		ParseHtmlFailed,
+		CreateNewEvent,
+		UpdateDFFailed,
+		UpdateDFSuccess,
+		GenerateTopicFailed,
+		GenerateTopicSuccess,
+		TopicInfoToUpdate,
+		UpdatedTopicInfoSuccess,
+		UpdatedTopicInfoFailed
 	}
 	
 	public static enum ProvinceId{

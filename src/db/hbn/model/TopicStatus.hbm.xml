@@ -5,8 +5,8 @@
 
 <hibernate-mapping package="db.hbn.model">
 	<class
-		name="Topic"
-		table="Topic" dynamic-update="true"
+		name="TopicStatus"
+		table="TopicStatus" dynamic-update="true"
 	>
 		<meta attribute="sync-DAO">false</meta>
 		<id
