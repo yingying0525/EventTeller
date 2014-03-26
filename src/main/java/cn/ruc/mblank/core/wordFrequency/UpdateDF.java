@@ -5,13 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 import cn.ruc.mblank.db.hbn.model.Event;
 import cn.ruc.mblank.db.hbn.model.EventStatus;
@@ -24,8 +18,8 @@ public class UpdateDF {
 	private Map<String,Integer> TDFMap;
 	private Map<Integer,Integer> DDNMap;
 	private Map<String,TreeMap<Integer,Integer>> DFMap;
-	
-	private List<EventStatus> EStatus;
+
+    private List<EventStatus> EStatus;
 	
 	private int BatchSize = 3000;
 	
@@ -98,13 +92,12 @@ public class UpdateDF {
 		LocalDDNPath = jcm.LocalDDNPath;
 		LocalDFPath = jcm.LocalDFPath;
 		loadDF();
-		EStatus = new ArrayList<EventStatus>();
 	}
 	
 	private void getInstances(){
 		String hql = "from EventStatus as obj where obj.status = " + Const.TaskId.CreateNewEvent.ordinal() ;
         Hbn db = new Hbn();
-		EStatus = db.getElementsFromDB(hql,-1,BatchSize);
+        EStatus = db.getElementsFromDB(hql,0,BatchSize);
 	}
 	
 	private void writeDF2Disk(){
@@ -143,15 +136,16 @@ public class UpdateDF {
 	}
 	
 	private int runTask(){
-		int num = 0;
-		getInstances();
-		num = EStatus.size();
-		if(num == 0){
-			return 0;
-		}
-		for(EventStatus es : EStatus){
-			String sql = "from Event as obj where obj.id = " + es.getId();
-            Hbn db = new Hbn();
+        Hbn db = new Hbn();
+        int num = 0;
+//        List<EventStatus> EStatus = new ArrayList<EventStatus>();
+        getInstances();
+        num = EStatus.size();
+        if(num == 0){
+            return 0;
+        }
+        for(EventStatus es : EStatus){
+            String sql = "from Event as obj where obj.id = " + es.getId();
 			Event et = db.getElementFromDB(sql);
 			if(et == null){
 				//some error
@@ -191,30 +185,31 @@ public class UpdateDF {
 					DFMap.put(word, days);
 				}
 			}
-			es.setStatus((short)Const.TaskId.UpdateDFSuccess.ordinal());
+			es.setStatus((short) Const.TaskId.UpdateDFSuccess.ordinal());
 		}
 		//write three map to disk
 		writeDF2Disk();
 		//update db
-        Hbn db = new Hbn();
 		db.updateDB(EStatus);
 		return num;
 	}
 	
 	public static void main(String[] args){
-		while(true){
-			UpdateDF ud = new UpdateDF();
+        UpdateDF ud = new UpdateDF();
+        while(true){
 			int num = ud.runTask();
 			if(num == 0){
-				System.out.println("no event to process.. will sleep for " +  Const.UpdateDFSleepTime / 1000 / 60 + " minutes");
-				try {
-					Thread.sleep(Const.UpdateDFSleepTime);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
+                System.out.println("no event to process.. will sleep for " +  Const.UpdateDFSleepTime / 1000 / 60 + " minutes");
+                try {
+                    Thread.sleep(Const.UpdateDFSleepTime);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }else{
+                System.out.println("one batch ok...." + new Date() + "\t" + ud.EStatus.get(ud.EStatus.size() - 1).getId());
+            }
+
 		}
 	}
 	

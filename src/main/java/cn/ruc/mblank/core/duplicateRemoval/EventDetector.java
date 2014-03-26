@@ -1,8 +1,5 @@
 package cn.ruc.mblank.core.duplicateRemoval;
 
-//import java.util.ArrayList;
-//import index.solr.EventIndex;
-
 import cn.ruc.mblank.db.hbn.model.*;
 import cn.ruc.mblank.index.solr.EventIndex;
 
@@ -18,7 +15,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-//import java.util.Map;
 
 
 import java.util.Set;
@@ -38,7 +34,7 @@ public class EventDetector {
 		public int id;
 		public long simhash;
 		public int eventId;
-	};
+	}
 	
 	private int BatchSize = 2000; 
 	private List<UrlStatus> UStatus;
@@ -107,7 +103,7 @@ public class EventDetector {
 	private void getInstances(){
 		String hql = "from UrlStatus as obj where obj.status = " + Const.TaskId.DownloadUrlToHtml.ordinal() ;
         Hbn db = new Hbn();
-		UStatus = db.getElementsFromDB(hql,-1,BatchSize);
+		UStatus = db.getElementsFromDB(hql,0,BatchSize);
 	}
 	
 	private SimPair findSameInIndex(long hash, int oid){
@@ -242,7 +238,7 @@ public class EventDetector {
 			SimPair mostSame = findSameInIndex(atSimHash,url.getId());
 			if(mostSame != null){
 				//find same ..
-				Event oldEvent = null;
+				Event oldEvent;
 				//first find in memory
 				if(updateEvents.containsKey(mostSame.eventId)){
 					oldEvent = updateEvents.get(mostSame.eventId);
@@ -272,7 +268,7 @@ public class EventDetector {
 				oldEvent.setNumber(oldEvent.getNumber() + 1);
 				updateSolr.add(oldEvent);
 				//update EventInfo.number
-				EventInfo ei = null;
+				EventInfo ei;
 				//first find in memory..then try to read from db.
 				if(updateEventInfos.containsKey(mostSame.eventId)){
 					ei = updateEventInfos.get(mostSame.eventId);

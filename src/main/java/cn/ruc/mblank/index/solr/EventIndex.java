@@ -41,11 +41,15 @@ public class EventIndex {
 			List<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
 			for(Event et : events){
 				SolrInputDocument doc = new SolrInputDocument();
-				doc.addField("id", et.getId());
-				doc.addField("et_title", et.getTitle());
-				doc.addField("et_summary", et.getContent().substring(0, Math.min(et.getContent().length(), 100)).replace("!##!", "\n"));
-				doc.addField("et_pubTime", et.getPubtime());
-				docs.add(doc);
+                doc.addField("id", et.getId());
+                doc.addField("et_title", et.getTitle());
+                doc.addField("et_summary", et.getContent());
+                doc.addField("et_pubTime", et.getPubtime());
+                doc.addField("et_number", et.getNumber());
+                doc.addField("et_topic",et.getTopic());
+                doc.addField("et_imgs",et.getImgs());
+                doc.addField("et_day", et.getDay());
+                docs.add(doc);
 			}
 			server.add(docs);
 			server.commit();
@@ -66,9 +70,12 @@ public class EventIndex {
 				SolrInputDocument doc = new SolrInputDocument();
 				doc.addField("id", et.getId());
 				doc.addField("et_title", et.getTitle());
-				doc.addField("et_summary", et.getContent().substring(0, Math.min(et.getContent().length(), 200)).replace("!##!", "\n"));
+				doc.addField("et_summary", et.getContent());
 				doc.addField("et_pubTime", et.getPubtime());
 				doc.addField("et_number", et.getNumber());
+                doc.addField("et_topic",et.getTopic());
+                doc.addField("et_imgs",et.getImgs());
+                doc.addField("et_day",et.getDay());
 				docs.add(doc);
 			}
 			server.add(docs);
@@ -85,10 +92,14 @@ public class EventIndex {
 			SolrServer server = new HttpSolrServer(solrUrl);
 			List<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
 			SolrInputDocument doc = new SolrInputDocument();
-			doc.addField("id", et.getId());
-			doc.addField("et_title", et.getTitle());
-			doc.addField("et_summary", et.getContent().substring(0, Math.min(et.getContent().length(), 100)));
-			doc.addField("et_pubTime", et.getPubtime());
+            doc.addField("id", et.getId());
+            doc.addField("et_title", et.getTitle());
+            doc.addField("et_summary", et.getContent());
+            doc.addField("et_pubTime", et.getPubtime());
+            doc.addField("et_number", et.getNumber());
+            doc.addField("et_topic",et.getTopic());
+            doc.addField("et_imgs",et.getImgs());
+            doc.addField("et_day",et.getDay());
 			docs.add(doc);
 			server.add(docs);
 			server.commit();
@@ -152,13 +163,22 @@ public class EventIndex {
 				String time = doc.getFieldValue("et_pubTime").toString();
 				String summary = doc.getFieldValue("et_summary").toString();
 				String number = doc.getFieldValue("et_number").toString();
-//				int topic = Integer.parseInt(doc.getFieldValue("et_topicId").toString());
+                String topic = doc.getFieldValue("et_topic").toString();
+                String day = doc.getFieldValue("et_day").toString();
+                String imgs = doc.getFieldValue("et_imgs").toString();
 				Event et = new Event();
 				et.setId(id);
 				et.setTitle(title);
 				et.setPubtime(new Date(time));
 				et.setContent(summary);
-				et.setNumber(Integer.parseInt(number));
+                et.setImgs(imgs);
+                try{
+                    et.setNumber(Integer.parseInt(number));
+                    et.setDay(Integer.parseInt(day));
+                    et.setTopic(Integer.parseInt(topic));
+                }catch (Exception e){
+
+                }
 				res.add(et);
 			}
 		}catch(Exception e){

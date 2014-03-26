@@ -36,7 +36,7 @@ public class Downloader {
 		List<UrlStatus> results = new ArrayList<UrlStatus>();
 		String hql = "from UrlStatus as obj where obj.status = " + Const.TaskId.CrawlUrlToDB.ordinal() + "  or obj.status = -1";
         Hbn db = new Hbn();
-		results = db.getElementsFromDB(hql,-1,2000);
+		results = db.getElementsFromDB(hql,0,2000);
 		return results;
 	}
 	

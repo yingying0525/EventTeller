@@ -14,7 +14,7 @@ public class TopicInfoUpdator {
 	//should update Topic and TopicInfo
 	//update TopicStatus
 	
-	private final int BatchSize = 2000;
+	private final int BatchSize = 3000;
 	private int KeyWordSize = 10;
 	private List<TopicStatus> TStatus;
 	

@@ -21,24 +21,15 @@ import cn.ruc.mblank.util.db.Hbn;
 public class TopicTrace {
 	
 	
-	private int BatchSize = 2000;
+	private int BatchSize = 10000;
 	private List<EventStatus> EStatus;
 	private List<EventSim> UpdateEventSims;
-	
 	private long TotalDocumentCount = 0;
 	private double AvgWordIDF = 1.0;
-	
-	
 	private Map<String,Double> IDF;
-	
 	private int MaxTopicId = 0;
-	
-	
 	private String LocalTDFPath;
 	private String LocalDDNPath;
-	
-	
-	
 	
 	public TopicTrace(){
 		JsonConfigModel jcm = JsonConfigModel.getConfig();		
@@ -48,16 +39,14 @@ public class TopicTrace {
 		EStatus = new ArrayList<EventStatus>();
 		UpdateEventSims = new ArrayList<EventSim>();
 		loadIDF();
-		String hql = "select max(id) from Topic";
         Hbn db = new Hbn();
 		MaxTopicId = db.getMaxFromDB(Topic.class,"id");
 	}
 	
-
 	private void getInstances(){
 		String hql = "from EventStatus as obj where obj.status = " + Const.TaskId.UpdateDFSuccess.ordinal();
         Hbn db = new Hbn();
-		EStatus = db.getElementsFromDB(hql,-1,BatchSize);
+		EStatus = db.getElementsFromDB(hql,0,BatchSize);
 	}
 	
 	/**
@@ -109,7 +98,6 @@ public class TopicTrace {
 		}
 	}
 	
-	
 	private String titleToSearchString(String title){
 		StringBuffer result = new StringBuffer("");
 		List<String> words = cn.ruc.mblank.util.ChineseSplit.SplitStr(title);
@@ -120,26 +108,24 @@ public class TopicTrace {
 		}
 		return result.toString();
 	}
-	
-	
+
 	private Event findMostSimEvent(Event scr){
 		Event mostSimEvent = null;
 		double maxSimScore = -2;
 		EventIndex ei = new EventIndex();
-		List<Integer> ids =  ei.queryIds(titleToSearchString(scr.getTitle()), 0, Const.MaxNeighborEventCount, null, "");
-		for(int id : ids){
-			String getEt = "from Event as obj where obj.id = " + id;
-            Hbn db = new Hbn();
-			Event candidate = db.getElementFromDB(getEt);
-			if(candidate == null || candidate.getPubtime().compareTo(scr.getPubtime()) > 0 || id == scr.getId()){
+		List<Event> ets =  ei.queryEvents("et_title:" + titleToSearchString(scr.getTitle()), 0, Const.MaxNeighborEventCount, null, "");
+		for(Event candidate : ets){
+			if(candidate == null || candidate.getPubtime().compareTo(scr.getPubtime()) > 0 || candidate.getId() == scr.getId()){
 				continue;
 			}
-			double simScore = cn.ruc.mblank.util.Similarity.similarityOfEvent(scr, candidate, IDF, AvgWordIDF);
-			if(simScore > maxSimScore){
-				mostSimEvent = candidate;
-				maxSimScore = simScore;
-			}
-		}
+            double simScore = cn.ruc.mblank.util.Similarity.similarityOfEvent(scr, candidate, IDF, AvgWordIDF);
+            if(simScore > maxSimScore){
+                mostSimEvent = candidate;
+                maxSimScore = simScore;
+            }
+        }
+
+
 		if(maxSimScore > Const.MaxTopicSimNum){
 			///find sim ..
 			//add to update EventSim
@@ -161,7 +147,7 @@ public class TopicTrace {
 		res.setEndTime(et.getPubtime());
 		res.setStartTime(et.getPubtime());
 		res.setNumber(1);
-		res.setSummary(et.getContent());
+		res.setSummary(et.getContent().substring(0,Math.min(10000,et.getContent().length())));
 		res.setKeyWords(et.getTitle());
 		return res;
 	}

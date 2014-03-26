@@ -69,12 +69,14 @@ public class KeyWords {
 		List<String> res = new ArrayList<String>();
 		int num = 0;
 		Collections.sort(TWords, new WordComparator());
+
 		for(Word wd : TWords){
 			if(num++ < N){
 				res.add(wd.getName());
+                System.out.println(wd.getName() + "\t" + wd.getTf());
 			}else{
 				break;
-			}
+		}
 		}
 		return res;		
 	}

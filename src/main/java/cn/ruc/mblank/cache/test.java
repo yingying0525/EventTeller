@@ -1,4 +1,4 @@
-package cn.ruc.mblank;
+package cn.ruc.mblank.cache;
 
 import cn.ruc.mblank.db.hbn.model.Event;
 import cn.ruc.mblank.db.hbn.model.EventStatus;
@@ -10,9 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by mblank on 14-3-25.
+ * Created by mblank on 14-3-26.
  */
-public class dbTest {
+public class test {
 
     public static void main(String[] args){
         EventIndex ei = new EventIndex();
@@ -21,7 +21,7 @@ public class dbTest {
         int last = 0;
         while(true){
             String sql = "from Event as obj";
-            List<Event> events = db.getElementsFromDB(sql,last,10000);
+            List<Event> events = db.getElementsFromDB(sql,last,100000);
             last += events.size();
             List<EventStatus> ets = new ArrayList<EventStatus>();
             if(events.size() == 0){

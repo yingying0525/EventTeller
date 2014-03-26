@@ -19,13 +19,8 @@ import org.jsoup.select.Elements;
 import cn.ruc.mblank.util.Const;
 
 /**
-* @PackageName:news.crawler.Article
-* @ClassName: NewsContentExtractor
-* @author: mblank
-* @date: 2013-3-13 下午9:58:01
-* @Description: TODO
-* @Marks: TODO
-*/
+ * by mblank 2014-3-26
+ */
 public class Extractor {
 	
 	public Url CurUrl;
@@ -39,10 +34,13 @@ public class Extractor {
 		return state;
 	}
 
-	//////////for some urls which has templete
+    /**
+     * for some url which have template
+     * @param url
+     */
 	public Extractor(Url url){
 		try {
-			Doc = Jsoup.connect(url.getUrl()).timeout(5000).userAgent(cn.ruc.mblank.util.Const.CrawlerUserAgent).get();
+			Doc = Jsoup.connect(url.getUrl()).timeout(3000).userAgent(cn.ruc.mblank.util.Const.CrawlerUserAgent).get();
 			if(Doc != null){
 				List<String> sites = NewsPageTags.getSiteName();
 				for(String site : sites){
@@ -62,8 +60,12 @@ public class Extractor {
 		}
 		CurUrl = url;
 	}
-	
-	//from html source
+
+    /**
+     *
+     * @param url
+     * @param html
+     */
 	public Extractor(Url url,String html){
 		Doc = Jsoup.parse(html);
 		if(Doc != null){
@@ -78,7 +80,12 @@ public class Extractor {
 		}
 		CurUrl = url;
 	}
-	
+
+    /**
+     * read html from local disk
+     * @param url
+     * @param html
+     */
 	public Extractor(Url url,File html){
 		try {
 			Doc = Jsoup.parse(html,Const.HtmlSaveEncode);
@@ -326,6 +333,10 @@ public class Extractor {
 			return "";
 		NewsPage npcontent = Npt.getContent();
 		content = getInformation(npcontent);
+        if(content == null || content.length() <= 20){
+            //template if out of date. use another strategy to extract content
+            content = getMainParagraph(getMainElement());
+        }
 		return content;
 	}
 	

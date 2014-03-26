@@ -31,7 +31,7 @@ public class Const{
 	public static int SummaryTitleWordsWeighs = 3;
 	
 	public static double MaxEventSimNum = 0.7;
-	public static double MaxTopicSimNum = 0.26;
+	public static double MaxTopicSimNum = 0.3;
 	
 
 	public static int TitleWordsWeight = 2;
@@ -42,7 +42,7 @@ public class Const{
 	public static int MinContentWordsCount = 5;
 	public static int AtInfoExtractorThreadNumber = 10;
 	
-	public static int MaxNeighborEventCount = 50;
+	public static int MaxNeighborEventCount = 100;
 	
 
 	

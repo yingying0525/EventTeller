@@ -96,6 +96,10 @@ public class Hbn {
     public int getMaxFromDB(java.lang.Class aClass,String col){
         Criteria criteria = HSession.getSession().createCriteria(aClass).setProjection(Projections.max(col));
         Integer max = (Integer)criteria.uniqueResult();
+        if(max == null){
+            //no item in db..
+            max = 1;
+        }
         HSession.closeSession();
         return max;
     }
