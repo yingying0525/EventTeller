@@ -1,0 +1,1318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Sites>
+	<!-- 新浪网 2013.3.2.10.43 -->
+	<Site name="sina.com.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>artibodyTitle</Id>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Id>pub_date</Id>
+			<Format>yyyy年mm月dd日hh:mm</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Id>media_name</Id>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>artibody</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>img_wrapper</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+		<NewsTag>
+			<Tag>div</Tag>
+			<Class>content_label_list</Class>
+			<SubTag index = "0">a</SubTag>
+		</NewsTag>
+	</Site>
+	<!-- 凤凰资讯 2013.3.2.10.43 -->
+	<Site name="ifeng.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>artical_topic</Id>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Id>artical_sth</Id>
+			<SubTag index="1">span</SubTag>
+			<Format>yyyy年mm月dd日 hh:mm</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Id>artical_sth</Id>
+			<SubTag index = "1">a</SubTag>			
+			<LinkAtt>href</LinkAtt>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>main_content</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>main_content</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+		<NewsTag>
+			<Tag>div</Tag>
+			<Id>artical_sth2</Id>
+			<SubTag index="0">a</SubTag>
+		</NewsTag>
+	</Site>
+	<!-- 腾讯新闻 2013.3.2.10.43 -->
+	<Site name="qq.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Class>article-time</Class>
+			<Format>yyyy-mm-dd hh:mm</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Class>color-a-1</Class>
+			<SubTag index = "1">a</SubTag>			
+			<LinkAtt>href</LinkAtt>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>Cnt-Main-Article-QQ</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>Cnt-Main-Article-QQ</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 新华网 2013.3.2.10.43 -->
+	<Site name="xinhuanet.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>title</Id>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Id>pubtime</Id>
+			<Format>xxxx年xx月xx日 xx:xx:xx</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Id>from</Id>
+			<SubTag index = "1">a</SubTag>			
+			<LinkAtt>href</LinkAtt>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>content</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>content</Id>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!total!</BaseUrl>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+		</NewsImg>
+	</Site>
+	<!-- CCTV新闻 2013.3.2.11.43 -->
+	<Site name="cntv.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>b-tit</Class>
+		</Title>
+		<Time>
+			<Tag>p</Tag>
+			<Class>art-info</Class>
+			<Format>yyyy年mm月dd日 hh:mm</Format>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>content_body</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>content_body</Id>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+			<LinkAtt>src</LinkAtt>
+		</NewsImg>
+	</Site>
+	<!-- 搜狐新闻  2013.3.2.11.43 -->
+	<Site name="sohu.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>time</Class>
+			<Format>yyyy年mm月dd日hh:mm</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Id>media_span</Id>
+			<SubTag index = "1">a</SubTag>
+			<LinkAtt>href</LinkAtt>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>contentText</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>contentText</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+		<NewsTag>
+			<Tag>div</Tag>
+			<Class>content_label_list</Class>
+			<SubTag index = "0">a</SubTag>
+		</NewsTag>
+	</Site>
+	<!-- 环球网  2013.3.2.11.43 -->
+	<Site name="huanqiu.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>summary</Class>
+			<SubTag index="1">strong</SubTag>
+			<Format>yyyy-mm-dd hh:mm</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Class>summary</Class>
+			<SubTag index = "2">strong</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>text</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>text</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 中国雅虎  2013.3.2.11.43 -->
+	<Site name="yahoo.com">
+		<Title>
+			<Tag>div</Tag>
+			<Class>title</Class>
+			<SubTag index="1">h1</SubTag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>title</Class>
+			<SubTag index="1">span</SubTag>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Class>title</Class>
+			<SubTag index = "1">a</SubTag>
+			<LinkAtt>href</LinkAtt>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Class>text-area</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>text-area</Class>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 网易新闻 2013.3.2.10.43 -->
+	<Site name="163.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>h1title</Id>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>ep-content-main</Class>
+		</Time>
+		<Source>
+			<Tag>span</Tag>4
+			<SubTag index = "1">a</SubTag>
+			<Class>ep-content-main</Class>
+			<LinkAtt>href</LinkAtt>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>endText</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>p</Tag>
+			<Class>f_center</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 人民网 2013.3.2.10.43 -->
+	<Site name="people.com.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>p_title</Id>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Id>p_publishtime</Id>
+			<Format>xxxx年xx月xx日xx:xx</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Id>p_origin</Id>
+			<SubTag index = "1">a</SubTag>
+			<LinkAtt>href</LinkAtt>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>p_content</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>p_content</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 中国新闻网 2013.3.2.10.43 -->
+	<Site name="chinanews.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>left-time</Class>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Class>left-t</Class>
+			<SubTag index = "1">a</SubTag>
+			<LinkAtt>href</LinkAtt>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Class>left_zw</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>tupian_div</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 南方网 2013.3.2.10.43 -->
+	<Site name="southcn.com">
+		<Title>
+			<Tag>div</Tag>
+			<Id>ScDetailTitle</Id>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Class>desc</Class>
+			<SubTag index="1">span</SubTag>
+			<Format>xxxx-xx-xx xx:xx:xx</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Class>desc</Class>
+			<SubTag index="2">span</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>ScDetailContent</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>ScDetailContent</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 中华网 2013.3.2.10.43 -->
+	<Site name="china.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>chan_newsTitle</Id>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Id>chan_newsInfo</Id>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<SubTag index = "1">a</SubTag>
+			<Id>chan_newsInfo</Id>
+			<LinkAtt>href</LinkAtt>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>chan_newsDetail</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>chan_newsDetail</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 国际在线 2013.3.2.10.43 -->
+	<Site name="gb.cri.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>news_ts_tit</Class>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>news_ts_ly</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>ccontent</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>ccontent</Class>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>http://gb.cri.cn</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 中国经济网 2013.3.2.10.43 -->
+	<Site name="ce.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>articleTitle</Id>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Id>articleTime</Id>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Id>articleSource</Id>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>articleText</Id>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>content</Class>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 星岛环球网 2013.3.2.10.43 -->
+	<Site name="stnn.cc">
+		<Title>
+			<Tag>span</Tag>
+			<Id>c_title</Id>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>l_box08</Class>
+			<SubTag index="2">span</SubTag>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Class>l_box08</Class>
+			<SubTag index="1">a</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>content_zoom</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+	</Site>
+	<!-- 参考消息 2013.3.2.10.43 -->
+	<Site name="cankaoxiaoxi.com">
+		<Title>
+			<Tag>h2</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>cor666</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>ctrlfscont</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>ctrlfscont</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- Msn中文网 2013.3.2.10.43 -->
+	<Site name="msn.com.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>h1title</Id>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>info</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>endText</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>endText</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	
+	<!-- Msn-北青网 2013.7.1.13.12 -->
+	<Site name="msn.ynet.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>h1title</Id>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>info</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>endText</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>endText</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	
+	
+	<!-- 中青在线 2013.3.2.10.43 -->
+	<Site name="cyol">
+		<Title>
+			<Tag>h5</Tag>
+			<Class>bttitle</Class>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>laiy</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>zhengwen</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>zhengwen</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 半月谈 2013.3.2.10.43 -->
+	<Site name="banyuetan.org">
+		<Title>
+			<Tag>div</Tag>
+			<Id>lblTitle</Id>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>xinxi</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>lblContent</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+	</Site>
+	<!-- 中国共产党网 2013.3.2.10.43 -->
+	<Site name="12371.cn">
+		<Title>
+			<Tag>div</Tag>
+			<Class>content_container</Class>
+			<SubTag index="1">h3</SubTag>
+		</Title>
+		<Time>
+			<Tag>h5</Tag>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>font_area</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>font_area</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+		<NewsTag>
+			<Tag>div</Tag>
+			<Class>left</Class>
+			<SubTag index = "0">a</SubTag>
+		</NewsTag>
+	</Site>
+	<!-- 光明网 2013.3.2.10.43 -->
+	<Site name="gmw.cn">
+		<Title>
+			<Tag>div</Tag>
+			<Id>articleTitle</Id>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Id>pubTime</Id>
+			<Format>xxxx-xx-xx xx:xx:xx</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Id>source</Id>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>contentMain</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>contentMain</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	
+	<!-- 大河报 2013.3.2.10.43 -->
+	<Site name="dahe.cn">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Class>sTime</Class>
+			<Format>xxxx年xx月xx日xx:xx</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Id>msg</Id>
+			<SubTag index="2">span</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>main</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>main</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 杨子晚报 2013.7.1.11.28 -->
+	<Site name="yangtse.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>date</Tag>
+			<Format>xxxx-xx-xx xx:xx:xx</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Id>msg</Id>
+			<SubTag index="2">span</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>content-txt</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>main</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	
+	
+	<!-- 中国日报 2013.3.2.10.43 -->
+	<Site name="chinadaily.com.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>newtitlebox</Class>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>arcfrom</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>Zoom</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+	</Site>
+	<!-- 羊城晚报 2013.3.2.10.43 -->
+	<Site name="ycwb.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>time</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>con-txt</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>con-txt</Class>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 新京报 2013.3.2.10.43 -->
+	<Site name="bjnews.com.cn">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>dl</Tag>
+			<Class>ctdate</Class>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Class>ctdate</Class>
+			<SubTag index="1">strong</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Class>content</Class>			
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>content</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 华龙网 2013.3.2.10.43 -->
+	<Site name="cqnews.net">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>dl</Tag>
+			<Class>time</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>main_text</Id>			
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>main_text</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 中国新闻周刊 2013.3.2.10.43 -->
+	<Site name="inewsweek.cn">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Id>detail</Id>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>detail</Class>			
+			<SubTag index = "0">p</SubTag>
+		</Content>
+	</Site>
+	<!-- 南都网 2013.3.2.10.43 -->
+	<Site name="oeeee.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>info</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>fontzoom</Id>			
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>fontzoom</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 和讯网  2013.3.7.22.43 -->
+	<Site name="hexun.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>artibodyTitle</Id>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Id>artibodyDesc</Id>
+			<SubTag index="2">span</SubTag>
+			<Format>xxxx年xx月xx日xx:xx</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Id>artibodyDesc</Id>
+			<SubTag index="1">a</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>artibody</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>artibody</Id>
+			<SubTag index="0">img</SubTag>
+			<TextAtt>alt</TextAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 安阳新闻网  2013.3.7.22.43 -->
+	<Site name="aynews.net.cn">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>info</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>cnt</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>cnt</Id>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 萧山网  2013.3.7.22.43 -->
+	<Site name="xsnet.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>h1title</Id>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>info</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>endText</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>endText</Id>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>http://www.xsnet.cn</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 名城新闻网  2013.3.7.22.43 -->
+	<Site name="2500sz.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>h3</Tag>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>content-text</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>content-text</Id>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>http://news.2500sz.com</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 东南网  2013.3.7.22.43 -->
+	<Site name="fjsen.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>new_subject_id</Id>
+		</Title>
+		<Time>
+			<Tag>h3</Tag>
+		</Time>
+		<Content>
+			<Tag>td</Tag>
+			<Id>new_message_id</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+	</Site>
+	<!-- 西部网  2013.3.7.22.43 -->
+	<Site name="cnwest.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>cont_title</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>fontzoom</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>fontzoom</Id>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 新民网  2013.3.7.22.43 -->
+	<Site name="xinmin.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>MP_title</Id>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Class>MP_datetime</Class>
+			<Format>xxxx-xx-xx xx:xx</Format>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>MP_article</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>MP_article</Id>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 合肥在线  2013.3.7.22.43 -->
+	<Site name="hf365.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>time</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>main_con</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>main_con</Class>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 21cn  2013.3.7.22.43 -->
+	<Site name="21cn.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>title</Class>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Class>pubTime</Class>
+			<Format>xxxx-xx-xx xx:xx:xx</Format>
+		</Time>
+		<Source>
+			<Tag>span</Tag>
+			<Class>infoCol</Class>
+			<SubTag index="1">a</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>article_text</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>article_text</Id>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 陕西传媒网  2013.3.7.22.43 -->
+	<Site name="sxdaily.com.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>p_title</Class>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>tools</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>zoom</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>zoom</Id>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>http://www.sxdaily.com.cn</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 东北网  2013.3.7.22.43 -->
+	<Site name="dbw.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>tem_bt</Class>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>main</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>f14</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>f14</Class>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 中国青年网  2013.3.7.22.43 -->
+	<Site name="youth.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>hs-h1-top</Class>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>hs-h1-dt02</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>TRS_Editor</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+	</Site>
+	<!-- 中国法院网  2013.3.7.22.43 -->
+	<Site name="chinacourt.org">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>detail_bigtitle</Class>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>detail_thr</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>detail_general</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>detail_image</Class>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 大众网  2013.3.7.22.43 -->
+	<Site name="dzwww.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>left</Class>
+			<SubTag index = "1">span</SubTag>
+			<Format>xxxx年xx月xx日 xx:xx</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Class>left</Class>
+			<SubTag index = "3">span</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>news-con</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+	</Site>
+	<!-- 浙江新闻网  2013.3.7.22.43 -->
+	<Site name="zj.com">
+		<Title>
+			<Tag>div</Tag>
+			<Class>adetail_bt</Class>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>adetail_time</Class>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Class>adetail_wz</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>detail_tu</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>alt</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!--  中国江苏网  2013.3.7.22.43 -->
+	<Site name="jschina.com.cn">
+		<Title>
+			<Tag>h1</Tag>
+			<Id>title</Id>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Id>ptime</Id>
+			<SubTag index = "1">date</SubTag>
+			<Format>xxxx-xx-xx xx:xx:xx</Format>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>content</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>content</Id>
+			<SubTag index="0">img</SubTag>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	
+	<!-- 中国军网 2013.7.1.12.57 -->
+	<Site name="chinamil.com.cn">
+		<Title>
+			<Tag>span</Tag>
+			<Class>biaoti</Class>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Class>sj</Class>
+			<Format>yyyy-mm-dd hh:mm</Format>
+		</Time>
+		<Content>
+			<Tag>span</Tag>
+			<Class>zw</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>span</Tag>
+			<Class>zw</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	
+	
+	<!-- for some law sites -->
+	
+	<!-- 法律界 -->
+	<Site name="mylegist.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>aboutInfo</Class>
+			<Format>yyyy-mm-dd hh:mm</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Class>aboutInfo</Class>
+			<SubTag index = "1">span</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Class>text</Class>
+			<SubTag index="4">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>img_wrapper</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<TextAtt>alt</TextAtt>
+		</NewsImg>
+	</Site>
+	<!-- 法邦网 -->
+	<Site name="fabao365.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>span</Tag>
+			<Class>actime</Class>
+			<Format>yyyy年mm月dd日 hh:mm</Format>
+		</Time>
+		<Content>
+			<Tag>div</Tag>
+			<Id>pcontent</Id>
+			<SubTag index="0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Id>pcontent</Id>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+			<BaseUrl>!no!</BaseUrl>
+		</NewsImg>
+	</Site>
+	<!-- 百家法坛 -->
+	<Site name="dffy.com">
+		<Title>
+			<Tag>h1</Tag>
+			<Class>ph</Class>
+		</Title>
+		<Time>
+			<Tag>p</Tag>
+			<Class>xg1</Class>
+			<Format>yyyy-mm-dd hh:mm</Format>
+		</Time>
+		<Content>
+			<Tag>td</Tag>
+			<Id>article_content</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+	</Site>
+	<!-- 正义网 -->
+	<Site name="jcrb.com">
+		<Title>
+			<Tag>h1</Tag>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Id>about</Id>
+			<SubTag index="0">span</SubTag>
+			<Format>yyyy-mm-dd hh:mm:ss</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Id>about</Id>
+			<SubTag index="2">span</SubTag>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Id>fontzoom</Id>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+	</Site>
+	<!-- 中国法院网 -->
+	<Site name="chinacourt.org">
+		<Title>
+			<Tag>div</Tag>
+			<Class>detail_title</Class>
+		</Title>
+		<Time>
+			<Tag>div</Tag>
+			<Class>detail_thr</Class>
+			<Format>yyyy-mm-dd hh:mm:ss</Format>
+		</Time>
+		<Source>
+			<Tag>div</Tag>
+			<Class>from</Class>
+		</Source>
+		<Content>
+			<Tag>div</Tag>
+			<Class>detail_txt</Class>
+			<SubTag index = "0">p</SubTag>
+		</Content>
+		<NewsImg>
+			<Tag>div</Tag>
+			<Class>resize</Class>
+			<SubTag index="0">img</SubTag>
+			<LinkAtt>src</LinkAtt>
+		</NewsImg>
+	</Site>
+</Sites>
