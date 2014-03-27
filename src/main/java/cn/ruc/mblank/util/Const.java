@@ -41,7 +41,7 @@ public class Const{
 	public static int MinTitleWordsCount = 5;
 	public static int MinContentWordsCount = 5;
 	public static int AtInfoExtractorThreadNumber = 10;
-	
+    public static int HtmlDownloaderThreadNumber = 5;
 	public static int MaxNeighborEventCount = 100;
 	
 

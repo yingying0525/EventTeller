@@ -18,6 +18,15 @@ public class Topic {
     private Date startTime;
     private Date endTime;
     private Integer number;
+    private String timeNumber;
+
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(Timestamp endTime) {
+        this.endTime = endTime;
+    }
 
     @Id
     @Column(name = "id")
@@ -105,5 +114,15 @@ public class Topic {
         result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
         result = 31 * result + (number != null ? number.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "timeNumber")
+    public String getTimeNumber() {
+        return timeNumber;
+    }
+
+    public void setTimeNumber(String timeNumber) {
+        this.timeNumber = timeNumber;
     }
 }

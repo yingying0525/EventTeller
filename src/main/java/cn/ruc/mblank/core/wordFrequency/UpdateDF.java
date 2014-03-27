@@ -7,11 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import cn.ruc.mblank.db.hbn.HSession;
 import cn.ruc.mblank.db.hbn.model.Event;
 import cn.ruc.mblank.db.hbn.model.EventStatus;
 import cn.ruc.mblank.util.Const;
 import cn.ruc.mblank.config.JsonConfigModel;
 import cn.ruc.mblank.util.db.Hbn;
+import org.hibernate.Session;
 
 public class UpdateDF {
 	
@@ -20,8 +22,9 @@ public class UpdateDF {
 	private Map<String,TreeMap<Integer,Integer>> DFMap;
 
     private List<EventStatus> EStatus;
+    private Session session;
 	
-	private int BatchSize = 3000;
+	private int BatchSize = 1000;
 	
 	private String LocalTDFPath;
 	private String LocalDFPath;
@@ -92,12 +95,12 @@ public class UpdateDF {
 		LocalDDNPath = jcm.LocalDDNPath;
 		LocalDFPath = jcm.LocalDFPath;
 		loadDF();
+        session = HSession.getSession();
 	}
 	
 	private void getInstances(){
 		String hql = "from EventStatus as obj where obj.status = " + Const.TaskId.CreateNewEvent.ordinal() ;
-        Hbn db = new Hbn();
-        EStatus = db.getElementsFromDB(hql,0,BatchSize);
+        EStatus = Hbn.getElementsFromDB(hql,0,BatchSize,session);
 	}
 	
 	private void writeDF2Disk(){
@@ -135,21 +138,13 @@ public class UpdateDF {
 		}
 	}
 	
-	private int runTask(){
-        Hbn db = new Hbn();
+	private void runTask(){
         int num = 0;
-//        List<EventStatus> EStatus = new ArrayList<EventStatus>();
         getInstances();
-        num = EStatus.size();
-        if(num == 0){
-            return 0;
-        }
         for(EventStatus es : EStatus){
-            String sql = "from Event as obj where obj.id = " + es.getId();
-			Event et = db.getElementFromDB(sql);
+			Event et = Hbn.getElementFromDB(session,Event.class,es.getId());
 			if(et == null){
 				//some error
-				System.out.println(es.getId());
 				es.setStatus((short)Const.TaskId.UpdateDFFailed.ordinal());
 				continue;
 			}
@@ -190,15 +185,15 @@ public class UpdateDF {
 		//write three map to disk
 		writeDF2Disk();
 		//update db
-		db.updateDB(EStatus);
-		return num;
+		Hbn.updateDB(session);
+        session.clear();
 	}
 	
 	public static void main(String[] args){
         UpdateDF ud = new UpdateDF();
         while(true){
-			int num = ud.runTask();
-			if(num == 0){
+			ud.runTask();
+			if(ud.EStatus.size() == 0){
                 System.out.println("no event to process.. will sleep for " +  Const.UpdateDFSleepTime / 1000 / 60 + " minutes");
                 try {
                     Thread.sleep(Const.UpdateDFSleepTime);

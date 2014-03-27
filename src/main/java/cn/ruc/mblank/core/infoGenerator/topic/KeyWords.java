@@ -56,9 +56,9 @@ public class KeyWords {
 		public int compare(Word wd1, Word wd2) {
 			// TODO Auto-generated method stub
 			if(((Word)wd1).getTf() > ((Word)wd2).getTf()){
-				return 1;
-			}else if(((Word)wd1).getTf() < ((Word)wd2).getTf()){
 				return -1;
+			}else if(((Word)wd1).getTf() < ((Word)wd2).getTf()){
+				return 1;
 			}
 			return 0;
 		}
@@ -69,11 +69,9 @@ public class KeyWords {
 		List<String> res = new ArrayList<String>();
 		int num = 0;
 		Collections.sort(TWords, new WordComparator());
-
 		for(Word wd : TWords){
 			if(num++ < N){
 				res.add(wd.getName());
-                System.out.println(wd.getName() + "\t" + wd.getTf());
 			}else{
 				break;
 		}

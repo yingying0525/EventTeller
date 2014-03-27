@@ -1,6 +1,7 @@
 package cn.ruc.mblank.core.topicTrace;
 
 
+import cn.ruc.mblank.db.hbn.HSession;
 import cn.ruc.mblank.db.hbn.model.*;
 import cn.ruc.mblank.index.solr.EventIndex;
 
@@ -17,19 +18,23 @@ import cn.ruc.mblank.config.JsonConfigModel;
 import cn.ruc.mblank.util.Const;
 import cn.ruc.mblank.util.IOReader;
 import cn.ruc.mblank.util.db.Hbn;
+import org.hibernate.Session;
 
 public class TopicTrace {
 	
 	
-	private int BatchSize = 10000;
+	private static int BatchSize = 10000;
 	private List<EventStatus> EStatus;
-	private List<EventSim> UpdateEventSims;
-	private long TotalDocumentCount = 0;
+	private Session session;
+
+    private long TotalDocumentCount = 0;
 	private double AvgWordIDF = 1.0;
 	private Map<String,Double> IDF;
 	private int MaxTopicId = 0;
 	private String LocalTDFPath;
 	private String LocalDDNPath;
+
+
 	
 	public TopicTrace(){
 		JsonConfigModel jcm = JsonConfigModel.getConfig();		
@@ -37,16 +42,14 @@ public class TopicTrace {
 		LocalDDNPath = jcm.LocalDDNPath;
 		IDF = new HashMap<String,Double>();
 		EStatus = new ArrayList<EventStatus>();
-		UpdateEventSims = new ArrayList<EventSim>();
 		loadIDF();
-        Hbn db = new Hbn();
-		MaxTopicId = db.getMaxFromDB(Topic.class,"id");
+        session = HSession.getSession();
+        MaxTopicId = Hbn.getMaxFromDB(session, Topic.class, "id");
 	}
 	
 	private void getInstances(){
 		String hql = "from EventStatus as obj where obj.status = " + Const.TaskId.UpdateDFSuccess.ordinal();
-        Hbn db = new Hbn();
-		EStatus = db.getElementsFromDB(hql,0,BatchSize);
+		EStatus = Hbn.getElementsFromDB(hql,0,BatchSize,session);
 	}
 	
 	/**
@@ -124,16 +127,14 @@ public class TopicTrace {
                 maxSimScore = simScore;
             }
         }
-
-
 		if(maxSimScore > Const.MaxTopicSimNum){
 			///find sim ..
-			//add to update EventSim
+			//add to session
 			EventSim es = new EventSim();
 			es.setFid(scr.getId());
 			es.setSid(mostSimEvent.getId());
 			es.setScore(maxSimScore);
-			UpdateEventSims.add(es);
+			session.saveOrUpdate(es);
 		}else{
 			mostSimEvent = null;
 		}
@@ -149,20 +150,16 @@ public class TopicTrace {
 		res.setNumber(1);
 		res.setSummary(et.getContent().substring(0,Math.min(10000,et.getContent().length())));
 		res.setKeyWords(et.getTitle());
+        res.setTimeNumber("");
 		return res;
 	}
 	
-	private int runTask(){
-        Hbn db = new Hbn();
+	private void runTask(){
 		Date readDbStart = new Date();
 		getInstances();
 		Date readDbEnd = new Date();
-		List<Topic> updateTopics = new ArrayList<Topic>();
-		List<EventTopicRelation> updateETRs = new ArrayList<EventTopicRelation>();
-		HashMap<Integer,TopicStatus> updateTopicStatus = new HashMap<Integer,TopicStatus>();
 		for(EventStatus es : EStatus){
-			String sql = "from Event as obj where obj.id = " + es.getId();
-			Event et = db.getElementFromDB(sql);
+			Event et = Hbn.getElementFromDB(session,Event.class,es.getId());
 			if(et == null){
 				es.setStatus((short)Const.TaskId.GenerateTopicFailed.ordinal());
 				continue;
@@ -174,51 +171,53 @@ public class TopicTrace {
 				//no sim find .. should be new Topic
 				//get max id from topic
 				Topic tp = createNewTopic(et);
-				updateTopics.add(tp);
+				session.saveOrUpdate(tp);
 				uetr.setTid(et.getId());
-				TopicStatus ts = new TopicStatus();
-				ts.setId(tp.getId());
+				TopicStatus ts = Hbn.getElementFromDB(session,TopicStatus.class,tp.getId());
+                if(ts == null){
+                    ts = new TopicStatus();
+                    ts.setId(tp.getId());
+                    session.saveOrUpdate(ts);
+                }
 				ts.setStatus((short)Const.TaskId.TopicInfoToUpdate.ordinal());
-				updateTopicStatus.put(ts.getId(), ts);
 			}else{
 				//found..update updateETRs
 				//get topic id;
-				String gettopic = "from EventTopicRelation as obj where obj.id = " + simEvent.getId();
-				EventTopicRelation etr = db.getElementFromDB(gettopic);
+				EventTopicRelation etr = Hbn.getElementFromDB(session,EventTopicRelation.class,simEvent.getId());
 				if(etr == null){
-					//because the 
+					//some error....
+                    es.setStatus((short)Const.TaskId.GenerateTopicFailed.ordinal());
 					continue;
 				}
 				uetr.setTid(etr.getTid());
-				TopicStatus ts = new TopicStatus();
-				ts.setId(etr.getTid());
-				ts.setStatus((short)Const.TaskId.TopicInfoToUpdate.ordinal());
-				updateTopicStatus.put(ts.getId(), ts);
+				TopicStatus ts = Hbn.getElementFromDB(session,TopicStatus.class,etr.getTid());
+                if(ts == null){
+                    ts = new TopicStatus();
+                    ts.setId(etr.getTid());
+                    session.saveOrUpdate(ts);
+                }
+				ts.setStatus((short) Const.TaskId.TopicInfoToUpdate.ordinal());
 			}
-			updateETRs.add(uetr);
+			session.saveOrUpdate(uetr);
 			es.setStatus((short)Const.TaskId.GenerateTopicSuccess.ordinal());
 		}
 		Date algoEnd = new Date();
 		//update event-topic table
-		db.updateDB(updateETRs);
-		db.updateDB(updateTopicStatus.values());
-		db.updateDB(updateTopics);
-		db.updateDB(UpdateEventSims);
-		db.updateDB(EStatus);
+        Hbn.updateDB(session);
+        session.clear();
 		Date updateDBEnd = new Date();
 		System.out.println("read db time spent.. " + (readDbEnd.getTime() - readDbStart.getTime()) / 1000);
 		System.out.println("algorithm time spent.. " + (algoEnd.getTime() - readDbEnd.getTime()) / 1000);
 		System.out.println("update db time spent .. " + (updateDBEnd.getTime() - algoEnd.getTime()) / 1000 );		
-		return EStatus.size();
 	}
 	
 	
 	public static void main(String[] args){
 		while(true){
 			TopicTrace ctt = new TopicTrace();
-			int num = ctt.runTask();
-			System.out.println("one batch ok for Topic Tracing.." + ctt.EStatus.size());
-			if(num == 0 ){
+			ctt.runTask();
+			System.out.println("one batch ok for Topic Tracing.." + new Date() + "\t" +  ctt.EStatus.size());
+			if(ctt.EStatus.size() == 0 ){
 				try {
 					System.out.println("now end of one cluster,sleep for:"+Const.ClusterToTopicSleepTime /1000 /60 +" minutes. "+new Date().toString());
 					Thread.sleep(Const.ClusterToTopicSleepTime /60);

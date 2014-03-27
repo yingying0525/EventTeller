@@ -27,6 +27,7 @@ public class JsonConfigModel {
 	
 	
 	public static JsonConfigModel getConfig(){
+
 		String fileContent = LocalJsonConfigReader.readJsonFile(Const.SYS_JSON_CONFIG_PATH);
 		JsonConfigModel jcm = JSON.parseObject(fileContent,JsonConfigModel.class);
 		return jcm;

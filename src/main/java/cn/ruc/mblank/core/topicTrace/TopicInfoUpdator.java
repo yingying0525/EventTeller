@@ -5,9 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 //import cn.ruc.mblank.db.hbn.model.*;
+import cn.ruc.mblank.core.infoGenerator.topic.TimeNumber;
+import cn.ruc.mblank.db.hbn.HSession;
 import cn.ruc.mblank.db.hbn.model.*;
 import cn.ruc.mblank.util.Const;
 import cn.ruc.mblank.util.db.Hbn;
+import org.hibernate.Session;
 
 public class TopicInfoUpdator {
 	
@@ -17,16 +20,16 @@ public class TopicInfoUpdator {
 	private final int BatchSize = 3000;
 	private int KeyWordSize = 10;
 	private List<TopicStatus> TStatus;
+    private Session session;
 	
 	public TopicInfoUpdator(){
 		TStatus = new ArrayList<TopicStatus>();
-		getInstances();
+        session = HSession.getSession();
 	}
 	
 	private void getInstances(){
 		String sql = "from TopicStatus as obj where obj.status = " + Const.TaskId.TopicInfoToUpdate.ordinal();
-        Hbn db = new Hbn();
-		TStatus = db.getElementsFromDB(sql,-1, BatchSize);
+		TStatus = Hbn.getElementsFromDB(sql,0, BatchSize,session);
 	}
 	
 	public Date getLastDateOfTopic(List<Event> scrs){
@@ -62,11 +65,14 @@ public class TopicInfoUpdator {
 	private void updateTopic(Topic tp,TopicInfo ti,List<Event> ets){
 		cn.ruc.mblank.core.infoGenerator.topic.KeyWords kw = new cn.ruc.mblank.core.infoGenerator.topic.KeyWords(ets);
 		List<String> keyWords = kw.getKeyWords(KeyWordSize);
+        TimeNumber gtn = new TimeNumber(ets);
+        String timeNumber = gtn.getTimeNumber();
 		String kwstr = cn.ruc.mblank.util.StringUtil.ListToStr(keyWords);
 		tp.setKeyWords(kwstr);
 		tp.setEndTime(getLastDateOfTopic(ets));
 		tp.setStartTime(getStartDateOfTopic(ets));
 		tp.setNumber(ets.size());
+        tp.setTimeNumber(timeNumber);
 		//update topic info
 		ti.setId(tp.getId());
 		ti.setNumber(tp.getNumber());
@@ -76,14 +82,13 @@ public class TopicInfoUpdator {
 	
 	
 	public void runTask(){
-        Hbn db = new Hbn();
+        getInstances();
 		List<Topic> updateTopics = new ArrayList<Topic>();
 		List<TopicInfo> updateTopicInfos = new ArrayList<TopicInfo>();
 		for(TopicStatus ts : TStatus){
 			String sql = "from EventTopicRelation as obj where obj.tid = " + ts.getId();
-			List<EventTopicRelation> etrs = db.getElementsFromDB(sql,-1, -1);
-			sql = "from Topic as obj where obj.id = " + ts.getId();
-			Topic tp = db.getElementFromDB(sql);
+			List<EventTopicRelation> etrs = Hbn.getElementsFromDB(sql,0, -1,session);
+			Topic tp = Hbn.getElementFromDB(session,Topic.class,ts.getId());
 			if(etrs == null || etrs.size() == 0 || tp == null){
 				//some error....
 				ts.setStatus((short)Const.TaskId.UpdatedTopicInfoFailed.ordinal());
@@ -91,33 +96,28 @@ public class TopicInfoUpdator {
 			}
 			List<Event> events = new ArrayList<Event>();
 			for(EventTopicRelation etr : etrs){
-				String esql = "from Event as obj where obj.id = " + etr.getEid();
-				Event et = db.getElementFromDB(esql);
+				Event et = Hbn.getElementFromDB(session,Event.class,etr.getEid());
 				events.add(et);
 			}
-			sql = "from TopicInfo as obj where obj.id = " + ts.getId();
-			TopicInfo ti = db.getElementFromDB(sql);
+			TopicInfo ti = Hbn.getElementFromDB(session,TopicInfo.class,ts.getId());
 			if(ti == null){
 				ti = new TopicInfo();
 			}
 			updateTopic(tp,ti,events);
-			updateTopics.add(tp);
-			updateTopicInfos.add(ti);
+            session.saveOrUpdate(tp);
+            session.saveOrUpdate(ti);
 			ts.setStatus((short)Const.TaskId.UpdatedTopicInfoSuccess.ordinal());
 		}
-		db.updateDB(updateTopics);
-		db.updateDB(updateTopicInfos);
-		db.updateDB(TStatus);
+		Hbn.updateDB(session);
+        session.clear();
 	}
 	
 	public static void main(String[] args){
-		while(true){
-			int num = 0;
-			TopicInfoUpdator tiu = new TopicInfoUpdator();
-			num = tiu.TStatus.size();
+        TopicInfoUpdator tiu = new TopicInfoUpdator();
+        while(true){
 			tiu.runTask();
 			System.out.println("one batch ok.." + new Date());
-			if(num == 0){
+			if(tiu.TStatus.size() == 0){
 				try {
 					System.out.println("now end of update Topic Info,sleep for:"+Const.UpdateTopicInfoSleepTime /1000 /60 +" minutes. "+new Date().toString());
 					Thread.sleep(Const.UpdateTopicInfoSleepTime /60);

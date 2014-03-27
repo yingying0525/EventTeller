@@ -19,14 +19,7 @@ import cn.ruc.mblank.config.LocalJsonConfigReader;
 import cn.ruc.mblank.util.Const;
 import cn.ruc.mblank.extractor.article.Extractor;
 
-/**
-* @PackageName:core.duplicateRemoval
-* @ClassName: ArticleInfoExtractor
-* @author: mblank
-* @date: 2014年3月13日 上午11:14:38
-* @Description: just read html from disk and extract infomation from html and do chinese split.
-* @Marks: TODO
-*/
+@Deprecated
 public class ArticleInfoExtractor implements Runnable{
 	
 	private String HtmlPath;

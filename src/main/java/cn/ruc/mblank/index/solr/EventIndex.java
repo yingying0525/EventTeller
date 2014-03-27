@@ -79,6 +79,7 @@ public class EventIndex {
 				docs.add(doc);
 			}
 			server.add(docs);
+            server.optimize();
 			server.commit();
 		}catch(Exception e){
 			e.printStackTrace();

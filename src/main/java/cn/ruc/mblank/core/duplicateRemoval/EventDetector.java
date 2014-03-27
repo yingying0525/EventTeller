@@ -1,5 +1,6 @@
 package cn.ruc.mblank.core.duplicateRemoval;
 
+import cn.ruc.mblank.db.hbn.HSession;
 import cn.ruc.mblank.db.hbn.model.*;
 import cn.ruc.mblank.index.solr.EventIndex;
 
@@ -26,6 +27,7 @@ import cn.ruc.mblank.util.Log;
 import cn.ruc.mblank.config.JsonConfigModel;
 import cn.ruc.mblank.extractor.article.Extractor;
 import cn.ruc.mblank.util.db.Hbn;
+import org.hibernate.Session;
 
 public class EventDetector {
 	
@@ -36,8 +38,9 @@ public class EventDetector {
 		public int eventId;
 	}
 	
-	private int BatchSize = 2000; 
+	private int BatchSize = 2000;
 	private List<UrlStatus> UStatus;
+    private Session Session;
 	
 	private ArrayList<HashMap<Integer,List<SimPair>>> LocalSimHash;
 	
@@ -53,6 +56,7 @@ public class EventDetector {
 		LocalSimHashPath = jcm.SimHashPath;
 		initSimHashIndex();
 		loadLocalSimHash();
+        Session = HSession.getSession();
 	}
 	
 	private void initSimHashIndex(){
@@ -102,8 +106,7 @@ public class EventDetector {
 	
 	private void getInstances(){
 		String hql = "from UrlStatus as obj where obj.status = " + Const.TaskId.DownloadUrlToHtml.ordinal() ;
-        Hbn db = new Hbn();
-		UStatus = db.getElementsFromDB(hql,0,BatchSize);
+		UStatus = Hbn.getElementsFromDB(hql,0,BatchSize,Session);
 	}
 	
 	private SimPair findSameInIndex(long hash, int oid){
@@ -202,14 +205,10 @@ public class EventDetector {
 	}
 	
 	public int runTask(){
-        Hbn db = new Hbn();
 		Date start = new Date();
 		//get batchsize instances first.
 		getInstances();
 		Set<Event> updateSolr = new HashSet<Event>();
-		HashMap<Integer,Event> updateEvents = new HashMap<Integer,Event>();
-		HashMap<Integer,EventInfo> updateEventInfos = new HashMap<Integer,EventInfo>();
-		List<EventStatus> updateEventStatus = new ArrayList<EventStatus>();
 		//for each url , get it's filepath and parse the html to article;
 		for(UrlStatus us : UStatus){
 			String folder = HtmlPath + cn.ruc.mblank.util.TimeUtil.getDateStr(us.getTime()) + "/" + us.getId();
@@ -220,8 +219,7 @@ public class EventDetector {
 			}
 			//get Url from db, the extractor need Url.url to recognition html model
 			//TODO can optimize
-			String getUrl = "from Url as obj where obj.id = " + us.getId();
-			Url url = db.getElementFromDB(getUrl);
+			Url url = Hbn.getElementFromDB(Session,Url.class,us.getId());
 			//get article from Url.url and html source
 			Extractor etor = new Extractor(url,file);
 			Article at = etor.getArticle();
@@ -239,14 +237,7 @@ public class EventDetector {
 			if(mostSame != null){
 				//find same ..
 				Event oldEvent;
-				//first find in memory
-				if(updateEvents.containsKey(mostSame.eventId)){
-					oldEvent = updateEvents.get(mostSame.eventId);
-				}else{
-					//get Event from db and update imgs,pubtime
-					String ehql = "from Event as obj where obj.id = " + mostSame.eventId;
-					oldEvent = db.getElementFromDB(ehql);
-				}
+				oldEvent = Hbn.getElementFromDB(Session,Event.class,mostSame.eventId);
 				if(oldEvent == null){
 					us.setStatus((short)Const.TaskId.ParseHtmlFailed.ordinal());
 					continue;
@@ -269,13 +260,7 @@ public class EventDetector {
 				updateSolr.add(oldEvent);
 				//update EventInfo.number
 				EventInfo ei;
-				//first find in memory..then try to read from db.
-				if(updateEventInfos.containsKey(mostSame.eventId)){
-					ei = updateEventInfos.get(mostSame.eventId);
-				}else{
-					String ehql = "from EventInfo as obj where obj.id = " + oldEvent.getId();
-					ei = db.getElementFromDB(ehql);
-				}
+				ei = Hbn.getElementFromDB(Session,EventInfo.class,oldEvent.getId());
 				if(ei == null){
 					us.setStatus((short)Const.TaskId.ParseHtmlFailed.ordinal());
 					continue;
@@ -283,9 +268,6 @@ public class EventDetector {
 				ei.setDay(day);
 				ei.setTopic(us.getTopic());
 				ei.setNumber(ei.getNumber() + 1);
-				//add to update set
-				updateEvents.put(mostSame.eventId,oldEvent);
-				updateEventInfos.put(mostSame.eventId,ei);
 				//add to localsimhash
 				SimPair nsp = new SimPair();
 				nsp.id = at.getId();
@@ -300,11 +282,11 @@ public class EventDetector {
 				EventInfo newEventInfo = createEventInfo(at);
 				newEventInfo.setTopic(us.getTopic());
 				EventStatus newEventStatus = createEventStatus(at);			
-				//add to update set
-				updateEvents.put(newEvent.getId(), newEvent);
-				updateEventInfos.put(newEvent.getId(),newEventInfo);
-				updateEventStatus.add(newEventStatus);
-				updateSolr.add(newEvent);	
+				//add to session
+                Session.saveOrUpdate(newEvent);
+                Session.saveOrUpdate(newEventInfo);
+                Session.saveOrUpdate(newEventStatus);
+				updateSolr.add(newEvent);
 				//add to localsimhash
 				SimPair nsp = new SimPair();
 				nsp.id = newEvent.getId();
@@ -319,15 +301,11 @@ public class EventDetector {
 		EventIndex upei = new EventIndex();
 		upei.update(updateSolr);
 		//update Event,EventInfo,EventStatus,UrlStatus
-		
 		Date updateStart = new Date();
-		
-		db.updateDB(updateEvents.values());
-		db.updateDB(updateEventInfos.values());
-		db.updateDB(updateEventStatus);
-		db.updateDB(UStatus);
+        Hbn.updateDB(Session);
+        Session.clear();
 		//write simhash to disk
-		//TODO shoudl append batch set to end of the file, but now for simple just write the whole map out...
+		//TODO should append batch set to end of the file, but now for simple just write the whole map out...
 		writeSimHash2Disk();
 		Date updateEnd = new Date();		
 		System.out.println("algorithm time " + (writeEnd.getTime() - start.getTime()));
@@ -340,8 +318,8 @@ public class EventDetector {
 	
 	
 	public static void main(String[] args){
-		while(true){
-			EventDetector ed = new EventDetector();
+        EventDetector ed = new EventDetector();
+        while(true){
 			int num = ed.runTask();
 			if(num == 0){
 				try {

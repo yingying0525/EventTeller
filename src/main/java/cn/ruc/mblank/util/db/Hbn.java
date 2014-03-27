@@ -31,6 +31,28 @@ public class Hbn {
         return result;
     }
 
+    public static <T> T getElementFromDB(Session session,java.lang.Class obj,int id){
+        return (T)session.get(obj,id);
+    }
+
+    public static <T> List<T> getElementsFromDB(String hql,int start ,int maxNum,Session session) {
+        List<T> result = new ArrayList<T>();
+        Query query =  session.createQuery(hql);
+        if(maxNum > 0){
+            query.setMaxResults(maxNum);
+        }
+        if(start >= 0){
+            query.setFirstResult(start);
+        }
+        result = query.list();
+        return result;
+    }
+
+    public static void updateDB(Session session){
+        session.beginTransaction().commit();
+    }
+
+
     public <T> T getElementFromDB(String hql) {
         Query query =  HSession.getSession().createQuery(hql);
         List res = query.list();
@@ -101,6 +123,16 @@ public class Hbn {
             max = 1;
         }
         HSession.closeSession();
+        return max;
+    }
+
+    public static int getMaxFromDB(Session session,java.lang.Class aClass,String col){
+        Criteria criteria = session.createCriteria(aClass).setProjection(Projections.max(col));
+        Integer max = (Integer)criteria.uniqueResult();
+        if(max == null){
+            //no item in db..
+            max = 1;
+        }
         return max;
     }
 
