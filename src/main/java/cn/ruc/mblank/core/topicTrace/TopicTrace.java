@@ -172,7 +172,7 @@ public class TopicTrace {
 				//get max id from topic
 				Topic tp = createNewTopic(et);
 				session.saveOrUpdate(tp);
-				uetr.setTid(et.getId());
+				uetr.setTid(tp.getId());
 				TopicStatus ts = Hbn.getElementFromDB(session,TopicStatus.class,tp.getId());
                 if(ts == null){
                     ts = new TopicStatus();

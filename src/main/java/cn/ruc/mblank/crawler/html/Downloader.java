@@ -69,7 +69,9 @@ public class Downloader {
         getInstances();
         int number = 0;
 		int failNumber = 0;
-        System.out.println(Instances.size());
+        if(Instances.size() == 0){
+            return;
+        }
 		for(UrlStatus us : Instances){
 			number++;
 			if(number % 200 == 0){

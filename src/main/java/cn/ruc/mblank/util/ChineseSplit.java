@@ -90,17 +90,21 @@ public class ChineseSplit {
      */
     public static List<String> SplitStr(String text){
     	List<String> result = new ArrayList<String>();
-    	List<Term> terms = NlpAnalysis.parse(text);
-		for(Term term : terms){
-			String nature = term.getNatrue().natureStr;
-			if(!checkNature(nature) ||term.getName().length() < 2 )
-				continue;
-			String tmp = term.getName().trim();
-			if(tmp.length() == 0){
-				continue;
-			}
-			result.add(tmp);
-		}
+        try{
+            List<Term> terms = NlpAnalysis.parse(text);
+            for(Term term : terms){
+                String nature = term.getNatrue().natureStr;
+                if(!checkNature(nature) ||term.getName().length() < 2 )
+                    continue;
+                String tmp = term.getName().trim();
+                if(tmp.length() == 0){
+                    continue;
+                }
+                result.add(tmp);
+            }
+        }catch (Exception e){
+            return  result;
+        }
     	return result;
     }
     
@@ -112,16 +116,20 @@ public class ChineseSplit {
      */
     public static List<Word> SplitStrWithPos(String text){
     	List<Word> result = new ArrayList<Word>();
-    	List<Term> terms = NlpAnalysis.parse(text);
-    	for(Term tm : terms){
-    		String nature = tm.getNatrue().natureStr;
-			if(tm.getName().length() < 2 || !checkNature(nature))
-				continue;
-    		Word wp = new Word();
-    		wp.setName( tm.getName());
-    		wp.setNature( nature);
-    		result.add(wp);
-    	}
+        try{
+            List<Term> terms = NlpAnalysis.parse(text);
+            for(Term tm : terms){
+                String nature = tm.getNatrue().natureStr;
+                if(tm.getName().length() < 2 || !checkNature(nature))
+                    continue;
+                Word wp = new Word();
+                wp.setName( tm.getName());
+                wp.setNature( nature);
+                result.add(wp);
+            }
+        }catch (Exception e){
+            return result;
+        }
     	return result;
     }
     

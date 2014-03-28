@@ -18,7 +18,6 @@ public class TopicInfoUpdator {
 	//update TopicStatus
 	
 	private final int BatchSize = 3000;
-	private int KeyWordSize = 10;
 	private List<TopicStatus> TStatus;
     private Session session;
 	
@@ -33,18 +32,16 @@ public class TopicInfoUpdator {
 	}
 	
 	public Date getLastDateOfTopic(List<Event> scrs){
-		Date dt = new Date();
-		if(scrs.size() > 0){
-			dt = scrs.get(0).getPubtime();
-		}else{
-			return dt;
-		}
+		long dt = 0;
+        Date today = new Date();
+        Date res = null;
 		for(Event et : scrs){
-			if(dt.compareTo(et.getPubtime()) < 0){
-				dt = et.getPubtime();
-			}
+			if(et.getPubtime().getTime() > dt && et.getPubtime().getTime() < today.getTime()){
+                dt = et.getPubtime().getTime();
+                res = et.getPubtime();
+            }
 		}
-		return dt;
+		return res;
 	}
 	
 	public Date getStartDateOfTopic(List<Event> scrs){
@@ -64,10 +61,10 @@ public class TopicInfoUpdator {
 	
 	private void updateTopic(Topic tp,TopicInfo ti,List<Event> ets){
 		cn.ruc.mblank.core.infoGenerator.topic.KeyWords kw = new cn.ruc.mblank.core.infoGenerator.topic.KeyWords(ets);
-		List<String> keyWords = kw.getKeyWords(KeyWordSize);
+		List<String> keyWords = kw.getKeyWords(Const.MaxTopicKeyWordsSize);
         TimeNumber gtn = new TimeNumber(ets);
         String timeNumber = gtn.getTimeNumber();
-		String kwstr = cn.ruc.mblank.util.StringUtil.ListToStr(keyWords);
+		String kwstr = cn.ruc.mblank.util.StringUtil.ListToStr(keyWords,",");
 		tp.setKeyWords(kwstr);
 		tp.setEndTime(getLastDateOfTopic(ets));
 		tp.setStartTime(getStartDateOfTopic(ets));
@@ -89,11 +86,15 @@ public class TopicInfoUpdator {
 			String sql = "from EventTopicRelation as obj where obj.tid = " + ts.getId();
 			List<EventTopicRelation> etrs = Hbn.getElementsFromDB(sql,0, -1,session);
 			Topic tp = Hbn.getElementFromDB(session,Topic.class,ts.getId());
-			if(etrs == null || etrs.size() == 0 || tp == null){
+			if(etrs == null || etrs.size() == 0){
 				//some error....
 				ts.setStatus((short)Const.TaskId.UpdatedTopicInfoFailed.ordinal());
 				continue;
 			}
+            if(tp == null){
+                tp = new Topic();
+                tp.setId(ts.getId());
+            }
 			List<Event> events = new ArrayList<Event>();
 			for(EventTopicRelation etr : etrs){
 				Event et = Hbn.getElementFromDB(session,Event.class,etr.getEid());
@@ -116,7 +117,6 @@ public class TopicInfoUpdator {
         TopicInfoUpdator tiu = new TopicInfoUpdator();
         while(true){
 			tiu.runTask();
-			System.out.println("one batch ok.." + new Date());
 			if(tiu.TStatus.size() == 0){
 				try {
 					System.out.println("now end of update Topic Info,sleep for:"+Const.UpdateTopicInfoSleepTime /1000 /60 +" minutes. "+new Date().toString());
@@ -124,7 +124,9 @@ public class TopicInfoUpdator {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}	
-			}
+			}else{
+                System.out.println("one batch ok.." + new Date());
+            }
 		}
 	}
 	

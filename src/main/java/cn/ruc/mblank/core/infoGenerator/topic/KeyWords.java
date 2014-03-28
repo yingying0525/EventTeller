@@ -1,5 +1,6 @@
 package cn.ruc.mblank.core.infoGenerator.topic;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,10 +25,12 @@ public class KeyWords {
 	
 	private void getTWords(){
 		HashMap<String,Word> wordMap = new HashMap<String,Word>();
+        double TTF = 1.0;
 		for(Event et : Events){
 			Set<Word> has = new HashSet<Word>();
 			if(et.getTitle() != null){
 				List<Word> wds = cn.ruc.mblank.util.ChineseSplit.SplitStrWithPos(et.getTitle());
+                TTF += wds.size();
 				for(Word wd : wds){
 					if(wordMap.containsKey(wd.getName())){
 						Word nwd = wordMap.get(wd.getName());
@@ -46,6 +49,7 @@ public class KeyWords {
 			}
 		}
 		for(Word wd : wordMap.values()){
+            wd.setScore(wd.getTf() / TTF);
 			TWords.add(wd);
 		}
 	}
@@ -55,9 +59,9 @@ public class KeyWords {
 		@Override
 		public int compare(Word wd1, Word wd2) {
 			// TODO Auto-generated method stub
-			if(((Word)wd1).getTf() > ((Word)wd2).getTf()){
+			if(((Word)wd1).getScore() > ((Word)wd2).getScore()){
 				return -1;
-			}else if(((Word)wd1).getTf() < ((Word)wd2).getTf()){
+			}else if(((Word)wd1).getScore() < ((Word)wd2).getScore()){
 				return 1;
 			}
 			return 0;
@@ -71,7 +75,8 @@ public class KeyWords {
 		Collections.sort(TWords, new WordComparator());
 		for(Word wd : TWords){
 			if(num++ < N){
-				res.add(wd.getName());
+                DecimalFormat df = new DecimalFormat("#0.000");
+				res.add(wd.getName() + ":" + df.format(wd.getScore()));
 			}else{
 				break;
 		}

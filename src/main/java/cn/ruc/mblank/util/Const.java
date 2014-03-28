@@ -68,6 +68,8 @@ public class Const{
 	///for repeated article simhash 
 	public static int SimHashBitNumber = 64;
 	public static int MinSimHashBitNumber = 7;
+
+    public static int MaxTopicKeyWordsSize = 100;
 	
 	
 	
