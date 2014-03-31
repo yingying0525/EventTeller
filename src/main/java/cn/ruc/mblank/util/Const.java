@@ -21,8 +21,7 @@ public class Const{
 	public static String HtmlSaveEncode = "UTF8";
 	public static String CrawlerUserAgent = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31";
 	
-	public static String Split_To_Sentences_Sign = "。";
-	
+
 	public static int WebSiteUrlTitleFilerLength = 5;
 	public static int PublistTimeLengthPlus = 8;
 	public static int SiteLogoLineCount = 10;
@@ -42,10 +41,13 @@ public class Const{
 	public static int MinContentWordsCount = 5;
 	public static int AtInfoExtractorThreadNumber = 10;
     public static int HtmlDownloaderThreadNumber = 5;
-	public static int MaxNeighborEventCount = 100;
+	public static int MaxNeighborEventCount = 30;
 	
+    public static String ParagraphSeperator = "!##!";
+    public static String SecondParagraphSeperator = "。";
+    public static int MinParagraphLength = 5;
 
-	
+
 	//miliseconds
 	public static int MaxTopicWindowsSize = 30 * 24 * 60 * 60 * 1000;
 	

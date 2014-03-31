@@ -19,11 +19,12 @@ import org.jsoup.nodes.Document;
 import cn.ruc.mblank.config.JsonConfigModel;
 import cn.ruc.mblank.util.Const;
 import cn.ruc.mblank.util.Log;
+import sun.security.jca.GetInstance;
 
 public class Downloader {
 	
 	private String SaveFolderPath;
-    private int BatchSize = 3000;
+    private int BatchSize = 1000;
     private Session Session;
     private List<UrlStatus> Instances;
 	
@@ -43,6 +44,7 @@ public class Downloader {
 	private void getInstances(){
 		String hql = "from UrlStatus as obj where obj.status = " + Const.TaskId.CrawlUrlToDB.ordinal() + "  or obj.status = -1";
         Instances = Hbn.getElementsFromDB(hql,0,BatchSize,Session);
+        System.out.println(Instances.size());
 	}
 
     private void writeHtml2Disk(Url url,String html){
@@ -100,9 +102,9 @@ public class Downloader {
 	}
 	
 	public static void main(String[] args) {
-		Downloader dw = new Downloader();
 		while(true){
-			dw.runTask();
+            Downloader dw = new Downloader();
+            dw.runTask();
             if(dw.Instances.size() == 0){
                 try {
                     System.out.println("now end of downloader,sleep for:"+Const.DownloadArticleSleepTime/1000/60+" minutes. "+new Date().toString());

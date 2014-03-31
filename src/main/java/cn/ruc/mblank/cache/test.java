@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * @deprecated
  * Created by mblank on 14-3-26.
  */
 public class test {
