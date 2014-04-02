@@ -16,7 +16,7 @@ public class SentenceTest {
 
 
     public static  void main(String[] args){
-        int id = 5381783;
+        int id = 4783592;
         Session session = HSession.getSession();
         Event et = Hbn.getElementFromDB(session, Event.class, id);
         MainSentence ms = new MainSentence(et);

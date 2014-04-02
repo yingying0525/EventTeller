@@ -72,10 +72,8 @@ public class Const{
 	public static int MinSimHashBitNumber = 7;
 
     public static int MaxTopicKeyWordsSize = 100;
-	
-	
-	
-	public static Map<String,Integer> TASKID =null;
+
+    public static double MaxVectorSimChange = 0.2;
 	
 	/// for china provinces code e.g. beijing 1
 	public static Map<String,Integer> ZH_PS = null;

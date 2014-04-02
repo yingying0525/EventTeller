@@ -155,5 +155,21 @@ public class Similarity {
 		}
 		return total_up / Math.sqrt(total_a) / Math.sqrt(total_b);
 	}
+
+    public static double simOf2Vector(double[] v1, double[] v2){
+        if(v1 == null || v2 == null || v1.length != v2.length){
+            return 0;
+        }
+        double res = 0;
+        double up = 0.0;
+        double down_v1 = 0.0;
+        double down_v2 = 0.0;
+        for(int i = 0; i < v1.length; i++){
+            up += v1[i] * v2[i];
+            down_v1 += v1[i] * v1[i];
+            down_v2 += v2[i] * v2[i];
+        }
+        return up / Math.sqrt(down_v1) / Math.sqrt(down_v2);
+    }
 	
 }
