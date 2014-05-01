@@ -35,7 +35,9 @@ DB-IIR Lab Renmin University of China (http://iir.ruc.edu.cn)
 Attations
 ========
 
-If you use Mysql as Event DB, pls set table character set to utf8mb4, because in java some chinese chracter use 4 bytes to encode and utf8 in mysql only use max to 3 bytes
+If you use Mysql as Event DB, pls set table character set to utf8mb4, 
+
+because in java some chinese chracter use 4 bytes to encode and utf8 in mysql only use max to 3 bytes
 
 
 
