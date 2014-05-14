@@ -6,5 +6,6 @@
 	"LocalDFPath":"/mnt/diskc/ET/DF/et.df",
 	"LocalTDFPath":"/mnt/diskc/ET/DF/et.tdf",
 	"LocalDDNPath":"/mnt/diskc/ET/DF/et.ddn",
-	"ArticleFilePath":"/mnt/diskd/ET_Articles"
+	"ArticleFilePath":"/mnt/diskd/ET_Articles",
+    "SolrWordIndexURI":"http://222.29.197.239:8080/solrRelations"
 }

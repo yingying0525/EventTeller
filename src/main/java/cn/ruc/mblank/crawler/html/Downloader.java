@@ -9,9 +9,7 @@ import cn.ruc.mblank.db.hbn.HSession;
 import cn.ruc.mblank.db.hbn.model.Url;
 import cn.ruc.mblank.db.hbn.model.UrlStatus;
 import cn.ruc.mblank.util.db.Hbn;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.annotations.BatchSize;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -19,7 +17,6 @@ import org.jsoup.nodes.Document;
 import cn.ruc.mblank.config.JsonConfigModel;
 import cn.ruc.mblank.util.Const;
 import cn.ruc.mblank.util.Log;
-import sun.security.jca.GetInstance;
 
 public class Downloader {
 	
@@ -102,12 +99,15 @@ public class Downloader {
 	}
 	
 	public static void main(String[] args) {
-		while(true){
-            Downloader dw = new Downloader();
+        Downloader dw = new Downloader();
+        while(true){
             dw.runTask();
             if(dw.Instances.size() == 0){
                 try {
                     System.out.println("now end of downloader,sleep for:"+Const.DownloadArticleSleepTime/1000/60+" minutes. "+new Date().toString());
+                    dw.Session.close();
+                    dw = null;
+                    dw = new Downloader();
                     Thread.sleep(Const.DownloadArticleSleepTime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

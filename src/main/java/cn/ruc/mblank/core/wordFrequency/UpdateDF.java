@@ -148,7 +148,7 @@ public class UpdateDF {
 				es.setStatus((short)Const.TaskId.UpdateDFFailed.ordinal());
 				continue;
 			}
-			int day = cn.ruc.mblank.util.TimeUtil.getDayGMT8(et.getPubtime());
+			int day = cn.ruc.mblank.util.TimeUtil.getDayGMT8(et.getPubTime());
 			List<String> words = cn.ruc.mblank.util.ChineseSplit.SplitStr(et.getTitle() + et.getContent());
 			//update three map in memory
 			Set<String> has = new HashSet<String>();
@@ -198,7 +198,6 @@ public class UpdateDF {
                 try {
                     Thread.sleep(Const.UpdateDFSleepTime);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }else{

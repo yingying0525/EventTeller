@@ -5,7 +5,6 @@ import cn.ruc.mblank.core.infoGenerator.model.Word;
 import cn.ruc.mblank.db.hbn.model.Event;
 import cn.ruc.mblank.util.ChineseSplit;
 import cn.ruc.mblank.util.Const;
-import sun.applet.Main;
 
 import java.util.*;
 

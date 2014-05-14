@@ -228,7 +228,7 @@
                                 <manifest>
                                     <addClasspath>true</addClasspath>
                                     <classpathPrefix>lib/</classpathPrefix>
-                                    <mainClass>cn.ruc.mblank.core.topicTrace.TopicTrace</mainClass>
+                                    <mainClass>cn.ruc.mblank.core.word2Vec.Learn</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

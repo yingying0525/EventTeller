@@ -9,6 +9,7 @@ public class JsonConfigModel {
 	public String HtmlSavePath;
 	public String SimHashPath;
 	public String SolrIndexURI;
+    public String SolrWordIndexURI;
 	public String UrlsBloomFilterFilePath;
 	public String LocalDFPath;
 	public String LocalTDFPath;

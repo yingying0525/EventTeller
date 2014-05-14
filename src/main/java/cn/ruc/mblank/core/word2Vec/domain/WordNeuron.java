@@ -11,6 +11,7 @@ public class WordNeuron extends Neuron {
      * for word in different time
      */
     public Map<Integer,double[]> synMap = null;
+    public int LastDay = -1;
 
     public List<Neuron> makeNeurons() {
         if (neurons != null) {

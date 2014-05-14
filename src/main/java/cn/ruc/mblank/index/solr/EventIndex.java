@@ -33,6 +33,8 @@ public class EventIndex {
 		JsonConfigModel jcm = JSON.parseObject(fileContent,JsonConfigModel.class);
 		solrUrl = jcm.SolrIndexURI;
 	}
+
+
 	
 	
 	public void update(List<Event> events){
@@ -44,7 +46,7 @@ public class EventIndex {
                 doc.addField("id", et.getId());
                 doc.addField("et_title", et.getTitle());
                 doc.addField("et_summary", et.getContent());
-                doc.addField("et_pubTime", et.getPubtime());
+                doc.addField("et_pubTime", et.getPubTime());
                 doc.addField("et_number", et.getNumber());
                 doc.addField("et_topic",et.getTopic());
                 doc.addField("et_imgs",et.getImgs());
@@ -71,7 +73,7 @@ public class EventIndex {
 				doc.addField("id", et.getId());
 				doc.addField("et_title", et.getTitle());
 				doc.addField("et_summary", et.getContent());
-				doc.addField("et_pubTime", et.getPubtime());
+				doc.addField("et_pubTime", et.getPubTime());
 				doc.addField("et_number", et.getNumber());
                 doc.addField("et_topic",et.getTopic());
                 doc.addField("et_imgs",et.getImgs());
@@ -96,7 +98,7 @@ public class EventIndex {
             doc.addField("id", et.getId());
             doc.addField("et_title", et.getTitle());
             doc.addField("et_summary", et.getContent());
-            doc.addField("et_pubTime", et.getPubtime());
+            doc.addField("et_pubTime", et.getPubTime());
             doc.addField("et_number", et.getNumber());
             doc.addField("et_topic",et.getTopic());
             doc.addField("et_imgs",et.getImgs());
@@ -170,7 +172,7 @@ public class EventIndex {
 				Event et = new Event();
 				et.setId(id);
 				et.setTitle(title);
-				et.setPubtime(new Date(time));
+				et.setPubTime(new Date(time));
 				et.setContent(summary);
                 et.setImgs(imgs);
                 try{

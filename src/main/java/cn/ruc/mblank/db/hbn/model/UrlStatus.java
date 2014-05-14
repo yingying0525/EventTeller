@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * Created by mblank on 14-3-25.
+ * Created by mblank on 14-4-9.
  */
 @Entity
 public class UrlStatus {

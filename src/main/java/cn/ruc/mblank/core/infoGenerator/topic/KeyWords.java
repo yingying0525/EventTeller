@@ -11,6 +11,7 @@ import java.util.Set;
 
 import cn.ruc.mblank.core.infoGenerator.model.Word;
 import cn.ruc.mblank.db.hbn.model.Event;
+import org.ansj.util.MyStaticValue;
 
 public class KeyWords {
 	
@@ -19,8 +20,9 @@ public class KeyWords {
 //	private List<Word> CWords = new ArrayList<Word>();
 	
 	public KeyWords(List<Event> ets){
-		this.Events = ets;
+        this.Events = ets;
 		getTWords();
+
 	}
 	
 	private void getTWords(){
@@ -28,8 +30,12 @@ public class KeyWords {
         double TTF = 1.0;
 		for(Event et : Events){
 			Set<Word> has = new HashSet<Word>();
+            if(et == null){
+                System.out.println(".....");
+                continue;
+            }
 			if(et.getTitle() != null){
-				List<Word> wds = cn.ruc.mblank.util.ChineseSplit.SplitStrWithPos(et.getTitle());
+				List<Word> wds = cn.ruc.mblank.util.ChineseSplit.SplitStrWithPos(et.getTitle(),"data/extdic");
                 TTF += wds.size();
 				for(Word wd : wds){
 					if(wordMap.containsKey(wd.getName())){
@@ -79,7 +85,7 @@ public class KeyWords {
 				res.add(wd.getName() + ":" + df.format(wd.getScore()));
 			}else{
 				break;
-		}
+		    }
 		}
 		return res;		
 	}

@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * Created by mblank on 14-3-25.
+ * Created by mblank on 14-4-9.
  */
 @Entity
 public class Topic {
@@ -19,14 +19,8 @@ public class Topic {
     private Date endTime;
     private Integer number;
     private String timeNumber;
-
-    public void setStartTime(Timestamp startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
-    }
+    private String main;
+    private String object;
 
     @Id
     @Column(name = "id")
@@ -88,6 +82,36 @@ public class Topic {
         this.number = number;
     }
 
+    @Basic
+    @Column(name = "timeNumber")
+    public String getTimeNumber() {
+        return timeNumber;
+    }
+
+    public void setTimeNumber(String timeNumber) {
+        this.timeNumber = timeNumber;
+    }
+
+    @Basic
+    @Column(name = "main")
+    public String getMain() {
+        return main;
+    }
+
+    public void setMain(String main) {
+        this.main = main;
+    }
+
+    @Basic
+    @Column(name = "object")
+    public String getObject() {
+        return object;
+    }
+
+    public void setObject(String object) {
+        this.object = object;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,9 +122,12 @@ public class Topic {
         if (id != topic.id) return false;
         if (endTime != null ? !endTime.equals(topic.endTime) : topic.endTime != null) return false;
         if (keyWords != null ? !keyWords.equals(topic.keyWords) : topic.keyWords != null) return false;
+        if (main != null ? !main.equals(topic.main) : topic.main != null) return false;
         if (number != null ? !number.equals(topic.number) : topic.number != null) return false;
+        if (object != null ? !object.equals(topic.object) : topic.object != null) return false;
         if (startTime != null ? !startTime.equals(topic.startTime) : topic.startTime != null) return false;
         if (summary != null ? !summary.equals(topic.summary) : topic.summary != null) return false;
+        if (timeNumber != null ? !timeNumber.equals(topic.timeNumber) : topic.timeNumber != null) return false;
 
         return true;
     }
@@ -113,16 +140,9 @@ public class Topic {
         result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
         result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
         result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + (timeNumber != null ? timeNumber.hashCode() : 0);
+        result = 31 * result + (main != null ? main.hashCode() : 0);
+        result = 31 * result + (object != null ? object.hashCode() : 0);
         return result;
-    }
-
-    @Basic
-    @Column(name = "timeNumber")
-    public String getTimeNumber() {
-        return timeNumber;
-    }
-
-    public void setTimeNumber(String timeNumber) {
-        this.timeNumber = timeNumber;
     }
 }

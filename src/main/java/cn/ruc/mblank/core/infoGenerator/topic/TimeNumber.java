@@ -30,8 +30,8 @@ public class TimeNumber {
 
     public String getTimeNumber(){
         for(Event et : Events){
-            if(et.getPubtime() != null){
-                int date = TimeUtil.getDayGMT8(et.getPubtime());
+            if(et.getPubTime() != null){
+                int date = TimeUtil.getDayGMT8(et.getPubTime());
                 if(NumMaps.containsKey(date)){
                     NumMaps.put(date,NumMaps.get(date) + 1);
                 }else{

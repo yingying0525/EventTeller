@@ -1,4 +1,4 @@
-package cn.ruc.mblank.core.wordVec;
+package cn.ruc.mblank.core.word2Vec;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -8,17 +8,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Map.Entry;
 
+import cn.ruc.mblank.util.*;
 import love.cq.util.MapCount;
-import cn.ruc.mblank.core.wordVec.domain.HiddenNeuron;
-import cn.ruc.mblank.core.wordVec.domain.Neuron;
-import cn.ruc.mblank.core.wordVec.domain.WordNeuron;
-import cn.ruc.mblank.core.wordVec.util.Haffman;
+import cn.ruc.mblank.core.word2Vec.domain.HiddenNeuron;
+import cn.ruc.mblank.core.word2Vec.domain.Neuron;
+import cn.ruc.mblank.core.word2Vec.domain.WordNeuron;
 
 public class Learn {
 
@@ -26,7 +24,7 @@ public class Learn {
     /**
      * 训练多少个特征
      */
-    private int layerSize = 200;
+    private int layerSize = 100;
 
     /**
      * 上下文窗口大小
@@ -39,7 +37,7 @@ public class Learn {
 
     public int EXP_TABLE_SIZE = 1000;
 
-    private Boolean isCbow = false;
+    private Boolean isCbow = true;
 
     private double[] expTable = new double[EXP_TABLE_SIZE];
 
@@ -79,11 +77,23 @@ public class Learn {
             int lastWordCount = 0;
             int wordCountActual = 0;
             while ((temp = br.readLine()) != null) {
-                if (wordCount - lastWordCount > 10000) {
-                    System.out
-                            .println("alpha:" + alpha + "\tProgress: "
-                                    + (int) (wordCountActual / (double) (trainWordsCount + 1) * 100)
-                                    + "%");
+                String[] its = temp.split("\t");
+                if(its.length != 2){
+                    continue;
+                }
+                int day = 0;
+                try{
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD hh:mm:ss");
+                    day = TimeUtil.getDayGMT8(sdf.parse(its[0]));
+
+                }catch (Exception e){
+                    //parse date str failed...
+                    continue;
+                }
+                if (wordCount - lastWordCount > 1000000) {
+                    System.out.println("alpha:" + alpha + "\tProgress: "
+                            + (int) (wordCountActual / (double) (trainWordsCount + 1) * 100)
+                            + "%");
                     wordCountActual += wordCount - lastWordCount;
                     lastWordCount = wordCount;
                     alpha = startingAlpha * (1 - wordCountActual / (double) (trainWordsCount + 1));
@@ -91,7 +101,7 @@ public class Learn {
                         alpha = startingAlpha * 0.0001;
                     }
                 }
-                String[] strs = temp.split(" ");
+                String[] strs = its[1].split(" ");
                 wordCount += strs.length;
                 List<WordNeuron> sentence = new ArrayList<WordNeuron>();
                 for (int i = 0; i < strs.length; i++) {
@@ -111,10 +121,12 @@ public class Learn {
                     sentence.add((WordNeuron) entry);
                 }
 
+
                 for (int index = 0; index < sentence.size(); index++) {
                     nextRandom = nextRandom * 25214903917L + 11;
                     if (isCbow) {
-                        cbowGram(index, sentence, (int) nextRandom % window);
+                        cbowGram(index, sentence, (int) nextRandom % window,day);
+
                     } else {
                         skipGram(index, sentence, (int) nextRandom % window);
                     }
@@ -125,14 +137,15 @@ public class Learn {
             System.out.println("Words in train file: " + trainWordsCount);
             System.out.println("sucess train over!");
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 
     /**
-     * skip gram 模型训练
+     *
+     * @param index
      * @param sentence
-     * @param neu1 
+     * @param b
      */
     private void skipGram(int index, List<WordNeuron> sentence, int b) {
         // TODO Auto-generated method stub
@@ -190,7 +203,7 @@ public class Learn {
      * @param sentence
      * @param b
      */
-    private void cbowGram(int index, List<WordNeuron> sentence, int b) {
+    private void cbowGram(int index, List<WordNeuron> sentence, int b,int day) {
         WordNeuron word = sentence.get(index);
         int a, c = 0;
 
@@ -226,11 +239,7 @@ public class Learn {
                 continue;
             else
                 f = expTable[(int) ((f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / 2))];
-            // 'g' is the gradient multiplied by the learning rate
-            //            double g = (1 - word.codeArr[d] - f) * alpha;
-            //              double g = f*(1-f)*( word.codeArr[i] - f) * alpha;
             double g = f * (1 - f) * (word.codeArr[d] - f) * alpha;
-            //
             for (c = 0; c < layerSize; c++) {
                 neu1e[c] += g * out.syn1[c];
             }
@@ -239,6 +248,7 @@ public class Learn {
                 out.syn1[c] += g * neu1[c];
             }
         }
+        //hidden to input
         for (a = b; a < window * 2 + 1 - b; a++) {
             if (a != window) {
                 c = index - window + a;
@@ -249,10 +259,27 @@ public class Learn {
                 last_word = sentence.get(c);
                 if (last_word == null)
                     continue;
+                //if bigger than max, record the old one
                 for (c = 0; c < layerSize; c++)
                     last_word.syn0[c] += neu1e[c];
+                //check the distance change of new vector
+                if(last_word.LastDay == -1){
+                    //the first vector
+                    double[] nvec = null;
+                    Util.arrayCopy(last_word.syn0,nvec);
+                    last_word.synMap.put(day,nvec);
+                    last_word.LastDay = day;
+                }else{
+                    double[] cals = last_word.synMap.get(last_word.LastDay);
+                    double sim = Similarity.simOf2Vector(last_word.syn0,cals);
+                    if(sim < Const.MaxVectorSimChange && day >= last_word.LastDay){
+                        double[] nvec = null;
+                        Util.arrayCopy(last_word.syn0,nvec);
+                        last_word.synMap.put(day, nvec);
+                        last_word.LastDay = day;
+                    }
+                }
             }
-
         }
     }
 
@@ -264,21 +291,29 @@ public class Learn {
     private void readVocab(File file) throws IOException {
         MapCount<String> mc = new MapCount<String>();
         try{
+            int line = 0;
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             String temp = null;
             while ((temp = br.readLine()) != null) {
-                String[] split = temp.split(" ");
+                ++line;
+                String[] its = temp.split("\t");
+                if(its.length != 2){
+                    continue;
+                }
+                String[] split = its[1].split(" ");
                 trainWordsCount += split.length;
                 for (String string : split) {
                     mc.add(string);
+                }
+                if(line % 10000 == 0){
+                    System.out.println(line);
                 }
             }
         }catch (Exception e){
 
         }
         for (Entry<String, Integer> element : mc.get().entrySet()) {
-            wordMap.put(element.getKey(), new WordNeuron(element.getKey(), element.getValue(),
-                layerSize));
+            wordMap.put(element.getKey(), new WordNeuron(element.getKey(), element.getValue(),layerSize));
         }
     }
 
@@ -299,19 +334,22 @@ public class Learn {
      * @throws java.io.IOException
      */
     public void learnFile(File file) throws IOException {
+        //read file words to memory map
         readVocab(file);
         new Haffman(layerSize).make(wordMap.values());
-        
         //查找每个神经元
         for (Neuron neuron : wordMap.values()) {
             ((WordNeuron)neuron).makeNeurons() ;
         }
-        
+        System.out.println("start to train the model" + "\t" + wordMap.size() + "\t" + trainWordsCount);
         trainModel(file);
     }
 
     /**
-     * 保存模型
+     * format
+     * wordSize layerSize
+     * wordName,totalVector,TimeVectorSize,Time1,Vector1,Time2,Vector2...
+     * @param file
      */
     public void saveModel(File file) {
         try{
@@ -321,13 +359,22 @@ public class Learn {
             double[] syn0 = null;
             for (Entry<String, Neuron> element : wordMap.entrySet()) {
                 dataOutputStream.writeUTF(element.getKey());
+                //for total vector
                 syn0 = ((WordNeuron) element.getValue()).syn0;
                 for (double d : syn0) {
                     dataOutputStream.writeFloat(((Double) d).floatValue());
                 }
+                //for vector in old time
+                dataOutputStream.writeInt(((WordNeuron) element.getValue()).synMap.size());
+                for(int day : ((WordNeuron) element.getValue()).synMap.keySet()){
+                    dataOutputStream.writeInt(day);
+                    syn0 = ((WordNeuron) element.getValue()).synMap.get(day);
+                    for(double d : syn0){
+                        dataOutputStream.writeFloat(((Double) d).floatValue());
+                    }
+                }
             }
         }catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -374,11 +421,14 @@ public class Learn {
     }
 
     public static void main(String[] args) throws IOException {
+        String trainFilePath = args[0];
+//        String trainFilePath = "d:\\ETT\\tianyiwords";
+        String vectorSavePath = trainFilePath + "_vector.bin";
         Learn learn = new Learn();
         long start = System.currentTimeMillis() ;
-        learn.learnFile(new File("library/xh.txt"));
+        learn.learnFile(new File(trainFilePath));
         System.out.println("use time "+(System.currentTimeMillis()-start));
-        learn.saveModel(new File("library/javaVector"));
+        learn.saveModel(new File(vectorSavePath));
         
     }
 }

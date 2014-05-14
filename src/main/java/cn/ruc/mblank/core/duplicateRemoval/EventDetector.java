@@ -36,13 +36,16 @@ public class EventDetector {
 		public int id;
 		public long simhash;
 		public int eventId;
+        public int day;
 	}
 	
-	private int BatchSize = 2000;
+	private int BatchSize = 200;
 	private List<UrlStatus> UStatus;
     private Session Session;
-	
+    private int MaxId = -1;
+
 	private ArrayList<HashMap<Integer,List<SimPair>>> LocalSimHash;
+    private List<SimPair> TotalSimHash = new ArrayList<SimPair>();
 	
 	private String HtmlPath;
 	private String LocalSimHashPath;
@@ -78,7 +81,10 @@ public class EventDetector {
 			LocalSimHash.get(i).put((int)bts[i], tmps);
 		}
 	}
-	
+
+    /**
+     * load recent news,interval is two week
+     */
 	private void loadLocalSimHash(){
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(LocalSimHashPath));
@@ -92,9 +98,19 @@ public class EventDetector {
 				sp.id = Integer.parseInt(its[0]);
 				sp.simhash = Long.parseLong(its[1]);
 				sp.eventId = Integer.parseInt(its[2]);
-				add2LocalSimHash(sp);
+                TotalSimHash.add(sp);
+                if(sp.id > MaxId){
+                    MaxId = sp.id;
+                }
 			}
-			System.out.println("init simhash index ok...");
+            int loadNum = 0;
+            for(SimPair sp : TotalSimHash){
+                if(sp.id + Const.MaxSimHashInterval >= MaxId){
+                    add2LocalSimHash(sp);
+                    loadNum++;
+                }
+            }
+			System.out.println("init simhash index ok..." + "\t" + loadNum);
 			br.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -139,7 +155,7 @@ public class EventDetector {
 		Event res = new Event();
 		res.setId(at.getId());
 		res.setTitle(at.getTitle());
-		res.setPubtime(at.getPublishtime());
+		res.setPubTime(at.getPublishtime());
 		res.setSource(at.getSource());
 		res.setContent(at.getContent());
 		res.setImgs(at.getImgs());
@@ -175,11 +191,9 @@ public class EventDetector {
 		}
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(this.LocalSimHashPath));
-			for(List<SimPair> sps : LocalSimHash.get(0).values()){
-				for(SimPair sp : sps){
-					bw.write(sp.id + " " + sp.simhash + " " + sp.eventId + "\n");
-				}
-			}
+            for(SimPair sp : TotalSimHash){
+                bw.write(sp.id + " " + sp.simhash + " " + sp.eventId + "\n");
+            }
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -246,8 +260,8 @@ public class EventDetector {
 				if(at.getImgs() != null && at.getImgs().length() > 0){
 					oldEvent.setImgs(oldEvent.getImgs() + " " + at.getImgs());
 				}
-				if(oldEvent.getPubtime().compareTo(at.getPublishtime()) > 0){
-					oldEvent.setPubtime(at.getPublishtime());
+				if(oldEvent.getPubTime().compareTo(at.getPublishtime()) > 0){
+					oldEvent.setPubTime(at.getPublishtime());
 					day = cn.ruc.mblank.util.TimeUtil.getDayGMT8(at.getPublishtime());
 				}
 				if(day > 100000 || day <= 0){
@@ -274,6 +288,7 @@ public class EventDetector {
 				nsp.simhash = atSimHash;
 				nsp.eventId = mostSame.eventId;
 				add2LocalSimHash(nsp);
+                TotalSimHash.add(nsp);
 			}else{
 				//can't find same.
 				//new event 
@@ -293,6 +308,7 @@ public class EventDetector {
 				nsp.simhash = atSimHash;
 				nsp.eventId = newEvent.getId();
 				add2LocalSimHash(nsp);
+                TotalSimHash.add(nsp);
 			}	
 			us.setStatus((short)Const.TaskId.CreateNewEvent.ordinal());
 		}
@@ -302,7 +318,24 @@ public class EventDetector {
 		upei.update(updateSolr);
 		//update Event,EventInfo,EventStatus,UrlStatus
 		Date updateStart = new Date();
-        Hbn.updateDB(Session);
+        //some error while update db.
+        //should change character set to utf8mb4 in mysql-event table
+        //because in java chinese character maybe use 4 bytes to encode
+        // but in mysql utf8 only use 3 max bytes to encode
+        //utf8mb4 will set max to 4
+        try{
+            Hbn.updateDB(Session);
+        }catch (Exception e){
+            System.out.println("update db error...");
+            Session.close();
+            Session = HSession.getSession();
+            for(UrlStatus us : UStatus){
+                us.setStatus((short)Const.TaskId.ParseHtmlFailed.ordinal());
+                Session.saveOrUpdate(us);
+            }
+            Hbn.updateDB(Session);
+            return UStatus.size();
+        }
         Session.clear();
 		//write simhash to disk
 		//TODO should append batch set to end of the file, but now for simple just write the whole map out...
@@ -318,17 +351,22 @@ public class EventDetector {
 	
 	
 	public static void main(String[] args){
-        EventDetector ed = new EventDetector();
+        int k = 10;
         while(true){
-			int num = ed.runTask();
-			if(num == 0){
-				try {
-					System.out.println("now end of event detector ,sleep for:"+Const.EventDetectorSleepTime/1000/60+" minutes. "+new Date().toString());
-					Thread.sleep(Const.EventDetectorSleepTime);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+            EventDetector ed = new EventDetector();
+            int cur = 0;
+            while(cur++ < k){
+                int num = ed.runTask();
+                if(num == 0){
+                    try {
+                        System.out.println("now end of event detector ,sleep for:"+Const.EventDetectorSleepTime/1000/60+" minutes. "+new Date().toString());
+                        Thread.sleep(Const.EventDetectorSleepTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            ed.Session.close();
 		}
 	}
 

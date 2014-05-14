@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.ansj.domain.Term;
+import org.ansj.recognition.NatureRecognition;
 import org.ansj.splitWord.analysis.NlpAnalysis;
 
 import cn.ruc.mblank.core.infoGenerator.model.Word;
-
-
-
-
+import org.ansj.splitWord.analysis.ToAnalysis;
+import org.ansj.util.MyStaticValue;
 
 
 /**
@@ -26,7 +25,8 @@ import cn.ruc.mblank.core.infoGenerator.model.Word;
 * @chages: add a new pos tool (ansj_seg.jar https://github.com/ansjsun/ansj_seg),this tool can give out word nature.
 */
 public class ChineseSplit {
-	
+
+
 	
 	public static boolean checkPerson(Word wd){
 		if(wd.getNature() != null && wd.getNature().indexOf("nr") >= 0){
@@ -91,7 +91,8 @@ public class ChineseSplit {
     public static List<String> SplitStr(String text){
     	List<String> result = new ArrayList<String>();
         try{
-            List<Term> terms = NlpAnalysis.parse(text);
+            List<Term> terms = ToAnalysis.parse(text);
+            new NatureRecognition(terms).recognition();
             for(Term term : terms){
                 String nature = term.getNatrue().natureStr;
                 if(!checkNature(nature) ||term.getName().length() < 2 )
@@ -107,6 +108,7 @@ public class ChineseSplit {
         }
     	return result;
     }
+
     
     /**
      * @param text
@@ -117,7 +119,8 @@ public class ChineseSplit {
     public static List<Word> SplitStrWithPos(String text){
     	List<Word> result = new ArrayList<Word>();
         try{
-            List<Term> terms = NlpAnalysis.parse(text);
+            List<Term> terms = ToAnalysis.parse(text);
+            new NatureRecognition(terms).recognition();
             for(Term tm : terms){
                 String nature = tm.getNatrue().natureStr;
                 if(tm.getName().length() < 2 || !checkNature(nature))
@@ -131,6 +134,29 @@ public class ChineseSplit {
             return result;
         }
     	return result;
+    }
+
+    public static List<Word> SplitStrWithPos(String text,String extdic){
+        List<Word> result = new ArrayList<Word>();
+        try{
+            if(extdic != null){
+                MyStaticValue.userLibrary = extdic;
+            }
+            List<Term> terms = ToAnalysis.parse(text);
+            new NatureRecognition(terms).recognition();
+            for(Term tm : terms){
+                String nature = tm.getNatrue().natureStr;
+                if(tm.getName().length() < 2 || !checkNature(nature))
+                    continue;
+                Word wp = new Word();
+                wp.setName( tm.getName());
+                wp.setNature( nature);
+                result.add(wp);
+            }
+        }catch (Exception e){
+            return result;
+        }
+        return result;
     }
     
     public static Map<Word,Integer> SplitStrWithPosTF(String text){
@@ -199,6 +225,8 @@ public class ChineseSplit {
     	maps = null;
     	return results;    	
     }
+
+//    public static List<String>
     
 }
 

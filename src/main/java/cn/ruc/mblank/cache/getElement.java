@@ -1,15 +1,15 @@
-package cn.ruc.mblank.event;
+package cn.ruc.mblank.cache;
 
 import cn.ruc.mblank.core.infoGenerator.model.Word;
 import cn.ruc.mblank.db.hbn.HSession;
 import cn.ruc.mblank.db.hbn.model.Event;
 import cn.ruc.mblank.util.ChineseSplit;
-import cn.ruc.mblank.util.Const;
-import cn.ruc.mblank.util.IOReader;
 import cn.ruc.mblank.util.db.Hbn;
 import org.hibernate.Session;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -142,7 +142,9 @@ public class getElement {
     }
 
     public static void main(String[] args){
+
         getElement ge = new getElement();
         ge.runTask();
+        ge.OutPath = args[0];
     }
 }
