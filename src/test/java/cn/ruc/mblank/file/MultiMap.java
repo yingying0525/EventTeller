@@ -1,4 +1,4 @@
-package cn.ruc.mblank;
+package cn.ruc.mblank.file;
 
 import java.io.*;
 import java.util.ArrayList;

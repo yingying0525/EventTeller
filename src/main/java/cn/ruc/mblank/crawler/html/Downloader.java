@@ -40,7 +40,7 @@ public class Downloader {
      */
 	private void getInstances(){
 		String hql = "from UrlStatus as obj where obj.status = " + Const.TaskId.CrawlUrlToDB.ordinal() + "  or obj.status = -1";
-        Instances = Hbn.getElementsFromDB(hql,0,BatchSize,Session);
+        Instances = Hbn.getElementsFromDB(hql,-1,BatchSize,Session);
         System.out.println(Instances.size());
 	}
 
@@ -105,10 +105,10 @@ public class Downloader {
             if(dw.Instances.size() == 0){
                 try {
                     System.out.println("now end of downloader,sleep for:"+Const.DownloadArticleSleepTime/1000/60+" minutes. "+new Date().toString());
+                    Thread.sleep(Const.DownloadArticleSleepTime);
                     dw.Session.close();
                     dw = null;
                     dw = new Downloader();
-                    Thread.sleep(Const.DownloadArticleSleepTime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

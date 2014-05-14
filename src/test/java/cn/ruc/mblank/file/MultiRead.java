@@ -1,7 +1,5 @@
 package cn.ruc.mblank.file;
 
-import cn.ruc.mblank.MultiMap;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

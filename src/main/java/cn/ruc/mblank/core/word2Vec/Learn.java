@@ -1,13 +1,6 @@
 package cn.ruc.mblank.core.word2Vec;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
@@ -302,9 +295,9 @@ public class Learn {
                 for (String string : split) {
                     mc.add(string);
                 }
-                if(line % 10000 == 0){
+//                if(line % 1 == 0){
                     System.out.println(line);
-                }
+//                }
             }
         }catch (Exception e){
 
@@ -379,6 +372,17 @@ public class Learn {
         System.out.println(wordMap.size() + "\t" + totalVectorSize);
     }
 
+    private void saveObjects2Disk(String path) throws IOException {
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
+        for(String key : wordMap.keySet()){
+            oos.writeObject(wordMap.get(key));
+        }
+        //eof mark
+        oos.writeObject(null);
+        oos.close();
+        System.out.println("write vector objects to disk ok...");
+    }
+
     public int getLayerSize() {
         return layerSize;
     }
@@ -429,6 +433,6 @@ public class Learn {
         learn.learnFile(new File(trainFilePath));
         System.out.println("use time "+(System.currentTimeMillis()-start));
         learn.saveModel(new File(vectorSavePath));
-        
+        learn.saveObjects2Disk(vectorSavePath + ".object");
     }
 }

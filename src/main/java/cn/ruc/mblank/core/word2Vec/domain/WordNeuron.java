@@ -1,8 +1,9 @@
 package cn.ruc.mblank.core.word2Vec.domain;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class WordNeuron extends Neuron {
+public class WordNeuron extends Neuron implements Serializable{
     public String name;
     public double[] syn0 = null; //input->hidden
     public List<Neuron> neurons = null;//路径神经元
