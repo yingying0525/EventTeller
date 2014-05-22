@@ -5,11 +5,13 @@ import java.util.Collection;
 import java.util.List;
 
 import cn.ruc.mblank.db.hbn.HSession;
+import com.sun.accessibility.internal.resources.accessibility;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 
 public class Hbn {
@@ -43,6 +45,15 @@ public class Hbn {
             query.setFirstResult(start);
         }
         result = query.list();
+        return result;
+    }
+
+    public static <T> List<T> getElementsFromDBC(Session session,java.lang.Class aClass,short start ,short end,int maxNum) {
+        List<T> result = new ArrayList<T>();
+        Criteria criteria =  session.createCriteria(aClass);
+        criteria.add(Restrictions.between("status",start,end));
+        criteria.setMaxResults(maxNum);
+        result = criteria.list();
         return result;
     }
 

@@ -25,6 +25,10 @@ public class HttpServerUtil {
             Map<String, String> parameters = new HashMap<String, String>();
             URI requestedUri = httpExchange.getRequestURI();
             String query = requestedUri.getRawQuery();
+            if(query == null){
+                return null;
+            }
+            System.out.println(query);
             query = URLDecoder.decode(query, "utf-8");
             // get 请求解析
             parseQuery(query, parameters);

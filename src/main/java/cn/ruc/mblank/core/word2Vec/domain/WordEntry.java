@@ -1,7 +1,9 @@
 package cn.ruc.mblank.core.word2Vec.domain;
 
 
-public class WordEntry implements Comparable<WordEntry> {
+import java.io.Serializable;
+
+public class WordEntry implements Comparable<WordEntry>,Serializable{
     public String name;
     public float score;
 

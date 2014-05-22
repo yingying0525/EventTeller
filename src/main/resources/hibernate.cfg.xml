@@ -7,13 +7,15 @@
 
 
     <session-factory>
-        <property name="connection.url">jdbc:mysql://10.77.50.245:3306/EventTeller</property>
-        <property name="connection.username">root</property>
-        <property name="connection.password">mysql@ET453</property>
-        <!--<property name="connection.url">jdbc:mysql://222.29.197.238:3306/EventTeller</property>-->
-        <!--<property name="connection.username">dbdm</property>-->
+        <!--<property name="connection.url">jdbc:mysql://10.77.50.245:3306/EventTeller</property>-->
+        <!--<property name="connection.username">root</property>-->
         <!--<property name="connection.password">mysql@ET453</property>-->
+        <property name="connection.url">jdbc:mysql://222.29.197.238:3306/EventTeller</property>
+        <property name="connection.username">dbdm</property>
+        <property name="connection.password">mysql@ET453</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.show_sql">false</property>
 
 
         <mapping class="cn.ruc.mblank.db.hbn.model.Event"/>

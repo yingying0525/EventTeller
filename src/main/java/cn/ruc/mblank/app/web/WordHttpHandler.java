@@ -1,7 +1,12 @@
 package cn.ruc.mblank.app.web;
 
+import cn.ruc.mblank.cache.model.Person;
+import cn.ruc.mblank.cache.model.WordSims;
 import cn.ruc.mblank.core.infoGenerator.model.Word;
+import cn.ruc.mblank.core.word2Vec.domain.WordNeuron;
 import cn.ruc.mblank.util.HttpServerUtil;
+import cn.ruc.mblank.util.Similarity;
+import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import love.cq.util.IOUtil;
@@ -29,16 +34,16 @@ import java.util.*;
  */
 public class WordHttpHandler implements HttpHandler {
 
-    public WordHttpHandler() throws IOException {
-        loadMemRelatedWords();
-        loadMemWordTime();
+    private HashMap<String,WordNeuron> Words = new HashMap<String,WordNeuron>();
+    private List<WordPair> WordPairs = new ArrayList<WordPair>();
+
+    public WordHttpHandler() throws IOException, ClassNotFoundException {
+        readPersonVector();
     }
 
     private String BaseDir = "data/";
     private final String WordTimePath = BaseDir + "wordTime";
     private final String RelatedWordPath = BaseDir + "relatedWords";
-    private HashMap<String,String> MemWordTimeMap = new HashMap<String, String>();
-    private HashMap<String,TreeMap<Integer,HashMap<String,HashMap<String,HashMap<Integer,Integer>>>>> MemRelatedWords = new HashMap<String, TreeMap<Integer, HashMap<String, HashMap<String, HashMap<Integer, Integer>>>>>();
 
     private String processWordTime(String time){
         StringBuffer res = new StringBuffer();
@@ -69,59 +74,23 @@ public class WordHttpHandler implements HttpHandler {
         return res.toString();
     }
 
-    private void loadMemWordTime() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(WordTimePath));
-        String line = "";
-        while((line = br.readLine()) != null){
-            String[] its = line.split("\t");
-            if(its.length != 2){
-                continue;
-            }
-            MemWordTimeMap.put(its[0],processWordTime(its[1]));
-        }
-        System.out.println("load WordTime to memory.. " + MemWordTimeMap.size());
-        br.close();
-    }
-
-    private void loadMemRelatedWords() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(RelatedWordPath));
-        String line = "";
+    private void readPersonVector() throws IOException, ClassNotFoundException {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(BaseDir + "personVectors"));
+        WordNeuron wn = null;
         int num = 0;
-        while((line = br.readLine()) != null){
-            String[] its = line.split("\t");
-            if(its.length < 2){
-                continue;
-            }
-            TreeMap<Integer,HashMap<String,HashMap<String,HashMap<Integer,Integer>>>> days = new TreeMap<Integer, HashMap<String, HashMap<String, HashMap<Integer, Integer>>>>();
-            for(int i = 1; i< its.length ; ++i){
-                String[] sdays = its[i].split(" ");
-                int day = Integer.parseInt(sdays[0]);
-                HashMap<String,HashMap<String,HashMap<Integer,Integer>>> natures = new HashMap<String, HashMap<String, HashMap<Integer, Integer>>>();
-                for(int j = 1; j<sdays.length; ++j){
-                    String[] stypes = sdays[j].split(",");
-                    HashMap<String,HashMap<Integer,Integer>> related = new HashMap<String, HashMap<Integer, Integer>>();
-                    for(int k = 1; k < stypes.length; ++k){
-                        String[] swbs = stypes[k].split(";");
-                        HashMap<Integer,Integer> nids = new HashMap<Integer, Integer>();
-                        for(int l = 1; l < swbs.length; ++l){
-                            String[] sids = swbs[l].split("[|]");
-                            nids.put(Integer.parseInt(sids[0]),Integer.parseInt(sids[1]));
-                        }
-                        related.put(swbs[0],nids);
-                    }
-                    natures.put(stypes[0],related);
-                }
-                days.put(day,natures);
-            }
-            MemRelatedWords.put(its[0], days);
+        while((wn = (WordNeuron) ois.readObject()) != null){
+            Words.put(wn.name, wn);
             num++;
-            if(num % 10000 == 0){
+            if(num % 1000 == 0){
                 System.out.println(num);
             }
         }
-        br.close();
-        System.out.println("load related word ok....");
+        ois.close();
+        System.out.println("read word vector ok..." + "\t" + num);
     }
+
+
+
 
 
     class wordNumber implements Comparable<wordNumber>{
@@ -136,75 +105,92 @@ public class WordHttpHandler implements HttpHandler {
         }
     }
 
-    private String getRelatedWord(String input,int startDay,int endDay,int topN){
-        StringBuffer res = new StringBuffer();
-        HashMap<String,HashMap<String,Integer>> numbers = new HashMap<String, HashMap<String, Integer>>();
-        HashMap<String,HashSet<Integer>> ids = new HashMap<String, HashSet<Integer>>();
-        for(int day : MemRelatedWords.get(input).keySet()){
-            if(day > endDay || day < startDay){
+    class WordPair implements Comparable<WordPair>{
+        public WordNeuron wn;
+        public double score;
+        @Override
+        public int compareTo(WordPair o) {
+            if(o.score > this.score){
+                return 1;
+            }else{
+                return -1;
+            }
+        }
+    }
+
+    private  List<WordSims> calDistanceWithTime(String input,int day){
+        WordNeuron target = Words.get(input);
+        int iday = 0;
+        int MaxNumber = 10;
+        //find most resent day to input day
+        for(int id : target.synMap.keySet()){
+            if(id > day){
+                break;
+            }
+            iday = id;
+        }
+        for(String key : Words.keySet()){
+            WordNeuron tmp = Words.get(key);
+            if(tmp.name.equals(input)){
                 continue;
             }
-            for(String type : MemRelatedWords.get(input).get(day).keySet()){
-                if(!type.equals("nr") && !type.equals("ns") && !type.equals("v")){
-                    continue;
-                }
-                for(String wb : MemRelatedWords.get(input).get(day).get(type).keySet()){
-                    int total = 0;
-                    for(int id :  MemRelatedWords.get(input).get(day).get(type).get(wb).keySet()){
-                        int val = MemRelatedWords.get(input).get(day).get(type).get(wb).get(id);
-                        total+=val;
-                        if(ids.containsKey(wb)){
-                            if(ids.get(wb).size() > 20){
-                                continue;
-                            }
-                            ids.get(wb).add(id);
-                        }else{
-                            HashSet<Integer> tids = new HashSet<Integer>();
-                            tids.add(id);
-                            ids.put(wb,tids);
-                        }
-                    }
-                    if(numbers.containsKey(type)){
-                        if(numbers.get(type).containsKey(wb)){
-                            numbers.get(type).put(wb,numbers.get(type).get(wb) + total);
-                        }else{
-                            numbers.get(type).put(wb,total);
-                        }
-                    }else{
-                        HashMap<String,Integer> tnum = new HashMap<String, Integer>();
-                        tnum.put(wb,total);
-                        numbers.put(type,tnum);
-                    }
-                }
-            }
-        }
-        //sort and get topN word add result to res
-        for(String type : numbers.keySet()){
-            List<wordNumber> words = new ArrayList<wordNumber>();
-            for(String word : numbers.get(type).keySet()){
-                wordNumber wn = new wordNumber();
-                wn.name = word;
-                wn.count = numbers.get(type).get(word);
-                words.add(wn);
-            }
-            //sort words
-            Collections.sort(words);
-            //add to res..
-            res.append(type + " ");
-            for(int i = 0 ; i < topN; ++i){
-                if(i == words.size()){
+            int tday = 0;
+            for(int sday : tmp.synMap.keySet()){
+                if(sday > day){
                     break;
                 }
-                res.append(words.get(i).name + ",");
-                for(Integer id : ids.get(words.get(i).name)){
-                    res.append(id + ";");
-                }
-                res.append(" ");
+                //find the most resent day..
+                tday = sday;
             }
-            res.append("\t");
+            double score = Similarity.simOf2Vector(target.synMap.get(iday), tmp.synMap.get(tday));
+            WordPair wp = new WordPair();
+            wp.wn = tmp;
+            wp.score = score;
+            WordPairs.add(wp);
         }
-        System.out.println(res.toString());
-        return res.toString();
+        Collections.sort(WordPairs);
+        List<WordSims> res = new ArrayList<WordSims>();
+        for(int i = 0 ; i < MaxNumber; ++i){
+            WordSims ws = new WordSims();
+            ws.worda = input;
+            ws.wordb = WordPairs.get(i).wn.name;
+            ws.score =  WordPairs.get(i).score;
+            res.add(ws);
+        }
+        WordPairs.clear();
+        return res;
+    }
+
+    private String getTimePGraph(String name,String persent){
+        Person ps = new Person();
+        int day = 0;
+        //get the day according to persent
+        WordNeuron current = Words.get(name);
+        double per = Integer.parseInt(persent) / 100.0;
+        int index = Math.min((int) (per * current.synMap.size()), current.synMap.size());
+        int num = 0;
+        for(int tday : current.synMap.keySet()){
+            day = tday;
+            num++;
+            if(num == index){
+                break;
+            }
+        }
+        System.out.println(day);
+        //first get first level graph
+        List<WordSims> firsts = calDistanceWithTime(name,day);
+        ps.relations.addAll(firsts);
+        //get second level
+        for(WordSims ws : firsts){
+            List<WordSims> second = calDistanceWithTime(ws.wordb,day);
+            ps.relations.addAll(second);
+        }
+        System.out.println(ps.relations.size());
+        String res = JSONObject.toJSONString(ps);
+        if(res == null){
+            res = "404";
+        }
+        return res;
     }
 
     @Override
@@ -212,31 +198,26 @@ public class WordHttpHandler implements HttpHandler {
         try {
             String responseMsg = "";
             Map<String, String> paramers = HttpServerUtil.parseParamers(httpExchange);
-            String function = paramers.get("function");
-            String input = paramers.get("input");
-            System.out.println(input + "\t" + function);
-            if(function.equals("word")){
-                if(MemWordTimeMap.containsKey(input)){
-                    responseMsg = MemWordTimeMap.get(input).toString();
-                }else{
-                    responseMsg = "404";
+            if(paramers == null){
+                responseMsg = "404";
+            }else{
+                String function = paramers.get("function");
+                String input = paramers.get("input");
+                String persent = paramers.get("persent");
+                if(function.equals("timePersonGraph")){
+                    if(Words.containsKey(input)){
+                        responseMsg = getTimePGraph(input,persent);
+                    }else{
+                        responseMsg = "404";
+                    }
                 }
-            }else if(function.equals("relatedWord")){
-                int start = Integer.parseInt(paramers.get("startDay"));
-                int end = Integer.parseInt(paramers.get("endDay"));
-                int topN = Integer.parseInt(paramers.get("topN"));
-                if(MemRelatedWords.containsKey(input)){
-                   responseMsg = getRelatedWord(input,start,end,topN);
-                }else{
-                    responseMsg = "404";
-                }
+                System.out.println(input + "\t --- " + responseMsg);
             }
-            System.out.println(input);
-            HttpServerUtil.writeToClient(httpExchange, URLEncoder.encode(responseMsg, "UTF-8"));
+            HttpServerUtil.writeToClient(httpExchange, URLEncoder.encode(responseMsg, "utf-8"));
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                HttpServerUtil.writeToClient(httpExchange, "");
+                HttpServerUtil.writeToClient(httpExchange, "404");
             } catch (IOException e1) {
                 System.out.println("eee");
             }

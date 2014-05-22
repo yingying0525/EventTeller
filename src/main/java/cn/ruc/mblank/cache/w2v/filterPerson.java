@@ -34,7 +34,7 @@ public class filterPerson {
         long words = 0;
         int size = 0;
         try{
-            DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(BaseDir + "trainWordsWithTime_vector.bin")));
+            DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(BaseDir + "newTrainText_vector.bin")));
             words = dis.readInt();
             size = dis.readInt();
             float vector = 0;

@@ -10,7 +10,7 @@ import java.net.InetSocketAddress;
  */
 public class WordServer {
 
-    private int ServerPort = 8088;
+    private int ServerPort = 8011;
 
     public void startServer() throws Exception {
         HttpServerProvider provider = HttpServerProvider.provider();

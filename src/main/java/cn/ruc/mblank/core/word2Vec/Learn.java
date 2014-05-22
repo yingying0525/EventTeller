@@ -75,17 +75,10 @@ public class Learn {
             while ((temp = br.readLine()) != null) {
                 String[] its = temp.split("\t");
                 if(its.length != 2){
+                    System.out.println(its.length);
                     continue;
                 }
-                int day = 0;
-                try{
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD hh:mm:ss");
-                    day = TimeUtil.getDayGMT8(sdf.parse(its[0]));
-
-                }catch (Exception e){
-                    //parse date str failed...
-                    continue;
-                }
+                int day = Integer.parseInt(its[0]);
                 if (wordCount - lastWordCount > 1000000) {
                     System.out.println("alpha:" + alpha + "\tProgress: "
                             + (int) (wordCountActual / (double) (trainWordsCount + 1) * 100)
@@ -103,6 +96,7 @@ public class Learn {
                 for (int i = 0; i < strs.length; i++) {
                     Neuron entry = wordMap.get(strs[i]);
                     if (entry == null) {
+                        System.out.println("can't find in map" + "\t" + strs[i]);
                         continue;
                     }
                     // The subsampling randomly discards frequent words while keeping the ranking same
@@ -116,13 +110,10 @@ public class Learn {
                     }
                     sentence.add((WordNeuron) entry);
                 }
-
-
                 for (int index = 0; index < sentence.size(); index++) {
                     nextRandom = nextRandom * 25214903917L + 11;
                     if (isCbow) {
                         cbowGram(index, sentence, (int) nextRandom % window,day);
-
                     } else {
                         skipGram(index, sentence, (int) nextRandom % window);
                     }
@@ -295,12 +286,10 @@ public class Learn {
                 for (String string : split) {
                     mc.add(string);
                 }
-//                if(line % 1 == 0){
-                    System.out.println(line);
-//                }
+                System.out.println(line);
             }
         }catch (Exception e){
-
+            e.printStackTrace();
         }
         for (Entry<String, Integer> element : mc.get().entrySet()) {
             wordMap.put(element.getKey(), new WordNeuron(element.getKey(), element.getValue(),layerSize));
