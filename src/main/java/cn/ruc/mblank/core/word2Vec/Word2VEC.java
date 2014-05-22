@@ -5,30 +5,37 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeSet;
 
 import cn.ruc.mblank.core.word2Vec.domain.WordEntry;
+import cn.ruc.mblank.core.word2Vec.domain.WordNeuron;
 
-public class Word2VEC {
+public class Word2Vec {
 
     public static void main(String[] args) throws IOException {
+        String inputPath = args[0];
+//        String inputPath = "d:\\ETT\\tianyiwords_vector.bin";
+        Word2Vec vec = new Word2Vec();
+        vec.loadJavaModel(inputPath);
 
-        Word2VEC vec = new Word2VEC();
-        vec.loadJavaModel("d:\\ETT\\tywords_vector");
-        String str = "李天一";
-        long start = System.currentTimeMillis();
-        System.out.println(vec.distance(str));
-        System.out.println(System.currentTimeMillis() - start);
+        while(true){
+            String str = "李天一";
+            System.out.println("please input entity:");
+            Scanner sc = new Scanner(System.in);
+            str = sc.next();
+            System.out.println(str);
+            if(str == null){
+                break;
+            }
+            long start = System.currentTimeMillis();
+            System.out.println(vec.distance(str));
+            System.out.println(System.currentTimeMillis() - start);
+        }
         //        System.out.println(vec2.analogy("毛泽东", "毛泽东思想", "邓小平"));
     }
 
-    private HashMap<String, float[]> wordMap = new HashMap<String, float[]>();
+    private Map<String, WordNeuron> wordMap = new HashMap<String, WordNeuron>();
 
     private int words;
     private int size;
@@ -54,10 +61,10 @@ public class Word2VEC {
             // //大小
             size = Integer.parseInt(readString(dis));
             String word;
-            float[] vectors = null;
+            double[] vectors = null;
             for (int i = 0; i < words; i++) {
                 word = readString(dis);
-                vectors = new float[size];
+                vectors = new double[size];
                 len = 0;
                 for (int j = 0; j < size; j++) {
                     vector = readFloat(dis);
@@ -69,8 +76,9 @@ public class Word2VEC {
                 for (int j = 0; j < size; j++) {
                     vectors[j] /= len;
                 }
-
-                wordMap.put(word, vectors);
+                WordNeuron wn = new WordNeuron(word,0,size);
+                wn.syn0 = vectors;
+                wordMap.put(word, wn);
                 dis.read();
             }
         } finally {
@@ -87,31 +95,61 @@ public class Word2VEC {
      * @throws java.io.IOException
      */
     public void loadJavaModel(String path) throws IOException {
+        long TimeVectorSize = 0;
+        long WordVectorSize = 0;
         try{
             DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(path)));
             words = dis.readInt();
             size = dis.readInt();
             float vector = 0;
             String key = null;
-            float[] value = null;
+            double[] totalVector = null;
             for (int i = 0; i < words; i++) {
-                double len = 0;
+                double len = 0.0001;
                 key = dis.readUTF();
-                value = new float[size];
+                WordNeuron wn = new WordNeuron(key,0,size);
+                //first read totalVector
+                totalVector = new double[size];
                 for (int j = 0; j < size; j++) {
                     vector = dis.readFloat();
                     len += vector * vector;
-                    value[j] = vector;
+                    totalVector[j] = vector;
                 }
                 len = Math.sqrt(len);
                 for (int j = 0; j < size; j++) {
-                    value[j] /= len;
+                    totalVector[j] /= len;
                 }
-                wordMap.put(key, value);
+                wn.syn0 = totalVector;
+                TreeMap<Integer,double[]> dayVectors = new TreeMap<Integer, double[]>();
+                //read time vector size
+                int timeVectorSize = dis.readInt();
+                if(timeVectorSize != 0){
+                    System.out.println(timeVectorSize + "\t" +TimeVectorSize + "\t" + key);
+                }
+                //TimeVector
+                TimeVectorSize += timeVectorSize;
+                for(int j = 0 ; j < timeVectorSize; ++j){
+                    //read day
+                    int day = dis.readInt();
+                    double[] oldVectors = new double[size];
+                    double oldLen = 0.0001;
+                    for(int k = 0 ; k < size; ++k){
+                        oldVectors[k] = dis.readFloat();
+                        oldLen += oldVectors[k] * oldVectors[k];
+                    }
+                    oldLen = Math.sqrt(oldLen);
+                    for(int k = 0 ; k < size; ++k){
+                        oldVectors[k] /= oldLen;
+                    }
+                    dayVectors.put(day,oldVectors);
+                }
+                wn.synMap = dayVectors;
+                wordMap.put(key, wn);
             }
         }catch (Exception e){
 
         }
+        System.out.println("wordSize : " + words + "\t timeVectorSize" + TimeVectorSize );
     }
 
     private static final int MAX_SIZE = 50;
@@ -122,27 +160,27 @@ public class Word2VEC {
      * @return 
      */
     public TreeSet<WordEntry> analogy(String word0, String word1, String word2) {
-        float[] wv0 = getWordVector(word0);
-        float[] wv1 = getWordVector(word1);
-        float[] wv2 = getWordVector(word2);
+        double[] wv0 = getWordVector(word0);
+        double[] wv1 = getWordVector(word1);
+        double[] wv2 = getWordVector(word2);
 
         if (wv1 == null || wv2 == null || wv0 == null) {
             return null;
         }
-        float[] wordVector = new float[size];
+        double[] wordVector = new double[size];
         for (int i = 0; i < size; i++) {
             wordVector[i] = wv1[i] - wv0[i] + wv2[i];
         }
-        float[] tempVector;
+        double[] tempVector;
         String name;
         List<WordEntry> wordEntrys = new ArrayList<WordEntry>(topNSize);
-        for (Entry<String, float[]> entry : wordMap.entrySet()) {
+        for (Entry<String, WordNeuron> entry : wordMap.entrySet()) {
             name = entry.getKey();
             if (name.equals(word0) || name.equals(word1) || name.equals(word2)) {
                 continue;
             }
             float dist = 0;
-            tempVector = entry.getValue();
+            tempVector = entry.getValue().syn0;
             for (int i = 0; i < wordVector.length; i++) {
                 dist += wordVector[i] * tempVector[i];
             }
@@ -152,7 +190,6 @@ public class Word2VEC {
     }
 
     private void insertTopN(String name, float score, List<WordEntry> wordsEntrys) {
-        // TODO Auto-generated method stub
         if (wordsEntrys.size() < topNSize) {
             wordsEntrys.add(new WordEntry(name, score));
             return;
@@ -176,7 +213,7 @@ public class Word2VEC {
 
     public Set<WordEntry> distance(String queryWord) {
 
-        float[] center = wordMap.get(queryWord);
+        double[] center = wordMap.get(queryWord).syn0;
         if (center == null) {
             return Collections.emptySet();
         }
@@ -185,8 +222,8 @@ public class Word2VEC {
         TreeSet<WordEntry> result = new TreeSet<WordEntry>();
 
         double min = Float.MIN_VALUE;
-        for (Entry<String, float[]> entry : wordMap.entrySet()) {
-            float[] vector = entry.getValue();
+        for (Entry<String, WordNeuron> entry : wordMap.entrySet()) {
+            double[] vector = entry.getValue().syn0;
             float dist = 0;
             for (int i = 0; i < vector.length; i++) {
                 dist += center[i] * vector[i];
@@ -211,8 +248,8 @@ public class Word2VEC {
      * @param word
      * @return
      */
-    public float[] getWordVector(String word) {
-        return wordMap.get(word);
+    public double[] getWordVector(String word) {
+        return wordMap.get(word).syn0;
     }
 
     public static float readFloat(InputStream is) throws IOException {
@@ -237,14 +274,12 @@ public class Word2VEC {
     }
 
     /**
-     * 读取一个字符串
-     * 
+     *
      * @param dis
      * @return
-     * @throws java.io.IOException
+     * @throws IOException
      */
     private static String readString(DataInputStream dis) throws IOException {
-        // TODO Auto-generated method stub
         byte[] bytes = new byte[MAX_SIZE];
         byte b = dis.readByte();
         int i = -1;
@@ -271,7 +306,7 @@ public class Word2VEC {
         this.topNSize = topNSize;
     }
 
-    public HashMap<String, float[]> getWordMap() {
+    public Map<String, WordNeuron> getWordMap() {
         return wordMap;
     }
 

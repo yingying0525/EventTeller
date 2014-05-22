@@ -5,13 +5,13 @@ import java.util.Collection;
 import java.util.List;
 
 import cn.ruc.mblank.db.hbn.HSession;
-import cn.ruc.mblank.db.hbn.model.Event;
+import com.sun.accessibility.internal.resources.accessibility;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 
 public class Hbn {
@@ -48,10 +48,27 @@ public class Hbn {
         return result;
     }
 
+    public static <T> List<T> getElementsFromDBC(Session session,java.lang.Class aClass,short start ,short end,int maxNum) {
+        List<T> result = new ArrayList<T>();
+        Criteria criteria =  session.createCriteria(aClass);
+        criteria.add(Restrictions.between("status",start,end));
+        criteria.setMaxResults(maxNum);
+        result = criteria.list();
+        return result;
+    }
+
     public static void updateDB(Session session){
         session.beginTransaction().commit();
     }
 
+    public static <T> T getElement(String sql,Session session){
+        Query query =  session.createQuery(sql);
+        List res = query.list();
+        if(res.size() >= 1){
+            return (T)res.get(0);
+        }
+        return null;
+    }
 
     public <T> T getElementFromDB(String hql) {
         Query query =  HSession.getSession().createQuery(hql);

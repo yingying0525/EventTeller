@@ -28,6 +28,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+@Deprecated
 public abstract class Index {
 	
 		
@@ -52,7 +53,7 @@ public abstract class Index {
      * 查询 
      * @throws Exception 
      */       
-	public List<Article> search(String text,boolean single, int maxsize,Date atime){  
+	public List<Article> search(String text,boolean single, int maxsize,Date atime){
 
     	Directory dir;
         List<Article> results = new ArrayList<Article>();

@@ -171,5 +171,17 @@ public class Similarity {
         }
         return up / Math.sqrt(down_v1) / Math.sqrt(down_v2);
     }
+
+    public static double simOf2VectorD(double[] v1, double[] v2){
+        double res = -20.0;
+        if(v1 == null || v2 == null || v1.length != v2.length){
+            return res;
+        }
+        double tmp = 0.0;
+        for(int i = 0 ; i < v1.length; ++i){
+            tmp += v1[i] * v2[i];
+        }
+        return tmp / v1.length;
+    }
 	
 }

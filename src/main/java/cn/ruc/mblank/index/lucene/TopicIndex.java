@@ -14,6 +14,7 @@ import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 
+@Deprecated
 public class TopicIndex extends Index{
 	
 	

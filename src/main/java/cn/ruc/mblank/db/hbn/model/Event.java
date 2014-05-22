@@ -4,17 +4,17 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.sql.Timestamp;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by mblank on 14-3-25.
+ * Created by mblank on 14-4-9.
  */
 @Entity
-public class Event {
+public class Event implements Serializable{
     private int id;
     private String title;
-    private Date pubtime;
+    private Date pubTime;
     private String content;
     private String source;
     private String imgs;
@@ -43,13 +43,13 @@ public class Event {
     }
 
     @Basic
-    @Column(name = "pubtime")
-    public Date getPubtime() {
-        return pubtime;
+    @Column(name = "pubTime")
+    public Date getPubTime() {
+        return pubTime;
     }
 
-    public void setPubtime(Date pubtime) {
-        this.pubtime = pubtime;
+    public void setPubTime(Date pubTime) {
+        this.pubTime = pubTime;
     }
 
     @Basic
@@ -124,7 +124,7 @@ public class Event {
         if (day != null ? !day.equals(event.day) : event.day != null) return false;
         if (imgs != null ? !imgs.equals(event.imgs) : event.imgs != null) return false;
         if (number != null ? !number.equals(event.number) : event.number != null) return false;
-        if (pubtime != null ? !pubtime.equals(event.pubtime) : event.pubtime != null) return false;
+        if (pubTime != null ? !pubTime.equals(event.pubTime) : event.pubTime != null) return false;
         if (source != null ? !source.equals(event.source) : event.source != null) return false;
         if (title != null ? !title.equals(event.title) : event.title != null) return false;
         if (topic != null ? !topic.equals(event.topic) : event.topic != null) return false;
@@ -136,7 +136,7 @@ public class Event {
     public int hashCode() {
         int result = id;
         result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (pubtime != null ? pubtime.hashCode() : 0);
+        result = 31 * result + (pubTime != null ? pubTime.hashCode() : 0);
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (source != null ? source.hashCode() : 0);
         result = 31 * result + (imgs != null ? imgs.hashCode() : 0);

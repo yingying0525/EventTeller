@@ -18,6 +18,13 @@ public class Util {
 		}
 	}
 
+    public static void arrayCopy(double[] a, double[] b){
+        b = new double[a.length];
+        for(int i = 0 ; i < a.length; ++i){
+            b[i] = a[i];
+        }
+    }
+
 	
 
 	

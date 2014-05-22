@@ -1,6 +1,7 @@
 package cn.ruc.mblank.util;
 
-import cn.ruc.mblank.core.word2Vec.Word2VEC;
+import cn.ruc.mblank.core.word2Vec.Word2Vec;
+import cn.ruc.mblank.core.word2Vec.domain.WordNeuron;
 
 import java.io.IOException;
 import java.util.*;
@@ -15,7 +16,7 @@ import java.util.Map.Entry;
 public class WordKmeans {
 
     public static void main(String[] args) throws IOException {
-        Word2VEC vec = new Word2VEC();
+        Word2Vec vec = new Word2Vec();
         vec.loadGoogleModel("vectors.bin");
         System.out.println("load model ok!");
         WordKmeans wordKmeans = new WordKmeans(vec.getWordMap(), 50, 50);
@@ -28,13 +29,13 @@ public class WordKmeans {
 
     }
 
-    private HashMap<String, float[]> wordMap = null;
+    private Map<String, WordNeuron> wordMap = null;
 
     private int iter;
 
     private Classes[] cArray = null;
 
-    public WordKmeans(HashMap<String, float[]> wordMap, int clcn, int iter) {
+    public WordKmeans(Map<String, WordNeuron> wordMap, int clcn, int iter) {
         this.wordMap = wordMap;
         this.iter = iter;
         cArray = new Classes[clcn];
@@ -42,10 +43,10 @@ public class WordKmeans {
 
     public Classes[] explain() {
         //first 取前clcn个点
-        Iterator<Entry<String, float[]>> iterator = wordMap.entrySet().iterator();
+        Iterator<Entry<String, WordNeuron>> iterator = wordMap.entrySet().iterator();
         for (int i = 0; i < cArray.length; i++) {
-            Entry<String, float[]> next = iterator.next();
-            cArray[i] = new Classes(i, next.getValue());
+            Entry<String,WordNeuron> next = iterator.next();
+            cArray[i] = new Classes(i, next.getValue().syn0);
         }
 
         for (int i = 0; i < iter; i++) {
@@ -55,12 +56,12 @@ public class WordKmeans {
 
             iterator = wordMap.entrySet().iterator();
             while (iterator.hasNext()) {
-                Entry<String, float[]> next = iterator.next();
+                Entry<String, WordNeuron> next = iterator.next();
                 double miniScore = Double.MAX_VALUE;
                 double tempScore;
                 int classesId = 0;
                 for (Classes classes : cArray) {
-                    tempScore = classes.distance(next.getValue());
+                    tempScore = classes.distance(next.getValue().syn0);
                     if (miniScore > tempScore) {
                         miniScore = tempScore;
                         classesId = classes.id;
@@ -81,16 +82,16 @@ public class WordKmeans {
     public static class Classes {
         private int id;
 
-        private float[] center;
+        private double[] center;
 
-        public Classes(int id, float[] center) {
+        public Classes(int id, double[] center) {
             this.id = id;
             this.center = center.clone();
         }
 
         Map<String, Double> values = new HashMap<String, Double>();
 
-        public double distance(float[] value) {
+        public double distance(double[] value) {
             double sum = 0;
             for (int i = 0; i < value.length; i++) {
                 sum += (center[i] - value[i])*(center[i] - value[i]) ;
@@ -106,13 +107,13 @@ public class WordKmeans {
          * 重新计算中心点
          * @param wordMap
          */
-        public void updateCenter(HashMap<String, float[]> wordMap) {
+        public void updateCenter(Map<String, WordNeuron> wordMap) {
             for (int i = 0; i < center.length; i++) {
                 center[i] = 0;
             }
-            float[] value = null;
+            double[] value = null;
             for (String keyWord : values.keySet()) {
-                value = wordMap.get(keyWord);
+                value = wordMap.get(keyWord).syn0;
                 for (int i = 0; i < value.length; i++) {
                     center[i] += value[i];
                 }

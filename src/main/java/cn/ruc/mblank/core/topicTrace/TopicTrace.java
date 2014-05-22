@@ -118,7 +118,7 @@ public class TopicTrace {
 		EventIndex ei = new EventIndex();
 		List<Event> ets =  ei.queryEvents("et_title:" + titleToSearchString(scr.getTitle()), 0, Const.MaxNeighborEventCount, null, "");
 		for(Event candidate : ets){
-			if(candidate == null || candidate.getPubtime().compareTo(scr.getPubtime()) > 0 || candidate.getId() == scr.getId()){
+			if(candidate == null || candidate.getPubTime().compareTo(scr.getPubTime()) > 0 || candidate.getId() == scr.getId()){
 				continue;
 			}
             double simScore = cn.ruc.mblank.util.Similarity.similarityOfEvent(scr, candidate, IDF, AvgWordIDF);
@@ -145,8 +145,8 @@ public class TopicTrace {
 	private Topic createNewTopic(Event et){
 		Topic res = new Topic();
 		res.setId(++MaxTopicId);
-		res.setEndTime(et.getPubtime());
-		res.setStartTime(et.getPubtime());
+		res.setEndTime(et.getPubTime());
+		res.setStartTime(et.getPubTime());
 		res.setNumber(1);
 		res.setSummary(et.getContent().substring(0,Math.min(10000,et.getContent().length())));
 		res.setKeyWords(et.getTitle());

@@ -1,6 +1,8 @@
 package cn.ruc.mblank.core.word2Vec.domain;
 
-public abstract class Neuron implements Comparable<Neuron> {
+import java.io.Serializable;
+
+public abstract class Neuron implements Comparable<Neuron> ,Serializable{
     public int freq;
     public Neuron parent;
     public int code;

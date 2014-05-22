@@ -9,9 +9,7 @@ import cn.ruc.mblank.db.hbn.HSession;
 import cn.ruc.mblank.db.hbn.model.Url;
 import cn.ruc.mblank.db.hbn.model.UrlStatus;
 import cn.ruc.mblank.util.db.Hbn;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.annotations.BatchSize;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -19,13 +17,12 @@ import org.jsoup.nodes.Document;
 import cn.ruc.mblank.config.JsonConfigModel;
 import cn.ruc.mblank.util.Const;
 import cn.ruc.mblank.util.Log;
-import sun.security.jca.GetInstance;
 
 public class Downloader {
 	
 	private String SaveFolderPath;
     private int BatchSize = 1000;
-    private Session Session;
+
     private List<UrlStatus> Instances;
 	
 	public Downloader(){
@@ -34,17 +31,17 @@ public class Downloader {
 		//read Bloom filter file path from json config file
 		JsonConfigModel jcm = JsonConfigModel.getConfig();
 		SaveFolderPath = jcm.HtmlSavePath;
-        Session = HSession.getSession();
-        Instances = new ArrayList<UrlStatus>();
 	}
 
     /**
      * get instances from db;
      */
-	private void getInstances(){
-		String hql = "from UrlStatus as obj where obj.status = " + Const.TaskId.CrawlUrlToDB.ordinal() + "  or obj.status = -1";
-        Instances = Hbn.getElementsFromDB(hql,0,BatchSize,Session);
-        System.out.println(Instances.size());
+	private void getInstances(Session session){
+		String hql = "from UrlStatus as obj where obj.status = 0 or obj.status = -1";
+        Instances = Hbn.getElementsFromDB(hql,0,BatchSize,session);
+//        Instances = Hbn.getElementsFromDBC(Session,UrlStatus.class,(short)-1,(short)0,BatchSize);
+        int maxId = Hbn.getMaxFromDB(session,UrlStatus.class,"id");
+        System.out.println(Instances.size() + "\t" + maxId);
 	}
 
     private void writeHtml2Disk(Url url,String html){
@@ -68,7 +65,8 @@ public class Downloader {
     }
 
 	public void runTask(){
-        getInstances();
+        Session session = HSession.getSession();
+        getInstances(session);
         int number = 0;
 		int failNumber = 0;
         if(Instances.size() == 0){
@@ -79,7 +77,7 @@ public class Downloader {
 			if(number % 200 == 0){
 				System.out.println("download 200 htmls..." + "\t" + us.getId());
 			}
-			Url url = Hbn.getElementFromDB(Session,Url.class,us.getId());
+			Url url = Hbn.getElementFromDB(session,Url.class,us.getId());
 			if(url == null){
 				us.setStatus((short)(us.getStatus() - 10));
 				failNumber++;
@@ -96,22 +94,20 @@ public class Downloader {
 				failNumber++;
 			}
 		}
-		System.out.println("Failed + " + failNumber + "\t" + "Successed : " + (number - failNumber) + "\t" + Instances.get(0).getId());
-		Hbn.updateDB(Session);
-        Session.clear();
+		System.out.println("Failed + " + failNumber + "\t" + "Successed : " + (number - failNumber) + "\t" + Instances.get(0).getId() + "\t" + new Date());
+		Hbn.updateDB(session);
+        HSession.closeSession();
 	}
 	
 	public static void main(String[] args) {
-		while(true){
+        while(true){
             Downloader dw = new Downloader();
             dw.runTask();
-            if(dw.Instances.size() == 0){
-                try {
-                    System.out.println("now end of downloader,sleep for:"+Const.DownloadArticleSleepTime/1000/60+" minutes. "+new Date().toString());
-                    Thread.sleep(Const.DownloadArticleSleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+                System.out.println("now end of downloader,sleep for:" + Const.DownloadArticleSleepTime / 1000 / 60 + " minutes. " + new Date().toString());
+                Thread.sleep(Const.DownloadArticleSleepTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 		}
 	}

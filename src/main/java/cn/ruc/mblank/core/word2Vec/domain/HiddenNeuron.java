@@ -1,6 +1,8 @@
 package cn.ruc.mblank.core.word2Vec.domain;
 
-public class HiddenNeuron extends Neuron{
+import java.io.Serializable;
+
+public class HiddenNeuron extends Neuron implements Serializable{
     
     public double[] syn1 ; //hidden->out
     

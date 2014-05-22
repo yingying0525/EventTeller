@@ -228,7 +228,7 @@
                                 <manifest>
                                     <addClasspath>true</addClasspath>
                                     <classpathPrefix>lib/</classpathPrefix>
-                                    <mainClass>cn.ruc.mblank.core.topicTrace.TopicTrace</mainClass>
+                                    <mainClass>cn.ruc.mblank.app.web.WordServer</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

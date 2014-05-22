@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- * Created by mblank on 14-3-25.
+ * Created by mblank on 14-4-9.
  */
 @Entity
 public class TopicStatus {

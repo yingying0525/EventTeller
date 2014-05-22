@@ -30,7 +30,7 @@ public class Const{
 	public static int SummaryTitleWordsWeighs = 3;
 	
 	public static double MaxEventSimNum = 0.7;
-	public static double MaxTopicSimNum = 0.3;
+	public static double MaxTopicSimNum = 0.15;
 	
 
 	public static int TitleWordsWeight = 2;
@@ -64,6 +64,8 @@ public class Const{
 	public static long ClusterToTopicSleepTime = 6*60*1000;
 	public static long UpdateTopicInfoSleepTime = 10 * 60 * 1000;
 
+    public static int MaxSimHashInterval = 100000;
+
 
 	public static int MinArticleToProcess = 50;	
 	public static int SimHashIndexNumber = 8;
@@ -73,7 +75,7 @@ public class Const{
 
     public static int MaxTopicKeyWordsSize = 100;
 
-    public static double MaxVectorSimChange = 0.2;
+    public static double MaxVectorSimChange = 0.95;
 	
 	/// for china provinces code e.g. beijing 1
 	public static Map<String,Integer> ZH_PS = null;

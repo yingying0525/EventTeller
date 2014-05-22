@@ -171,10 +171,17 @@ public class Extractor {
 							for(Element subel : subels){
 								///special for news imgs
 								if(subel.tagName().equals("img")){
-									if(np.getBaseUrl().indexOf("http") == 0){
-										result += "!##!" + np.getBaseUrl();
-									}else{
-										result += "!##!" ;
+                                    result += "!##!" ;
+                                    if(np.getBaseUrl().indexOf("http") == 0){
+                                        result +=  np.getBaseUrl();
+                                    }else{
+                                        Elements baseTag = Doc.getElementsByTag("base");
+                                        if(baseTag.size() > 0){
+                                            String baseAtt = baseTag.get(0).attr("href");
+                                            if(baseAtt != null && baseAtt.length() > 0){
+                                                result += baseAtt;
+                                            }
+                                        }
 									}
 									if(np.getTextAtt() != null && subel.attr(np.getTextAtt()).length() > 0 ){
 										result += subel.attr("src");

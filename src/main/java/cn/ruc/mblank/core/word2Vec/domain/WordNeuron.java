@@ -1,8 +1,9 @@
 package cn.ruc.mblank.core.word2Vec.domain;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class WordNeuron extends Neuron {
+public class WordNeuron extends Neuron implements Serializable{
     public String name;
     public double[] syn0 = null; //input->hidden
     public List<Neuron> neurons = null;//路径神经元
@@ -11,6 +12,7 @@ public class WordNeuron extends Neuron {
      * for word in different time
      */
     public Map<Integer,double[]> synMap = null;
+    public int LastDay = -1;
 
     public List<Neuron> makeNeurons() {
         if (neurons != null) {
