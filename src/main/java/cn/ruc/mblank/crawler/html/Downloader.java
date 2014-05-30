@@ -22,7 +22,7 @@ import javax.jms.*;
 public class Downloader {
 	
 	private String SaveFolderPath;
-    private int BatchSize = 100;
+    private int BatchSize = 50;
 
     private int SuccessNumber = 0;
     private int FailNumber = 0;
@@ -94,10 +94,13 @@ public class Downloader {
                     //download
                     execute(url);
                 }else{
+                    System.out.println("error receive..." + url.getId());
                     continue;
                 }
-                if(SuccessNumber % BatchSize == 0){
+                if(SuccessNumber  >= BatchSize || FailNumber >= BatchSize){
                     //update db
+                    SuccessNumber = 0;
+                    FailNumber = 0;
                     Hbn.updateDB(DSession);
                     DSession.clear();
                     System.out.println("download htmls " + SuccessNumber + "\t" + FailNumber + "\t" + url.getId());
@@ -116,8 +119,8 @@ public class Downloader {
 
 	public void execute(Url url){
         UrlStatus us = Hbn.getElementFromDB(DSession,UrlStatus.class,url.getId());
-        if(url == null || us == null){
-            FailNumber++;
+        if( us == null){
+            System.out.println("can't find us " + url.getId());
             return;
         }
         try {
@@ -131,7 +134,7 @@ public class Downloader {
             us.setStatus((short)(us.getStatus() - 1));
             FailNumber++;
         }
-	}
+    }
 	
 	public static void main(String[] args) {
         Downloader dw = new Downloader();

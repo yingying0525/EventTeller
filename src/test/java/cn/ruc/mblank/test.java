@@ -17,7 +17,7 @@ import java.util.List;
 public class test {
 
     public static void main(String[] args){
-        Sender<Url> sender = new Sender<Url>(Const.MQUrl);
+        Sender<Url> sender = new Sender<Url>();
         List<Url> urls = new ArrayList<Url>();
         Url url = new Url();
         url.setId(1);
