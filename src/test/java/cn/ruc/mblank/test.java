@@ -1,10 +1,14 @@
 package cn.ruc.mblank;
 
 import cn.ruc.mblank.db.hbn.HSession;
+import cn.ruc.mblank.db.hbn.model.Url;
 import cn.ruc.mblank.db.hbn.model.UrlStatus;
+import cn.ruc.mblank.mq.Sender;
+import cn.ruc.mblank.util.Const;
 import cn.ruc.mblank.util.db.Hbn;
 import org.hibernate.Session;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,12 +17,13 @@ import java.util.List;
 public class test {
 
     public static void main(String[] args){
-        Session session = HSession.getSession();
-        String sql = "from UrlStatus as obj where obj.status = 0 or obj.status = -1";
-        List<UrlStatus> instances = Hbn.getElementsFromDB(sql,0,1000,session);
-        int maxId = Hbn.getMaxFromDB(session,UrlStatus.class,"id");
-        System.out.println(instances.size() + "\t" + maxId);
-        HSession.closeSession();
+        Sender<Url> sender = new Sender<Url>(Const.MQUrl);
+        List<Url> urls = new ArrayList<Url>();
+        Url url = new Url();
+        url.setId(1);
+        url.setUrl("dkdkdk");
+        urls.add(url);
+        sender.send("UrlQueue",urls);
 
     }
 }

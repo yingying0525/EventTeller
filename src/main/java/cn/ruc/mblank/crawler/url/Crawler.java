@@ -19,6 +19,7 @@ import java.util.Set;
 
 import cn.ruc.mblank.db.hbn.model.Url;
 import cn.ruc.mblank.db.hbn.model.UrlStatus;
+import cn.ruc.mblank.mq.Sender;
 import cn.ruc.mblank.util.BloomFilter;
 import cn.ruc.mblank.crawler.url.filter.UrlFilter;
 
@@ -43,9 +44,9 @@ import cn.ruc.mblank.util.Log;
 // -2 -- try again, but failed again, will not try any more.
 
 /**
- * @time 2013-3-16
  * @author mblank
- *
+ * @time 2014-05-30
+ * @version 1.2
  */
 public class Crawler implements Runnable{
 		
@@ -404,6 +405,11 @@ public class Crawler implements Runnable{
 			e.printStackTrace();
 		}
 	}
+
+    private void sendMessage(List<Url> updates){
+        Sender<Url> sender = new Sender<Url>();
+        sender.send(Const.URLQueueName,updates);
+    }
 	
 	@Override
 	public  void run(){
@@ -439,9 +445,12 @@ public class Crawler implements Runnable{
 				max_len_url = tn.getUrl().length();
 			}
 		}
+        //update db
 		db.updateDB(updateUrls);
 		db.updateDB(updateStatus);
 		WriterToBloomFile(updateUrls);
+        //update message queue
+        sendMessage(updateUrls);
 		UrlTopicMaps.clear();
 		System.out.println("now end of Crawler..update urls -- " + updateUrls.size());	
 	}

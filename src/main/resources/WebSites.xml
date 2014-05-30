@@ -328,7 +328,7 @@
      <Type>1</Type>
      <Filter>
      	<Pattern level="1">news.163.com</Pattern>
-     	<Pattern level="2">13</Pattern>
+     	<Pattern level="2">14</Pattern>
      </Filter>
      <AvgUrlLength>50</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -338,7 +338,7 @@
      <Type>2</Type>
      <Filter>
      	<Pattern level="1">news.163.com</Pattern>
-     	<Pattern level="2">13</Pattern>
+     	<Pattern level="2">14</Pattern>
      </Filter>
      <AvgUrlLength>50</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -348,7 +348,7 @@
      <Type>3</Type>
      <Filter>
      	<Pattern level="1">news.163.com</Pattern>
-     	<Pattern level="2">13</Pattern>
+     	<Pattern level="2">14</Pattern>
      </Filter>
      <AvgUrlLength>50</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -358,7 +358,7 @@
      <Type>4</Type>
      <Filter>
      	<Pattern level="1">news.163.com</Pattern>
-     	<Pattern level="2">13</Pattern>
+     	<Pattern level="2">14</Pattern>
      </Filter>
      <AvgUrlLength>50</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -368,21 +368,17 @@
      <Type>5</Type>
      <Filter>
      	<Pattern level="1">war.163.com</Pattern>
-     	<Pattern level="2">13</Pattern>
+     	<Pattern level="2">14</Pattern>
      </Filter>
      <AvgUrlLength>45</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
-   <!--Site>
-     <Addr>http://health.sina.com.cn</Addr>
-     <Type>6</Type>
-   </Site-->
    <Site>
      <Addr>http://sports.163.com</Addr>
      <Type>7</Type>
      <Filter>
      	<Pattern level="1">sports.163.com</Pattern>
-     	<Pattern level="2">13</Pattern>
+     	<Pattern level="2">14</Pattern>
      </Filter>
      <AvgUrlLength>50</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -392,7 +388,7 @@
      <Type>8</Type>
      <Filter>
      	<Pattern level="1">ent.163.com</Pattern>
-     	<Pattern level="2">13</Pattern>
+     	<Pattern level="2">14</Pattern>
      </Filter>
      <AvgUrlLength>45</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -402,7 +398,7 @@
      <Type>9</Type>
      <Filter>
      	<Pattern level="1">money.163.com</Pattern>
-     	<Pattern level="2">13</Pattern>
+     	<Pattern level="2">14</Pattern>
      </Filter>
      <AvgUrlLength>50</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -412,7 +408,7 @@
      <Type>10</Type>
      <Filter>
      	<Pattern level="1">tech.163.com</Pattern>
-     	<Pattern level="2">13</Pattern>
+     	<Pattern level="2">14</Pattern>
      </Filter>
      <AvgUrlLength>50</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -422,7 +418,7 @@
      <Type>11</Type>
      <Filter>
      	<Pattern level="1">edu.163.com</Pattern>
-     	<Pattern level="2">13</Pattern>
+     	<Pattern level="2">14</Pattern>
      </Filter>
      <AvgUrlLength>45</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -445,7 +441,6 @@
      <Type>2</Type>
      <Filter>
      	<Pattern level="1">news.ifeng.com</Pattern>
-     	<Pattern level="2">mainland</Pattern>
      </Filter>
      <AvgUrlLength>60</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -455,7 +450,6 @@
      <Type>3</Type>
      <Filter>
      	<Pattern level="1">news.ifeng.com</Pattern>
-     	<Pattern level="2">world</Pattern>
      </Filter>
      <AvgUrlLength>60</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -465,7 +459,6 @@
      <Type>4</Type>
      <Filter>
      	<Pattern level="1">news.ifeng.com</Pattern>
-     	<Pattern level="2">society</Pattern>
      </Filter>
      <AvgUrlLength>60</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -475,7 +468,6 @@
      <Type>5</Type>
      <Filter>
      	<Pattern level="1">news.ifeng.com</Pattern>
-     	<Pattern level="2">mil</Pattern>
      </Filter>
      <AvgUrlLength>60</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -485,7 +477,6 @@
      <Type>6</Type>
      <Filter>
      	<Pattern level="1">fashion.ifeng.com</Pattern>
-     	<Pattern level="2">health</Pattern>
      </Filter>
      <AvgUrlLength>60</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
@@ -1750,111 +1741,94 @@
 <!-- for www.yangtse.com-->
 <WebSite name="yangtse">
    <Site>
-     <Addr>http://www.yangtse.com/news/</Addr>
+     <Addr>http://www.yangtse.com/</Addr>
      <Type>1</Type>
      <Filter>
      	<Pattern level="1">www.yangtse.com</Pattern>
-     	<Pattern level="2">system</Pattern>
      </Filter>
      <AvgUrlLength>40</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
-     <Addr>http://www.yangtse.com/news/gn</Addr>
+     <Addr>http://www.yangtse.com/guonei/</Addr>
      <Type>2</Type>
      <Filter>
      	<Pattern level="1">www.yangtse.com</Pattern>
-     	<Pattern level="2">system</Pattern>
+     	<Pattern level="2">guonei</Pattern>
      </Filter>
      <AvgUrlLength>40</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
-     <Addr>http://www.yangtse.com/news/gj</Addr>
+     <Addr>http://www.yangtse.com/guoji/</Addr>
      <Type>3</Type>
      <Filter>
      	<Pattern level="1">www.yangtse.com</Pattern>
-     	<Pattern level="2">system</Pattern>
+     	<Pattern level="2">guoji</Pattern>
      </Filter>
      <AvgUrlLength>40</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
-     <Addr>http://www.yangtse.com/news/sh</Addr>
+     <Addr>http://www.yangtse.com/shehui/</Addr>
      <Type>4</Type>
      <Filter>
      	<Pattern level="1">www.yangtse.com</Pattern>
-     	<Pattern level="2">system</Pattern>
+     	<Pattern level="2">shehui</Pattern>
      </Filter>
      <AvgUrlLength>40</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
-   <!--Site>
-     <Addr>http://gb.takungpao.com/mil/</Addr>
-     <Type>5</Type>
-     <Filter>
-     	<Pattern level="1">gb.takungpao.com</Pattern>
-     	<Pattern level="2">mil</Pattern>
-     </Filter>
-   </Site-->
    <Site>
-     <Addr>http://www.yangtse.com/jk/</Addr>
+     <Addr>http://www.yangtse.com/jiankang/</Addr>
      <Type>6</Type>
      <Filter>
      	<Pattern level="1">www.yangtse.com</Pattern>
-     	<Pattern level="2">system</Pattern>
+     	<Pattern level="2">jiankang</Pattern>
      </Filter>
      <AvgUrlLength>40</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
-     <Addr>http://www.yangtse.com/news/ty/</Addr>
+     <Addr>http://www.yangtse.com/tiyu/</Addr>
      <Type>7</Type>
      <Filter>
      	<Pattern level="1">www.yangtse.com</Pattern>
-     	<Pattern level="2">system</Pattern>
+     	<Pattern level="2">tiyu</Pattern>
      </Filter>
      <AvgUrlLength>40</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
-     <Addr>http://www.yangtse.com/news/yl/</Addr>
+     <Addr>http://www.yangtse.com/yule/</Addr>
      <Type>8</Type>
      <Filter>
      	<Pattern level="1">www.yangtse.com</Pattern>
-     	<Pattern level="2">system</Pattern>
+     	<Pattern level="2">yule</Pattern>
      </Filter>
      <AvgUrlLength>40</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
-   	 <Addr>http://www.yangtse.com/news/cj</Addr>
+   	 <Addr>http://www.yangtse.com/caijing</Addr>
    	 <Type>9</Type>
      <Filter>
      	<Pattern level="1">www.yangtse.com</Pattern>
-     	<Pattern level="2">system</Pattern>
+     	<Pattern level="2">caijing</Pattern>
      </Filter>
      <AvgUrlLength>40</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
    <Site>
-     <Addr>http://www.yangtse.com/tech/</Addr>
+     <Addr>http://www.yangtse.com/jiaoyu</Addr>
      <Type>10</Type>
      <Filter>
      	<Pattern level="1">www.yangtse.com</Pattern>
-     	<Pattern level="2">system</Pattern>
+     	<Pattern level="2">jiaoyu</Pattern>
      </Filter>
      <AvgUrlLength>40</AvgUrlLength>
      <AvgTitleLength>10</AvgTitleLength>
    </Site>
-   <!--Site>
-     <Addr>http://gb.takungpao.com/edu/</Addr>
-     <Type>11</Type>
-     <Filter>
-     	<Pattern level="1">gb.takungpao.com</Pattern>
-     	<Pattern level="2">edu</Pattern>
-     </Filter>
-   </Site-->
 </WebSite> 
 
 <!-- for some law web sites -->
