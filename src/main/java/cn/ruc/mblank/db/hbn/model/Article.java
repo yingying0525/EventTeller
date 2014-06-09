@@ -1,8 +1,10 @@
 package cn.ruc.mblank.db.hbn.model;
 
+import java.awt.*;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Article {
+public class Article implements Serializable{
 	
 	private Integer id;
 	private String  title;

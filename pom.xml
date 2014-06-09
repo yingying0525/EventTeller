@@ -233,7 +233,7 @@
                                 <manifest>
                                     <addClasspath>true</addClasspath>
                                     <classpathPrefix>lib/</classpathPrefix>
-                                    <mainClass>cn.ruc.mblank.crawler.html.Downloader</mainClass>
+                                    <mainClass>cn.ruc.mblank.cache.Extractor</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
