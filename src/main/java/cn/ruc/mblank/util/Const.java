@@ -20,7 +20,12 @@ public class Const{
 	
 	public static String HtmlSaveEncode = "UTF8";
 	public static String CrawlerUserAgent = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31";
-	
+
+    public static String MQUrl = "tcp://222.29.197.239:61616";
+    public static String URLQueueName = "UrlQueue";
+    public static String HTMLQueueName = "HtmlQueue";
+
+
 
 	public static int WebSiteUrlTitleFilerLength = 5;
 	public static int PublistTimeLengthPlus = 8;
@@ -56,8 +61,7 @@ public class Const{
 
 	
 	
-	public static long UrlCrawlerSleepTime = 15*60*1000;
-	public static long DownloadArticleSleepTime = 15*60*1000;
+	public static long UrlCrawlerSleepTime = 10*60*1000;
 	public static long ArticleInfoExtractorSleepTime = 15*60*1000;
 	public static long EventDetectorSleepTime = 10*60*1000;
 	public static long UpdateDFSleepTime = 10*60*1000;

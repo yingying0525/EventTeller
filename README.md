@@ -32,7 +32,7 @@ Thanks to Ansj (A Chinese Tokenizer https://github.com/ansjsun/ansj_seg)
 DB-IIR Lab Renmin University of China (http://iir.ruc.edu.cn)
 
 
-Attations
+Attentions
 ========
 
 If you use Mysql as Event DB, pls set table character set to utf8mb4, 

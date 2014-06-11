@@ -4,13 +4,14 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by mblank on 14-4-9.
  */
 @Entity
-public class Url {
+public class Url implements Serializable {
     private int id;
     private Date crawltime;
     private String url;
