@@ -1,13 +1,7 @@
 
 package cn.ruc.mblank.crawler.url;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -51,16 +45,17 @@ import cn.ruc.mblank.util.Log;
 public class Crawler implements Runnable{
 		
 	private static String Bloom_File_Path;
+    private String SaveFolderPath;
 	private BloomFilter bloomfilter;
 	private Map<String,Integer> UrlTopicMaps;
-	
 
-	
+
 	public Crawler(){
 		Log.getLogger().info("Start TitleCrawler!");
 		//read Bloom filter file path from json config file
 		JsonConfigModel jcm = JsonConfigModel.getConfig();
-		Bloom_File_Path = jcm.UrlsBloomFilterFilePath;		
+		Bloom_File_Path = jcm.UrlsBloomFilterFilePath;
+        SaveFolderPath = jcm.HtmlSavePath;
 		bloomfilter =  InitBloomFilter();
 		UrlTopicMaps = new HashMap<String,Integer>();
 		System.out.println("bloom filter init ok...");	
@@ -343,7 +338,6 @@ public class Crawler implements Runnable{
 	 * @return List<WebSite>
 	 * @Description:read WebSites.xml and get all titleNews urls + titles+filter
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Url> getAllTitleNews(){
 		List<Url> ls_results = new ArrayList<Url>();
 		List<Url> ls_temp = new ArrayList<Url>();
@@ -371,7 +365,6 @@ public class Crawler implements Runnable{
 	}
 	
 	public BloomFilter InitBloomFilter(){
-
 		BloomFilter bloomfilter = new BloomFilter();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(Bloom_File_Path));
@@ -406,11 +399,26 @@ public class Crawler implements Runnable{
 		}
 	}
 
-    private void sendMessage(List<Url> updates){
-        Sender<Url> sender = new Sender<Url>();
-        sender.send(Const.URLQueueName,updates);
+    private void writeHtml2Disk(Url url,String html){
+        String date = cn.ruc.mblank.util.TimeUtil.getDateStr(url.getCrawltime());
+        File folder = new File(SaveFolderPath + date);
+        if(!folder.exists()){
+            folder.mkdirs();
+        }
+        try {
+            BufferedWriter bw = null;
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(SaveFolderPath + date + File.separator + url.getId()), Const.HtmlSaveEncode));
+            bw.write(html);
+            bw.close();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-	
+
 	@Override
 	public  void run(){
         Hbn db = new Hbn();
@@ -420,6 +428,7 @@ public class Crawler implements Runnable{
 		if(bloomfilter == null)
 			return;		
 		List<Url> updateUrls = new ArrayList<Url>();
+        HashMap<Integer,UrlStatus> updateStatusMap = new HashMap<Integer, UrlStatus>();
 		List<UrlStatus> updateStatus = new ArrayList<UrlStatus>();
 		int maxId = db.getMaxFromDB(Url.class,"id");
 		int max_len_url = 0;
@@ -427,7 +436,6 @@ public class Crawler implements Runnable{
 			if(!bloomfilter.contains(tn.getUrl().toLowerCase())){
 				//set url id
 				if(tn.getUrl() == null || UrlTopicMaps.get(tn.getUrl()) == null){
-					System.out.println("null....");
 					continue;
 				}
 				tn.setId(++maxId);
@@ -439,20 +447,41 @@ public class Crawler implements Runnable{
 				us.setTime(tn.getCrawltime());
 				us.setTopic(UrlTopicMaps.get(tn.getUrl()));
 				updateStatus.add(us);
+                updateStatusMap.put(tn.getId(),us);
 				bloomfilter.add(tn.getUrl().toLowerCase());
 			}
 			if(tn.getUrl().length() > max_len_url){
 				max_len_url = tn.getUrl().length();
 			}
 		}
+        int SuccessNumber = 0;
+        int FailNumber = 0;
+        System.out.println("crawled " + updateUrls.size() + " Urls, start to download htmls. " + new Date().toString());
+        //download htmls
+        int dnum = 0;
+        for(Url urldown : updateUrls){
+            dnum++;
+            try {
+                Document doc = Jsoup.connect(urldown.getUrl()).userAgent(Const.CrawlerUserAgent).timeout(3000).get();
+                String html = doc.html();
+                writeHtml2Disk(urldown,html);
+                updateStatusMap.get(urldown.getId()).setStatus((short) Const.TaskId.DownloadUrlToHtml.ordinal());
+                SuccessNumber++;
+            } catch (Exception e) {
+                //can't download this url.. will update the taskStatus
+                updateStatusMap.get(urldown.getId()).setStatus((short) (updateStatusMap.get(urldown.getId()).getStatus() - 1));
+                FailNumber++;
+            }
+            if(dnum % 100 == 0){
+                System.out.println("download " + dnum + " / " + updateUrls.size());
+            }
+        }
         //update db
 		db.updateDB(updateUrls);
 		db.updateDB(updateStatus);
 		WriterToBloomFile(updateUrls);
-        //update message queue
-        sendMessage(updateUrls);
 		UrlTopicMaps.clear();
-		System.out.println("now end of Crawler..update urls -- " + updateUrls.size());	
+        System.out.println("download html + " + SuccessNumber + "\t" + "failed number " + FailNumber + " " + new Date().toString());
 	}
 	
 	

@@ -61,8 +61,7 @@ public class Const{
 
 	
 	
-	public static long UrlCrawlerSleepTime = 15*60*1000;
-	public static long DownloadArticleSleepTime = 15*60*1000;
+	public static long UrlCrawlerSleepTime = 10*60*1000;
 	public static long ArticleInfoExtractorSleepTime = 15*60*1000;
 	public static long EventDetectorSleepTime = 10*60*1000;
 	public static long UpdateDFSleepTime = 10*60*1000;

@@ -19,6 +19,7 @@ import cn.ruc.mblank.util.Log;
 
 import javax.jms.*;
 
+@Deprecated
 public class Downloader {
 	
 	private String SaveFolderPath;

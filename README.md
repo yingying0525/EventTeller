@@ -22,7 +22,7 @@ Features
 Demo
 ========
 
-You can try our online demo site in http://202.112.113.121:8080/ETW/
+You can try our online demo site in http://www.istoryteller.org/ETW/
 
 Thanks
 ========
@@ -32,7 +32,7 @@ Thanks to Ansj (A Chinese Tokenizer https://github.com/ansjsun/ansj_seg)
 DB-IIR Lab Renmin University of China (http://iir.ruc.edu.cn)
 
 
-Attations
+Attentions
 ========
 
 
