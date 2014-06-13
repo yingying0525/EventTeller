@@ -7,6 +7,8 @@ It crawls news from more than 30 news sites in China real-time (the time interva
 
 The details about which website was crawled can be found in Wiki page.
 
+You can find all the details in Qun Zhao's master dissertation.(http://pan.baidu.com/s/1eQotzm6)
+
 Features
 ==========
 
@@ -22,7 +24,7 @@ Features
 Demo
 ========
 
-You can try our online demo site in http://www.istoryteller.org/ETW/
+You can try our online demo site in http://222.29.197.240:8080/EventTellerWeb
 
 Thanks
 ========
