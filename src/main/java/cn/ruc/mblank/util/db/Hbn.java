@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import cn.ruc.mblank.db.hbn.HSession;
-import com.sun.accessibility.internal.resources.accessibility;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;

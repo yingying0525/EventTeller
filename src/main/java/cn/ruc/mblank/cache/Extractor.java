@@ -85,6 +85,7 @@ public class Extractor implements Runnable{
                 }
                 oos.writeObject(at);
             }
+            oos.writeObject(null);
             oos.close();
             System.out.println(folder.getName() + "\t" + (files.length - fail) + "\t" + fail);
     }
