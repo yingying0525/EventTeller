@@ -1,6 +1,10 @@
 {
-	"HtmlSavePath":"/mnt/diskd/ETHtmls_2012_Backup",
-	"SimHashPath":"/mnt/diskb/ET/NewsSimHash",
-	"SolrIndexURI":"http://222.29.197.239:8080/solr",
-	"UrlsBloomFilterFilePath":"/mnt/diskb/ET/urls"
+    "HtmlSavePath":"/mnt/diskc/ETHtmlFiles/",
+    "SimHashPath":"/mnt/diskb/ET/NewsSimHash",
+    "SolrIndexURI":"http://222.29.197.239:8080/solr",
+    "UrlsBloomFilterFilePath":"/mnt/diskb/ET/urls",
+    "LocalDFPath":"/mnt/diskc/ET/DF/et.df",
+    "LocalTDFPath":"/mnt/diskc/ET/DF/et.tdf",
+    "LocalDDNPath":"/mnt/diskc/ET/DF/et.ddn",
+    "ArticleFilePath":"/mnt/diskd/ET_Articles"
 }

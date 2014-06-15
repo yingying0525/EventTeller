@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * @deprecated
  * Created by mblank on 14-5-30.
  */
 public  class  Sender<T extends Serializable> {

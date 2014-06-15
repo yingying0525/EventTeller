@@ -13,8 +13,9 @@ import java.util.Map;
 */
 public class Const{
 	
-	public static String WEB_SITES_PATH = "Config/WebSites.xml";
+	public static String WEB_SITES_PATH = "Config/WebSites";
 	public static String SYS_JSON_CONFIG_PATH = "Config/SysConfig.json";
+    public static String Web_Type_Path = "Config/WebTypes";
 	public static String LOG4J_CONFIG_PATH = "Config/log4j.xml";
 	
 	
