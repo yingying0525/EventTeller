@@ -233,7 +233,7 @@
                                 <manifest>
                                     <addClasspath>true</addClasspath>
                                     <classpathPrefix>lib/</classpathPrefix>
-                                    <mainClass>cn.ruc.mblank.cache.event.ProcSame</mainClass>
+                                    <mainClass>cn.ruc.mblank.cache.crawler.UrlCrawler</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

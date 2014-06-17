@@ -49,31 +49,12 @@ public class test {
     public static void main(String[] args) throws IOException {
 
 
-        Set<CUrl> urls = new HashSet<CUrl>();
-        String url = "http://6660409.blog.163.com/blog/static/472419692013229103322946/";
-        Document doc = Jsoup.connect(url).userAgent(Const.CrawlerUserAgent).timeout(5000).get();
-        Elements els = doc.getElementsByTag("a");
-        for(Element el : els){
-            Elements nodes = el.getElementsByTag("font");
-            if(nodes.size() != 1 || nodes.get(0).attr("color") == null||!nodes.get(0).attr("color").equals("#474486")){
-                continue;
-            }
-            String turl = el.attr("href");
-            String text = el.getElementsByTag("font").get(0).text();
-            if(turl.equals(text)){
-                continue;
-            }
-            System.out.println(turl + "\t" + text);
-            CUrl curl = new CUrl();
-            curl.url = turl;
-            curl.name = text;
-            urls.add(curl);
+       String url = "http://news.qq.com/world_index.shtml";
+        Document doc = Jsoup.connect(url).userAgent(Const.CrawlerUserAgent).get();
+        Elements nodes = doc.getElementsByTag("a");
+        for(Element node : nodes){
+
+            System.out.println(node.absUrl("href"));
         }
-        System.out.println(urls.size());
-        BufferedWriter bw = new BufferedWriter(new FileWriter("d:\\urls"));
-        for(CUrl curl : urls){
-            bw.write(curl.url + "\t" + curl.name + "\n");
-        }
-        bw.close();
     }
 }

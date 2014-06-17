@@ -1,11 +1,8 @@
-package cn.ruc.mblank.crawler;
+package cn.ruc.mblank.cache.crawler;
 
 import cn.ruc.mblank.config.JsonConfigModel;
-import cn.ruc.mblank.crawler.url.MUrl;
-import cn.ruc.mblank.db.hbn.model.Url;
-import cn.ruc.mblank.db.hbn.model.UrlStatus;
+import cn.ruc.mblank.cache.crawler.url.MUrl;
 import cn.ruc.mblank.db.hbn.model.WebSite;
-import cn.ruc.mblank.index.solr.model.WebTopic;
 import cn.ruc.mblank.util.BloomFilter;
 import cn.ruc.mblank.util.Const;
 import cn.ruc.mblank.util.Log;
@@ -13,11 +10,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import sun.applet.Main;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 /**
  * 1 read web sites from config file
@@ -128,13 +123,9 @@ public class UrlCrawler {
                     //if a.href contains htm and the length of a.title is bigger than 10,then it is a news
                     //if a.title is contained in WebType,then it is a second level url
                     String title = a.text();
-                    String href = a.attr("href");
-                    if (href == null || title == null) {
+                    String href = a.absUrl("href");
+                    if (href == null || title == null || href.indexOf("http") < 0) {
                         continue;
-                    }
-                    //for base url
-                    if (href.indexOf("http") < 0) {
-                        href += doc.baseUri() + href;
                     }
                     if (href.contains("htm") && title.length() > 10) {
                         MUrl url = new MUrl();
@@ -143,6 +134,7 @@ public class UrlCrawler {
                         url.url = href;
                         url.level = 1;
                         url.subTopic = 2;
+                        url.webSite = ws.name;
                         MainUrls.add(url);
                     }
                     if(UrlTopicMaps.containsKey(title)){
@@ -150,6 +142,7 @@ public class UrlCrawler {
                         url.title = title;
                         url.url = href;
                         url.level = 2;
+                        url.webSite = ws.name;
                         url.subTopic = 1 << UrlTopicMaps.get(title);
                         SecondUrls.add(url);
                     }
@@ -168,7 +161,7 @@ public class UrlCrawler {
                 Elements as = doc.getElementsByTag("a");
                 for(Element a : as){
                     String title = a.text();
-                    String href = a.attr("href");
+                    String href = a.absUrl("href");
                     if (href == null || title == null) {
                         continue;
                     }
@@ -179,6 +172,7 @@ public class UrlCrawler {
                         surl.level = 2;
                         surl.crawlTime = new Date();
                         surl.subTopic = url.subTopic;
+                        surl.webSite = url.webSite;
                         if(!MainUrls.contains(surl)){
                             MainUrls.add(surl);
                             num++;
