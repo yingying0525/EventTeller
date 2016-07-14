@@ -18,6 +18,7 @@ import java.util.*;
 
 /**
  * Created by mblank on 14-4-8.
+ * Use the Word index from getElement.java, calculate the max-similar event for given event
  */
 public class TopicTrace {
 
