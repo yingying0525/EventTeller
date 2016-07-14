@@ -18,6 +18,8 @@ import java.util.Map;
 
 /**
  * Created by mblank on 14-4-9.
+ * Use the event simliar files (format eventA eventB score for every line)
+ * to split this big graph to some topics
  */
 public class SplitTopic {
 
