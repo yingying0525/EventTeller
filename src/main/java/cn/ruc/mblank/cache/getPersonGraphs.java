@@ -7,6 +7,8 @@ import java.util.*;
 
 /**
  * Created by mblank on 2014/5/1.
+ * This class related to person relationship generation.
+ * Get the related persions (TopN) from calculated person vectors (w2v)
  */
 public class getPersonGraphs {
 
