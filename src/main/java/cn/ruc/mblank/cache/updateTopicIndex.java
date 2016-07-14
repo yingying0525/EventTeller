@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by mblank on 2014/5/9.
+ * From relation file to group the event ids together.
  */
 public class updateTopicIndex {
 
