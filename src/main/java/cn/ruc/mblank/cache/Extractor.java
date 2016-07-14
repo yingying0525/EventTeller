@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Created by mblank on 14-5-28.
+ * Use New algo. to extract original Html for better News contents.
  */
 public class Extractor implements Runnable{
 
