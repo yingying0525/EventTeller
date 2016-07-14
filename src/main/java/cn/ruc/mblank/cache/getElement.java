@@ -14,6 +14,8 @@ import java.util.*;
 
 /**
  * Created by mblank on 14-4-1.
+ * Use this class to generate the WordIndex file, with structure (Word, day, nature, word, eventId)
+ * This file will be used when do topic trace (just as a index to be loaded into memory and lookup the related events)
  */
 public class getElement {
 
